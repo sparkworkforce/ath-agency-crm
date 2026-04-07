@@ -1,0 +1,334 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────
+
+enum UserRole {
+  AGENCY
+  CLIENT
+}
+
+enum ClientStatus {
+  prospecto
+  en_progreso
+  completado
+  soporte_mensual
+}
+
+enum ClientPlatform {
+  WOOCOMMERCE
+  SHOPIFY
+  CUSTOM
+}
+
+enum TaskStatus {
+  pendiente
+  en_progreso
+  completado
+  vencido
+}
+
+enum InvoiceStatus {
+  pendiente
+  pagado
+  vencido
+}
+
+enum TicketStatus {
+  abierto
+  en_progreso
+  cerrado
+}
+
+enum SnippetPlatform {
+  WOOCOMMERCE
+  SHOPIFY
+  CUSTOM
+  GENERAL
+}
+
+enum SnippetCategory {
+  wrapper
+  webhook
+  utility
+}
+
+// ─── NextAuth Required Models (PrismaAdapter) ────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Application Models ──────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // null for CLIENT users (magic link only)
+  role          UserRole
+  clientId      String?   // only for role CLIENT
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  client        Client?       @relation(fields: [clientId], references: [id])
+  assignedTasks Task[]        @relation("AssignedTasks")
+  snippets      CodeSnippet[]
+  magicLinks    MagicLink[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model MagicLink {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+}
+
+model LoginAttempt {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  attempts    Int       @default(0)
+  lastAttempt DateTime  @default(now())
+  lockedUntil DateTime?
+
+  @@index([email])
+}
+
+model Client {
+  id           String         @id @default(cuid())
+  businessName String
+  contactName  String
+  contactEmail String
+  contactPhone String?
+  industry     String?
+  platform     ClientPlatform
+  status       ClientStatus   @default(prospecto)
+  deletedAt    DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  users          User[]
+  projects       Project[]
+  invoices       Invoice[]
+  tickets        SupportTicket[]
+  communications Communication[]
+  statusHistory  ClientStatusHistory[]
+
+  @@index([status])
+  @@index([deletedAt])
+  @@index([contactEmail])
+}
+
+model ClientStatusHistory {
+  id        String       @id @default(cuid())
+  clientId  String
+  status    ClientStatus
+  changedAt DateTime     @default(now())
+  changedBy String
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+}
+
+model Communication {
+  id        String   @id @default(cuid())
+  clientId  String
+  date      DateTime
+  channel   String
+  summary   String
+  createdBy String
+  createdAt DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+}
+
+model Project {
+  id                   String   @id @default(cuid())
+  name                 String
+  clientId             String
+  completionPercentage Float    @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  client Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  tasks  Task[]
+  files  ProjectFile[]
+
+  @@index([clientId])
+}
+
+model Task {
+  id           String     @id @default(cuid())
+  projectId    String
+  title        String
+  assignedToId String?
+  dueDate      DateTime?
+  status       TaskStatus @default(pendiente)
+  order        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignedTo User?   @relation("AssignedTasks", fields: [assignedToId], references: [id])
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model ProjectFile {
+  id         String   @id @default(cuid())
+  projectId  String
+  fileName   String
+  fileType   String
+  fileSize   Int
+  storageKey String
+  uploadedBy String
+  createdAt  DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  clientId    String
+  totalAmount Decimal       @db.Decimal(10, 2)
+  status      InvoiceStatus @default(pendiente)
+  dueDate     DateTime
+  isRetainer  Boolean       @default(false)
+  createdBy   String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client   Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  payments Payment[]
+  auditLog InvoiceAuditLog[]
+
+  @@index([clientId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([isRetainer])
+}
+
+model Payment {
+  id         String   @id @default(cuid())
+  invoiceId  String
+  amount     Decimal  @db.Decimal(10, 2)
+  receivedAt DateTime
+  recordedBy String
+  createdAt  DateTime @default(now())
+
+  invoice  Invoice           @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  auditLog InvoiceAuditLog[]
+
+  @@index([invoiceId])
+}
+
+model InvoiceAuditLog {
+  id         String   @id @default(cuid())
+  invoiceId  String
+  paymentId  String?
+  action     String
+  actorId    String
+  beforeData Json?
+  afterData  Json?
+  createdAt  DateTime @default(now())
+
+  invoice Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  payment Payment? @relation(fields: [paymentId], references: [id])
+
+  @@index([invoiceId])
+}
+
+model SupportTicket {
+  id          String       @id @default(cuid())
+  clientId    String
+  title       String
+  description String
+  status      TicketStatus @default(abierto)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([status])
+}
+
+model CodeSnippet {
+  id          String          @id @default(cuid())
+  title       String
+  description String
+  code        String          @db.Text
+  language    String
+  platform    SnippetPlatform
+  category    SnippetCategory
+  authorId    String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  author User @relation(fields: [authorId], references: [id])
+
+  @@index([platform])
+  @@index([category])
+}
