@@ -11,6 +11,7 @@ interface Project {
   id: string
   name: string
   completionPercentage: number
+  estimatedCompletionDate?: string | Date | null
   tasks: Task[]
 }
 
@@ -31,13 +32,18 @@ export default function ProjectProgress({ project }: ProjectProgressProps) {
     <div className="bg-white rounded-lg border border-gray-200 p-6" data-testid="project-progress">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-900">{project.name}</h2>
-        <span className="text-sm font-medium text-blue-600">{project.completionPercentage}% completado</span>
+        <div className="text-right">
+          <span className="text-sm font-medium" style={{ color: 'var(--agency-color, #059669)' }}>{project.completionPercentage}% completado</span>
+          {project.estimatedCompletionDate && project.completionPercentage < 100 && (
+            <p className="text-xs text-gray-400">Estimado: {new Date(project.estimatedCompletionDate).toLocaleDateString('es-PR')}</p>
+          )}
+        </div>
       </div>
 
       <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
         <div
-          className="bg-blue-600 h-2 rounded-full transition-all"
-          style={{ width: `${project.completionPercentage}%` }}
+          className="h-2 rounded-full transition-all"
+          style={{ width: `${project.completionPercentage}%`, backgroundColor: 'var(--agency-color, #059669)' }}
           role="progressbar"
           aria-valuenow={project.completionPercentage}
           aria-valuemin={0}

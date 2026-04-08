@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateCommunicationSchema } from '@/lib/validations/clients'
 import { logCommunication, getCommunications } from '@/lib/services/clients.service'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
   const { id } = await params
-  const communications = await getCommunications(id)
+  const communications = await getCommunications(id, session.user.agencyId)
   return NextResponse.json({ communications })
 }
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
   const { id } = await params
   const body = await request.json()
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   }
 
   try {
-    const communication = await logCommunication(id, result.data, session.user.id)
+    const communication = await logCommunication(id, result.data, session.user.id, session.user.agencyId)
     return NextResponse.json({ communication }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })

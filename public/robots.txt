@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /clients
+Disallow: /projects
+Disallow: /invoices
+Disallow: /snippets
+Disallow: /users
+Disallow: /settings
+Disallow: /portal
+
+Sitemap: https://cobrahub.io/sitemap.xml

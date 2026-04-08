@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
+      - name: Create Prisma barrel file
+        run: echo "export * from './client'" > prisma/generated/prisma/client/index.ts
+
+      - run: npx tsc --noEmit
+
+      - run: npm run test
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
+          NEXTAUTH_SECRET: ci-secret
+          NEXTAUTH_URL: http://localhost:3000
+
+      - run: npm audit --audit-level=high
+        continue-on-error: true

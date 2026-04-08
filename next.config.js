@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**.supabase.co' },
+    ],
+  },
   async headers() {
     return [
       {
@@ -25,11 +30,12 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline'",
+              "script-src 'self' 'unsafe-inline' https://js.stripe.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob:",
+              "img-src 'self' data: blob: https://*.supabase.co",
               "font-src 'self'",
-              "connect-src 'self'",
+              "connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io https://api.stripe.com",
+              "frame-src https://js.stripe.com",
               "frame-ancestors 'none'",
             ].join('; '),
           },
@@ -39,4 +45,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+export default nextConfig

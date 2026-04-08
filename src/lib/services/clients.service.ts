@@ -5,13 +5,15 @@ import {
   revokeAllUserSessions,
 } from './auth.service'
 import type { CreateClientInput, UpdateClientStatusInput, CreateCommunicationInput } from '../validations/clients'
+import { paginationArgs, paginated, type PaginationInput, type PaginatedResult } from '../pagination'
 import type { ClientStatus } from '../../../prisma/generated/prisma/client'
 
-export async function createClient(data: CreateClientInput, createdBy: string) {
+export async function createClient(data: CreateClientInput, createdBy: string, agencyId: string) {
   return prisma.$transaction(async (tx) => {
     const client = await tx.client.create({
       data: {
         ...data,
+        agencyId,
         status: 'prospecto',
       },
     })
@@ -22,9 +24,9 @@ export async function createClient(data: CreateClientInput, createdBy: string) {
   })
 }
 
-export async function updateClient(clientId: string, data: Partial<CreateClientInput>) {
+export async function updateClient(clientId: string, data: Partial<CreateClientInput>, agencyId: string) {
   return prisma.client.update({
-    where: { id: clientId, deletedAt: null },
+    where: { id: clientId, agencyId, deletedAt: null },
     data,
   })
 }
@@ -32,11 +34,12 @@ export async function updateClient(clientId: string, data: Partial<CreateClientI
 export async function updateClientStatus(
   clientId: string,
   status: ClientStatus,
-  changedBy: string
+  changedBy: string,
+  agencyId: string
 ) {
   return prisma.$transaction(async (tx) => {
     const client = await tx.client.update({
-      where: { id: clientId, deletedAt: null },
+      where: { id: clientId, agencyId, deletedAt: null },
       data: { status },
     })
     await tx.clientStatusHistory.create({
@@ -46,26 +49,36 @@ export async function updateClientStatus(
   })
 }
 
-export async function searchClients(query?: string) {
-  return prisma.client.findMany({
-    where: {
-      deletedAt: null,
-      ...(query
-        ? {
-            OR: [
-              { businessName: { contains: query, mode: 'insensitive' } },
-              { contactEmail: { contains: query, mode: 'insensitive' } },
-            ],
-          }
-        : {}),
-    },
-    orderBy: { createdAt: 'desc' },
-  })
+export async function searchClients(agencyId: string, query?: string, pagination?: undefined): Promise<any[]>
+export async function searchClients(agencyId: string, query: string | undefined, pagination: PaginationInput): Promise<PaginatedResult<any>>
+export async function searchClients(agencyId: string, query?: string, pagination?: PaginationInput) {
+  const where = {
+    agencyId,
+    deletedAt: null,
+    ...(query
+      ? {
+          OR: [
+            { businessName: { contains: query, mode: 'insensitive' as const } },
+            { contactEmail: { contains: query, mode: 'insensitive' as const } },
+          ],
+        }
+      : {}),
+  }
+
+  if (!pagination) {
+    return prisma.client.findMany({ where, orderBy: { createdAt: 'desc' } })
+  }
+
+  const [data, total] = await Promise.all([
+    prisma.client.findMany({ where, orderBy: { createdAt: 'desc' }, ...paginationArgs(pagination) }),
+    prisma.client.count({ where }),
+  ])
+  return paginated(data, total, pagination)
 }
 
-export async function getClientById(clientId: string) {
+export async function getClientById(clientId: string, agencyId: string) {
   return prisma.client.findFirst({
-    where: { id: clientId, deletedAt: null },
+    where: { id: clientId, agencyId, deletedAt: null },
     include: { statusHistory: { orderBy: { changedAt: 'desc' } } },
   })
 }
@@ -73,8 +86,13 @@ export async function getClientById(clientId: string) {
 export async function logCommunication(
   clientId: string,
   data: CreateCommunicationInput,
-  createdBy: string
+  createdBy: string,
+  agencyId: string
 ) {
+  // Verify client belongs to agency
+  const client = await prisma.client.findFirst({ where: { id: clientId, agencyId, deletedAt: null } })
+  if (!client) throw new Error('CLIENT_NOT_FOUND')
+
   return prisma.communication.create({
     data: {
       clientId,
@@ -86,9 +104,9 @@ export async function logCommunication(
   })
 }
 
-export async function getCommunications(clientId: string) {
+export async function getCommunications(clientId: string, agencyId: string) {
   return prisma.communication.findMany({
-    where: { clientId },
+    where: { clientId, client: { agencyId } },
     orderBy: { date: 'desc' },
   })
 }
@@ -96,16 +114,15 @@ export async function getCommunications(clientId: string) {
 export async function inviteClientUser(
   clientId: string,
   email: string,
-  name: string
+  name: string,
+  agencyId: string
 ) {
   const client = await prisma.client.findFirst({
-    where: { id: clientId, deletedAt: null },
+    where: { id: clientId, agencyId, deletedAt: null },
   })
   if (!client) throw new Error('CLIENT_NOT_FOUND')
 
-  const existing = await prisma.user.findFirst({
-    where: { email, active: true },
-  })
+  const existing = await prisma.user.findUnique({ where: { email } })
   if (existing) throw new Error('EMAIL_ALREADY_EXISTS')
 
   const user = await prisma.user.create({
@@ -118,13 +135,15 @@ export async function inviteClientUser(
   return user
 }
 
-export async function softDeleteClient(clientId: string) {
-  // Get users before transaction to avoid deadlock
+export async function softDeleteClient(clientId: string, agencyId: string) {
+  const client = await prisma.client.findFirst({ where: { id: clientId, agencyId, deletedAt: null } })
+  if (!client) throw new Error('CLIENT_NOT_FOUND')
+
   const users = await prisma.user.findMany({ where: { clientId } })
 
   await prisma.$transaction(async (tx) => {
     await tx.client.update({
-      where: { id: clientId },
+      where: { id: clientId, agencyId, deletedAt: null },
       data: { deletedAt: new Date() },
     })
     for (const user of users) {

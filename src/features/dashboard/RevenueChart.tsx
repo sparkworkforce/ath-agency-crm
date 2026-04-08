@@ -26,10 +26,10 @@ export default function RevenueChart({ data }: RevenueChartProps) {
             tickFormatter={(v) => `$${v}`}
           />
           <Tooltip
-            formatter={(value: number) => [`$${value.toFixed(2)}`, 'Revenue']}
+            formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Revenue']}
             contentStyle={{ fontSize: 12, borderRadius: 6 }}
           />
-          <Bar dataKey="revenue" fill="#2563eb" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="revenue" fill="#059669" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

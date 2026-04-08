@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import StatusBadge from '@/components/StatusBadge'
 import ConfirmDialog from '@/components/ConfirmDialog'
+import { toast } from 'sonner'
+import EmptyState from '@/components/EmptyState'
 
 interface Client {
   id: string
@@ -35,10 +37,12 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
   async function handleOffboard() {
     if (!offboardingId) return
     setLoading(true)
-    await fetch(`/api/clients/${offboardingId}`, { method: 'DELETE' })
+    const res = await fetch(`/api/clients/${offboardingId}`, { method: 'DELETE' })
+    if (!res.ok) { toast.error('Error al archivar cliente'); setLoading(false); setOffboardingId(null); return }
     setClients((prev) => prev.filter((c) => c.id !== offboardingId))
     setOffboardingId(null)
     setLoading(false)
+    toast.success('Offboarding iniciado')
   }
 
   return (
@@ -49,12 +53,12 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
           placeholder="Buscar por nombre o email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
           data-testid="clients-search-input"
         />
         <button
           onClick={() => router.push('/clients/new')}
-          className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+          className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700"
           data-testid="clients-new-button"
         >
           Nuevo cliente
@@ -78,7 +82,7 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
                 <td className="px-4 py-3">
                   <button
                     onClick={() => router.push(`/clients/${client.id}`)}
-                    className="font-medium text-blue-600 hover:underline text-left"
+                    className="font-medium text-emerald-600 hover:underline text-left"
                     data-testid={`client-row-${client.id}`}
                   >
                     {client.businessName}
@@ -105,8 +109,8 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-gray-400 text-sm">
-                  No se encontraron clientes
+                <td colSpan={5}>
+                  <EmptyState icon="👥" title="Sin clientes" description="Agrega tu primer cliente para comenzar a gestionar proyectos e integraciones." actionLabel="Agregar cliente" actionHref="/clients/new" />
                 </td>
               </tr>
             )}

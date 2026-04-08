@@ -6,6 +6,6 @@ const globalForResend = globalThis as unknown as {
 
 export const resend =
   globalForResend.resend ??
-  new Resend(process.env.RESEND_API_KEY)
+  new Resend(process.env.RESEND_API_KEY || 'placeholder')
 
 if (process.env.NODE_ENV !== 'production') globalForResend.resend = resend

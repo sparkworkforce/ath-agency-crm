@@ -61,7 +61,7 @@ export default function SupportTickets({ initialTickets }: SupportTicketsProps) 
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             data-testid="ticket-title-input"
           />
         </div>
@@ -75,7 +75,7 @@ export default function SupportTickets({ initialTickets }: SupportTicketsProps) 
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             data-testid="ticket-description-input"
           />
         </div>
@@ -83,7 +83,7 @@ export default function SupportTickets({ initialTickets }: SupportTicketsProps) 
         <button
           type="submit"
           disabled={submitting}
-          className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 disabled:opacity-50"
+          className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700 disabled:opacity-50"
           data-testid="ticket-submit-button"
         >
           {submitting ? 'Enviando...' : 'Enviar solicitud'}

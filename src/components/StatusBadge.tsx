@@ -5,14 +5,14 @@ interface StatusBadgeProps {
 
 const CLIENT_COLORS: Record<string, string> = {
   prospecto: 'bg-gray-100 text-gray-700',
-  en_progreso: 'bg-blue-100 text-blue-700',
+  en_progreso: 'bg-emerald-100 text-emerald-700',
   completado: 'bg-green-100 text-green-700',
   soporte_mensual: 'bg-purple-100 text-purple-700',
 }
 
 const TASK_COLORS: Record<string, string> = {
   pendiente: 'bg-gray-100 text-gray-700',
-  en_progreso: 'bg-blue-100 text-blue-700',
+  en_progreso: 'bg-emerald-100 text-emerald-700',
   completado: 'bg-green-100 text-green-700',
   vencido: 'bg-red-100 text-red-700',
 }
@@ -24,7 +24,7 @@ const INVOICE_COLORS: Record<string, string> = {
 }
 
 const TICKET_COLORS: Record<string, string> = {
-  abierto: 'bg-blue-100 text-blue-700',
+  abierto: 'bg-emerald-100 text-emerald-700',
   en_progreso: 'bg-yellow-100 text-yellow-700',
   cerrado: 'bg-gray-100 text-gray-700',
 }
@@ -45,7 +45,7 @@ export default function StatusBadge({ status, variant }: StatusBadgeProps) {
       className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colorClass}`}
       data-testid={`status-badge-${variant}-${status}`}
     >
-      {status.replace('_', ' ')}
+      {status.replace(/_/g, ' ')}
     </span>
   )
 }

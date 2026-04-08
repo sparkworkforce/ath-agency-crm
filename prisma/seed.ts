@@ -6,7 +6,26 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  // Create default admin Agency_User
+  // 1. Create or find default agency
+  const agencyName = process.env.NEXT_PUBLIC_AGENCY_NAME ?? 'Mi Agencia'
+  const agencySlug = agencyName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'default'
+
+  let agency = await prisma.agency.findUnique({ where: { slug: agencySlug } })
+  if (!agency) {
+    agency = await prisma.agency.create({
+      data: { name: agencyName, slug: agencySlug, plan: 'FREE' },
+    })
+    console.log(`✓ Agency created: ${agency.name} (${agency.slug})`)
+  } else {
+    console.log(`→ Agency already exists: ${agency.name}`)
+  }
+
+  // 2. Assign all unassigned users, clients, snippets to this agency
+  await prisma.user.updateMany({ where: { agencyId: null, role: 'AGENCY' }, data: { agencyId: agency.id } })
+  await prisma.client.updateMany({ where: { agencyId: null as any }, data: { agencyId: agency.id } })
+  await prisma.codeSnippet.updateMany({ where: { agencyId: null as any }, data: { agencyId: agency.id } })
+
+  // 3. Create default admin Agency_User
   const adminEmail = process.env.SEED_ADMIN_EMAIL
   const adminPassword = process.env.SEED_ADMIN_PASSWORD
 
@@ -22,17 +41,22 @@ async function main() {
           email: adminEmail,
           password: hashed,
           role: 'AGENCY',
+          agencyId: agency.id,
           active: true,
         },
       })
       console.log(`✓ Admin user created: ${adminEmail}`)
     } else {
+      // Ensure existing admin is assigned to agency
+      if (!existing.agencyId) {
+        await prisma.user.update({ where: { id: existing.id }, data: { agencyId: agency.id } })
+      }
       console.log(`→ Admin user already exists: ${adminEmail}`)
     }
   }
 
-  // Seed default ATH Business snippets
-  const adminUser = await prisma.user.findFirst({ where: { role: 'AGENCY' } })
+  // 4. Seed default ATH Business snippets
+  const adminUser = await prisma.user.findFirst({ where: { role: 'AGENCY', agencyId: agency.id } })
   if (!adminUser) {
     console.warn('No AGENCY user found — skipping snippet seed')
     return
@@ -51,6 +75,7 @@ add_action('woocommerce_payment_gateways', function($gateways) {
       platform: SnippetPlatform.WOOCOMMERCE,
       category: SnippetCategory.wrapper,
       authorId: adminUser.id,
+      agencyId: agency.id,
     },
     {
       title: 'ATH Business Payment Button — Shopify',
@@ -63,6 +88,7 @@ export function ATHBusinessPayment({ paymentRequest }) {
       platform: SnippetPlatform.SHOPIFY,
       category: SnippetCategory.wrapper,
       authorId: adminUser.id,
+      agencyId: agency.id,
     },
     {
       title: 'ATH Business Payment Button — Custom',
@@ -73,10 +99,7 @@ async function initATHBusiness({ publicToken, total, subtotal, tax, items }) {
     env: 'production',
     publicToken,
     timeout: 600,
-    total,
-    subtotal,
-    tax,
-    items,
+    total, subtotal, tax, items,
     onCompletedPayment: (response) => console.log('Payment completed', response),
     onCancelledPayment: (response) => console.log('Payment cancelled', response),
     onExpiredPayment: (response) => console.log('Payment expired', response),
@@ -86,6 +109,7 @@ async function initATHBusiness({ publicToken, total, subtotal, tax, items }) {
       platform: SnippetPlatform.CUSTOM,
       category: SnippetCategory.wrapper,
       authorId: adminUser.id,
+      agencyId: agency.id,
     },
     {
       title: 'ATH Business Webhook — Verificación de Pago',
@@ -93,7 +117,6 @@ async function initATHBusiness({ publicToken, total, subtotal, tax, items }) {
       code: `// ATH Business Payment Webhook Handler
 export async function POST(request: Request) {
   const body = await request.json();
-  // Verify webhook signature
   const signature = request.headers.get('x-ath-signature');
   if (!verifySignature(body, signature, process.env.ATH_WEBHOOK_SECRET!)) {
     return new Response('Unauthorized', { status: 401 });
@@ -108,6 +131,7 @@ export async function POST(request: Request) {
       platform: SnippetPlatform.GENERAL,
       category: SnippetCategory.webhook,
       authorId: adminUser.id,
+      agencyId: agency.id,
     },
     {
       title: 'ATH Business Webhook — Cancelación de Pago',
@@ -123,13 +147,12 @@ export async function handleCancellation(referenceNumber: string) {
       platform: SnippetPlatform.GENERAL,
       category: SnippetCategory.webhook,
       authorId: adminUser.id,
+      agencyId: agency.id,
     },
   ]
 
   for (const snippet of snippets) {
-    const exists = await prisma.codeSnippet.findFirst({
-      where: { title: snippet.title },
-    })
+    const exists = await prisma.codeSnippet.findFirst({ where: { title: snippet.title, agencyId: agency.id } })
     if (!exists) {
       await prisma.codeSnippet.create({ data: snippet })
       console.log(`✓ Snippet created: ${snippet.title}`)

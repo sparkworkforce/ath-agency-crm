@@ -24,7 +24,7 @@ export default function UpcomingRetainers({ retainers }: UpcomingRetainersProps)
           {retainers.map((r) => (
             <li key={r.id} className="flex items-center justify-between text-sm">
               <div>
-                <Link href={`/invoices/${r.id}`} className="font-medium text-gray-900 hover:text-blue-600">
+                <Link href={`/invoices/${r.id}`} className="font-medium text-gray-900 hover:text-emerald-600">
                   {r.client.businessName}
                 </Link>
                 <p className="text-xs text-gray-400">

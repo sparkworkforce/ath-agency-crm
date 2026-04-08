@@ -1,11 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-// Mock next-auth — auth() wraps a handler, so we make it pass through
 vi.mock('@/lib/auth', () => ({
   auth: vi.fn((handler: Function) => handler),
 }))
 
-// Mock NextResponse since next/server may not resolve in test env
 vi.mock('next/server', () => ({
   NextResponse: {
     next: vi.fn(() => ({ status: 200, headers: new Map() })),
@@ -36,12 +34,11 @@ describe('Proxy route protection', () => {
   })
 
   function makeRequest(pathname: string, session: unknown = null) {
-    const req = {
+    return {
       nextUrl: new URL(`http://localhost:3000${pathname}`),
       url: `http://localhost:3000${pathname}`,
       auth: session,
     }
-    return req
   }
 
   it('redirects to /login when no session on protected route', async () => {
@@ -75,6 +72,32 @@ describe('Proxy route protection', () => {
   it('allows CLIENT user to access portal routes', async () => {
     const { default: proxy } = await import('./proxy')
     const req = makeRequest('/portal', { user: { role: 'CLIENT', clientId: 'client-123' } })
+    const res = await (proxy as Function)(req)
+    expect(res.status).toBe(200)
+  })
+
+  it.each([
+    '/',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/terms',
+    '/privacy',
+  ])('allows unauthenticated access to public path %s', async (path) => {
+    const { default: proxy } = await import('./proxy')
+    const req = makeRequest(path, null)
+    const res = await (proxy as Function)(req)
+    expect(res.status).toBe(200)
+  })
+
+  it.each([
+    '/api/billing/webhook',
+    '/api/auth/verify-email',
+    '/api/auth/reset-password',
+  ])('allows unauthenticated access to public API %s', async (path) => {
+    const { default: proxy } = await import('./proxy')
+    const req = makeRequest(path, null)
     const res = await (proxy as Function)(req)
     expect(res.status).toBe(200)
   })

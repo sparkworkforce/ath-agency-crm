@@ -2,8 +2,8 @@ import { auth } from '@/lib/auth'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/login', '/api/auth']
-const AGENCY_PATHS = ['/dashboard', '/clients', '/projects', '/invoices', '/snippets', '/users']
+const PUBLIC_PATHS = ['/login', '/register', '/api/auth', '/api/agency/register', '/api/billing/webhook', '/api/auth/verify-email', '/api/auth/reset-password', '/forgot-password', '/reset-password', '/terms', '/privacy']
+const AGENCY_PATHS = ['/dashboard', '/clients', '/projects', '/invoices', '/snippets', '/users', '/settings']
 const PORTAL_PATHS = ['/portal']
 
 function isPublicPath(pathname: string): boolean {
@@ -36,7 +36,7 @@ export default auth(async function proxy(request: NextRequest) {
   }
 
   // Allow public paths
-  if (isPublicPath(pathname)) {
+  if (isPublicPath(pathname) || pathname === '/') {
     return NextResponse.next()
   }
 

@@ -1,17 +1,30 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
+import Image from 'next/image'
 
 interface PortalHeaderProps {
   userName: string
+  agencyName?: string
+  logoUrl?: string | null
+  primaryColor?: string
 }
 
-export default function PortalHeader({ userName }: PortalHeaderProps) {
+export default function PortalHeader({ userName, agencyName, logoUrl, primaryColor = '#059669' }: PortalHeaderProps) {
   return (
-    <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between" data-testid="portal-header">
-      <p className="text-sm font-medium text-gray-900">
-        {process.env.NEXT_PUBLIC_AGENCY_NAME ?? 'Portal de Cliente'}
-      </p>
+    <header
+      className="border-b px-4 py-3 flex items-center justify-between"
+      style={{ borderBottomColor: primaryColor + '33', backgroundColor: 'white' }}
+      data-testid="portal-header"
+    >
+      <div className="flex items-center gap-3">
+        {logoUrl && (
+          <Image src={logoUrl} alt={agencyName ?? ''} width={28} height={28} className="rounded" />
+        )}
+        <p className="text-sm font-medium" style={{ color: primaryColor }}>
+          {agencyName ?? 'Portal de Cliente'}
+        </p>
+      </div>
       <div className="flex items-center gap-3">
         <span className="text-sm text-gray-500">{userName}</span>
         <button

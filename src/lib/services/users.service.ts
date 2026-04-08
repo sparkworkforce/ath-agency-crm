@@ -1,28 +1,28 @@
 import bcrypt from 'bcryptjs'
 import { prisma } from '../prisma'
 import { revokeAllUserSessions } from './auth.service'
-import type { CreateAgencyUserInput } from '../validations/clients'
+import type { CreateAgencyUserInput } from '../validations/users'
 
-export async function createAgencyUser(data: CreateAgencyUserInput) {
+export async function createAgencyUser(data: CreateAgencyUserInput, agencyId: string) {
   const existing = await prisma.user.findUnique({ where: { email: data.email } })
   if (existing) throw new Error('EMAIL_ALREADY_EXISTS')
 
   const hashed = await bcrypt.hash(data.password, 12)
   return prisma.user.create({
-    data: { name: data.name, email: data.email, password: hashed, role: 'AGENCY', active: true },
+    data: { name: data.name, email: data.email, password: hashed, role: 'AGENCY', agencyId, active: true },
   })
 }
 
-export async function listAgencyUsers() {
+export async function listAgencyUsers(agencyId: string) {
   return prisma.user.findMany({
-    where: { role: 'AGENCY' },
+    where: { role: 'AGENCY', agencyId },
     select: { id: true, name: true, email: true, active: true, createdAt: true },
     orderBy: { name: 'asc' },
   })
 }
 
-export async function deactivateUser(userId: string) {
-  await prisma.user.update({ where: { id: userId }, data: { active: false } })
+export async function deactivateUser(userId: string, agencyId: string) {
+  await prisma.user.update({ where: { id: userId, agencyId }, data: { active: false } })
   await revokeAllUserSessions(userId)
 }
 

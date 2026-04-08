@@ -26,6 +26,7 @@ export type AggregateCodeSnippet = {
 
 export type CodeSnippetMinAggregateOutputType = {
   id: string | null
+  agencyId: string | null
   title: string | null
   description: string | null
   code: string | null
@@ -39,6 +40,7 @@ export type CodeSnippetMinAggregateOutputType = {
 
 export type CodeSnippetMaxAggregateOutputType = {
   id: string | null
+  agencyId: string | null
   title: string | null
   description: string | null
   code: string | null
@@ -52,6 +54,7 @@ export type CodeSnippetMaxAggregateOutputType = {
 
 export type CodeSnippetCountAggregateOutputType = {
   id: number
+  agencyId: number
   title: number
   description: number
   code: number
@@ -67,6 +70,7 @@ export type CodeSnippetCountAggregateOutputType = {
 
 export type CodeSnippetMinAggregateInputType = {
   id?: true
+  agencyId?: true
   title?: true
   description?: true
   code?: true
@@ -80,6 +84,7 @@ export type CodeSnippetMinAggregateInputType = {
 
 export type CodeSnippetMaxAggregateInputType = {
   id?: true
+  agencyId?: true
   title?: true
   description?: true
   code?: true
@@ -93,6 +98,7 @@ export type CodeSnippetMaxAggregateInputType = {
 
 export type CodeSnippetCountAggregateInputType = {
   id?: true
+  agencyId?: true
   title?: true
   description?: true
   code?: true
@@ -179,6 +185,7 @@ export type CodeSnippetGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type CodeSnippetGroupByOutputType = {
   id: string
+  agencyId: string
   title: string
   description: string
   code: string
@@ -213,6 +220,7 @@ export type CodeSnippetWhereInput = {
   OR?: Prisma.CodeSnippetWhereInput[]
   NOT?: Prisma.CodeSnippetWhereInput | Prisma.CodeSnippetWhereInput[]
   id?: Prisma.StringFilter<"CodeSnippet"> | string
+  agencyId?: Prisma.StringFilter<"CodeSnippet"> | string
   title?: Prisma.StringFilter<"CodeSnippet"> | string
   description?: Prisma.StringFilter<"CodeSnippet"> | string
   code?: Prisma.StringFilter<"CodeSnippet"> | string
@@ -222,11 +230,13 @@ export type CodeSnippetWhereInput = {
   authorId?: Prisma.StringFilter<"CodeSnippet"> | string
   createdAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
+  agency?: Prisma.XOR<Prisma.AgencyScalarRelationFilter, Prisma.AgencyWhereInput>
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type CodeSnippetOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  agencyId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   code?: Prisma.SortOrder
@@ -236,6 +246,7 @@ export type CodeSnippetOrderByWithRelationInput = {
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  agency?: Prisma.AgencyOrderByWithRelationInput
   author?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -244,6 +255,7 @@ export type CodeSnippetWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CodeSnippetWhereInput | Prisma.CodeSnippetWhereInput[]
   OR?: Prisma.CodeSnippetWhereInput[]
   NOT?: Prisma.CodeSnippetWhereInput | Prisma.CodeSnippetWhereInput[]
+  agencyId?: Prisma.StringFilter<"CodeSnippet"> | string
   title?: Prisma.StringFilter<"CodeSnippet"> | string
   description?: Prisma.StringFilter<"CodeSnippet"> | string
   code?: Prisma.StringFilter<"CodeSnippet"> | string
@@ -253,11 +265,13 @@ export type CodeSnippetWhereUniqueInput = Prisma.AtLeast<{
   authorId?: Prisma.StringFilter<"CodeSnippet"> | string
   createdAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
+  agency?: Prisma.XOR<Prisma.AgencyScalarRelationFilter, Prisma.AgencyWhereInput>
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type CodeSnippetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  agencyId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   code?: Prisma.SortOrder
@@ -277,6 +291,7 @@ export type CodeSnippetScalarWhereWithAggregatesInput = {
   OR?: Prisma.CodeSnippetScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CodeSnippetScalarWhereWithAggregatesInput | Prisma.CodeSnippetScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CodeSnippet"> | string
+  agencyId?: Prisma.StringWithAggregatesFilter<"CodeSnippet"> | string
   title?: Prisma.StringWithAggregatesFilter<"CodeSnippet"> | string
   description?: Prisma.StringWithAggregatesFilter<"CodeSnippet"> | string
   code?: Prisma.StringWithAggregatesFilter<"CodeSnippet"> | string
@@ -298,11 +313,13 @@ export type CodeSnippetCreateInput = {
   category: $Enums.SnippetCategory
   createdAt?: Date | string
   updatedAt?: Date | string
+  agency: Prisma.AgencyCreateNestedOneWithoutSnippetsInput
   author: Prisma.UserCreateNestedOneWithoutSnippetsInput
 }
 
 export type CodeSnippetUncheckedCreateInput = {
   id?: string
+  agencyId: string
   title: string
   description: string
   code: string
@@ -324,11 +341,13 @@ export type CodeSnippetUpdateInput = {
   category?: Prisma.EnumSnippetCategoryFieldUpdateOperationsInput | $Enums.SnippetCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agency?: Prisma.AgencyUpdateOneRequiredWithoutSnippetsNestedInput
   author?: Prisma.UserUpdateOneRequiredWithoutSnippetsNestedInput
 }
 
 export type CodeSnippetUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
@@ -342,6 +361,7 @@ export type CodeSnippetUncheckedUpdateInput = {
 
 export type CodeSnippetCreateManyInput = {
   id?: string
+  agencyId: string
   title: string
   description: string
   code: string
@@ -367,6 +387,7 @@ export type CodeSnippetUpdateManyMutationInput = {
 
 export type CodeSnippetUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
@@ -390,6 +411,7 @@ export type CodeSnippetOrderByRelationAggregateInput = {
 
 export type CodeSnippetCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  agencyId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   code?: Prisma.SortOrder
@@ -403,6 +425,7 @@ export type CodeSnippetCountOrderByAggregateInput = {
 
 export type CodeSnippetMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  agencyId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   code?: Prisma.SortOrder
@@ -416,6 +439,7 @@ export type CodeSnippetMaxOrderByAggregateInput = {
 
 export type CodeSnippetMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  agencyId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   code?: Prisma.SortOrder
@@ -425,6 +449,48 @@ export type CodeSnippetMinOrderByAggregateInput = {
   authorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CodeSnippetCreateNestedManyWithoutAgencyInput = {
+  create?: Prisma.XOR<Prisma.CodeSnippetCreateWithoutAgencyInput, Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput> | Prisma.CodeSnippetCreateWithoutAgencyInput[] | Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput[]
+  connectOrCreate?: Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput | Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput[]
+  createMany?: Prisma.CodeSnippetCreateManyAgencyInputEnvelope
+  connect?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+}
+
+export type CodeSnippetUncheckedCreateNestedManyWithoutAgencyInput = {
+  create?: Prisma.XOR<Prisma.CodeSnippetCreateWithoutAgencyInput, Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput> | Prisma.CodeSnippetCreateWithoutAgencyInput[] | Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput[]
+  connectOrCreate?: Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput | Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput[]
+  createMany?: Prisma.CodeSnippetCreateManyAgencyInputEnvelope
+  connect?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+}
+
+export type CodeSnippetUpdateManyWithoutAgencyNestedInput = {
+  create?: Prisma.XOR<Prisma.CodeSnippetCreateWithoutAgencyInput, Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput> | Prisma.CodeSnippetCreateWithoutAgencyInput[] | Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput[]
+  connectOrCreate?: Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput | Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput[]
+  upsert?: Prisma.CodeSnippetUpsertWithWhereUniqueWithoutAgencyInput | Prisma.CodeSnippetUpsertWithWhereUniqueWithoutAgencyInput[]
+  createMany?: Prisma.CodeSnippetCreateManyAgencyInputEnvelope
+  set?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  disconnect?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  delete?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  connect?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  update?: Prisma.CodeSnippetUpdateWithWhereUniqueWithoutAgencyInput | Prisma.CodeSnippetUpdateWithWhereUniqueWithoutAgencyInput[]
+  updateMany?: Prisma.CodeSnippetUpdateManyWithWhereWithoutAgencyInput | Prisma.CodeSnippetUpdateManyWithWhereWithoutAgencyInput[]
+  deleteMany?: Prisma.CodeSnippetScalarWhereInput | Prisma.CodeSnippetScalarWhereInput[]
+}
+
+export type CodeSnippetUncheckedUpdateManyWithoutAgencyNestedInput = {
+  create?: Prisma.XOR<Prisma.CodeSnippetCreateWithoutAgencyInput, Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput> | Prisma.CodeSnippetCreateWithoutAgencyInput[] | Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput[]
+  connectOrCreate?: Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput | Prisma.CodeSnippetCreateOrConnectWithoutAgencyInput[]
+  upsert?: Prisma.CodeSnippetUpsertWithWhereUniqueWithoutAgencyInput | Prisma.CodeSnippetUpsertWithWhereUniqueWithoutAgencyInput[]
+  createMany?: Prisma.CodeSnippetCreateManyAgencyInputEnvelope
+  set?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  disconnect?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  delete?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  connect?: Prisma.CodeSnippetWhereUniqueInput | Prisma.CodeSnippetWhereUniqueInput[]
+  update?: Prisma.CodeSnippetUpdateWithWhereUniqueWithoutAgencyInput | Prisma.CodeSnippetUpdateWithWhereUniqueWithoutAgencyInput[]
+  updateMany?: Prisma.CodeSnippetUpdateManyWithWhereWithoutAgencyInput | Prisma.CodeSnippetUpdateManyWithWhereWithoutAgencyInput[]
+  deleteMany?: Prisma.CodeSnippetScalarWhereInput | Prisma.CodeSnippetScalarWhereInput[]
 }
 
 export type CodeSnippetCreateNestedManyWithoutAuthorInput = {
@@ -477,6 +543,75 @@ export type EnumSnippetCategoryFieldUpdateOperationsInput = {
   set?: $Enums.SnippetCategory
 }
 
+export type CodeSnippetCreateWithoutAgencyInput = {
+  id?: string
+  title: string
+  description: string
+  code: string
+  language: string
+  platform: $Enums.SnippetPlatform
+  category: $Enums.SnippetCategory
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutSnippetsInput
+}
+
+export type CodeSnippetUncheckedCreateWithoutAgencyInput = {
+  id?: string
+  title: string
+  description: string
+  code: string
+  language: string
+  platform: $Enums.SnippetPlatform
+  category: $Enums.SnippetCategory
+  authorId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CodeSnippetCreateOrConnectWithoutAgencyInput = {
+  where: Prisma.CodeSnippetWhereUniqueInput
+  create: Prisma.XOR<Prisma.CodeSnippetCreateWithoutAgencyInput, Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput>
+}
+
+export type CodeSnippetCreateManyAgencyInputEnvelope = {
+  data: Prisma.CodeSnippetCreateManyAgencyInput | Prisma.CodeSnippetCreateManyAgencyInput[]
+  skipDuplicates?: boolean
+}
+
+export type CodeSnippetUpsertWithWhereUniqueWithoutAgencyInput = {
+  where: Prisma.CodeSnippetWhereUniqueInput
+  update: Prisma.XOR<Prisma.CodeSnippetUpdateWithoutAgencyInput, Prisma.CodeSnippetUncheckedUpdateWithoutAgencyInput>
+  create: Prisma.XOR<Prisma.CodeSnippetCreateWithoutAgencyInput, Prisma.CodeSnippetUncheckedCreateWithoutAgencyInput>
+}
+
+export type CodeSnippetUpdateWithWhereUniqueWithoutAgencyInput = {
+  where: Prisma.CodeSnippetWhereUniqueInput
+  data: Prisma.XOR<Prisma.CodeSnippetUpdateWithoutAgencyInput, Prisma.CodeSnippetUncheckedUpdateWithoutAgencyInput>
+}
+
+export type CodeSnippetUpdateManyWithWhereWithoutAgencyInput = {
+  where: Prisma.CodeSnippetScalarWhereInput
+  data: Prisma.XOR<Prisma.CodeSnippetUpdateManyMutationInput, Prisma.CodeSnippetUncheckedUpdateManyWithoutAgencyInput>
+}
+
+export type CodeSnippetScalarWhereInput = {
+  AND?: Prisma.CodeSnippetScalarWhereInput | Prisma.CodeSnippetScalarWhereInput[]
+  OR?: Prisma.CodeSnippetScalarWhereInput[]
+  NOT?: Prisma.CodeSnippetScalarWhereInput | Prisma.CodeSnippetScalarWhereInput[]
+  id?: Prisma.StringFilter<"CodeSnippet"> | string
+  agencyId?: Prisma.StringFilter<"CodeSnippet"> | string
+  title?: Prisma.StringFilter<"CodeSnippet"> | string
+  description?: Prisma.StringFilter<"CodeSnippet"> | string
+  code?: Prisma.StringFilter<"CodeSnippet"> | string
+  language?: Prisma.StringFilter<"CodeSnippet"> | string
+  platform?: Prisma.EnumSnippetPlatformFilter<"CodeSnippet"> | $Enums.SnippetPlatform
+  category?: Prisma.EnumSnippetCategoryFilter<"CodeSnippet"> | $Enums.SnippetCategory
+  authorId?: Prisma.StringFilter<"CodeSnippet"> | string
+  createdAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
+}
+
 export type CodeSnippetCreateWithoutAuthorInput = {
   id?: string
   title: string
@@ -487,10 +622,12 @@ export type CodeSnippetCreateWithoutAuthorInput = {
   category: $Enums.SnippetCategory
   createdAt?: Date | string
   updatedAt?: Date | string
+  agency: Prisma.AgencyCreateNestedOneWithoutSnippetsInput
 }
 
 export type CodeSnippetUncheckedCreateWithoutAuthorInput = {
   id?: string
+  agencyId: string
   title: string
   description: string
   code: string
@@ -527,24 +664,61 @@ export type CodeSnippetUpdateManyWithWhereWithoutAuthorInput = {
   data: Prisma.XOR<Prisma.CodeSnippetUpdateManyMutationInput, Prisma.CodeSnippetUncheckedUpdateManyWithoutAuthorInput>
 }
 
-export type CodeSnippetScalarWhereInput = {
-  AND?: Prisma.CodeSnippetScalarWhereInput | Prisma.CodeSnippetScalarWhereInput[]
-  OR?: Prisma.CodeSnippetScalarWhereInput[]
-  NOT?: Prisma.CodeSnippetScalarWhereInput | Prisma.CodeSnippetScalarWhereInput[]
-  id?: Prisma.StringFilter<"CodeSnippet"> | string
-  title?: Prisma.StringFilter<"CodeSnippet"> | string
-  description?: Prisma.StringFilter<"CodeSnippet"> | string
-  code?: Prisma.StringFilter<"CodeSnippet"> | string
-  language?: Prisma.StringFilter<"CodeSnippet"> | string
-  platform?: Prisma.EnumSnippetPlatformFilter<"CodeSnippet"> | $Enums.SnippetPlatform
-  category?: Prisma.EnumSnippetCategoryFilter<"CodeSnippet"> | $Enums.SnippetCategory
-  authorId?: Prisma.StringFilter<"CodeSnippet"> | string
-  createdAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"CodeSnippet"> | Date | string
+export type CodeSnippetCreateManyAgencyInput = {
+  id?: string
+  title: string
+  description: string
+  code: string
+  language: string
+  platform: $Enums.SnippetPlatform
+  category: $Enums.SnippetCategory
+  authorId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CodeSnippetUpdateWithoutAgencyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.EnumSnippetPlatformFieldUpdateOperationsInput | $Enums.SnippetPlatform
+  category?: Prisma.EnumSnippetCategoryFieldUpdateOperationsInput | $Enums.SnippetCategory
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutSnippetsNestedInput
+}
+
+export type CodeSnippetUncheckedUpdateWithoutAgencyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.EnumSnippetPlatformFieldUpdateOperationsInput | $Enums.SnippetPlatform
+  category?: Prisma.EnumSnippetCategoryFieldUpdateOperationsInput | $Enums.SnippetCategory
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CodeSnippetUncheckedUpdateManyWithoutAgencyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  platform?: Prisma.EnumSnippetPlatformFieldUpdateOperationsInput | $Enums.SnippetPlatform
+  category?: Prisma.EnumSnippetCategoryFieldUpdateOperationsInput | $Enums.SnippetCategory
+  authorId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CodeSnippetCreateManyAuthorInput = {
   id?: string
+  agencyId: string
   title: string
   description: string
   code: string
@@ -565,10 +739,12 @@ export type CodeSnippetUpdateWithoutAuthorInput = {
   category?: Prisma.EnumSnippetCategoryFieldUpdateOperationsInput | $Enums.SnippetCategory
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agency?: Prisma.AgencyUpdateOneRequiredWithoutSnippetsNestedInput
 }
 
 export type CodeSnippetUncheckedUpdateWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
@@ -581,6 +757,7 @@ export type CodeSnippetUncheckedUpdateWithoutAuthorInput = {
 
 export type CodeSnippetUncheckedUpdateManyWithoutAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
@@ -595,6 +772,7 @@ export type CodeSnippetUncheckedUpdateManyWithoutAuthorInput = {
 
 export type CodeSnippetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  agencyId?: boolean
   title?: boolean
   description?: boolean
   code?: boolean
@@ -604,11 +782,13 @@ export type CodeSnippetSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["codeSnippet"]>
 
 export type CodeSnippetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  agencyId?: boolean
   title?: boolean
   description?: boolean
   code?: boolean
@@ -618,11 +798,13 @@ export type CodeSnippetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["codeSnippet"]>
 
 export type CodeSnippetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  agencyId?: boolean
   title?: boolean
   description?: boolean
   code?: boolean
@@ -632,11 +814,13 @@ export type CodeSnippetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   authorId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["codeSnippet"]>
 
 export type CodeSnippetSelectScalar = {
   id?: boolean
+  agencyId?: boolean
   title?: boolean
   description?: boolean
   code?: boolean
@@ -648,24 +832,29 @@ export type CodeSnippetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CodeSnippetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "code" | "language" | "platform" | "category" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["codeSnippet"]>
+export type CodeSnippetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agencyId" | "title" | "description" | "code" | "language" | "platform" | "category" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["codeSnippet"]>
 export type CodeSnippetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type CodeSnippetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type CodeSnippetIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $CodeSnippetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CodeSnippet"
   objects: {
+    agency: Prisma.$AgencyPayload<ExtArgs>
     author: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    agencyId: string
     title: string
     description: string
     code: string
@@ -1069,6 +1258,7 @@ readonly fields: CodeSnippetFieldRefs;
  */
 export interface Prisma__CodeSnippetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  agency<T extends Prisma.AgencyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AgencyDefaultArgs<ExtArgs>>): Prisma.Prisma__AgencyClient<runtime.Types.Result.GetResult<Prisma.$AgencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1100,6 +1290,7 @@ export interface Prisma__CodeSnippetClient<T, Null = never, ExtArgs extends runt
  */
 export interface CodeSnippetFieldRefs {
   readonly id: Prisma.FieldRef<"CodeSnippet", 'String'>
+  readonly agencyId: Prisma.FieldRef<"CodeSnippet", 'String'>
   readonly title: Prisma.FieldRef<"CodeSnippet", 'String'>
   readonly description: Prisma.FieldRef<"CodeSnippet", 'String'>
   readonly code: Prisma.FieldRef<"CodeSnippet", 'String'>

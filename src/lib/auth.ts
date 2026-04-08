@@ -53,6 +53,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = user.id
         session.user.role = (user as any).role
+        session.user.agencyId = (user as any).agencyId ?? null
         session.user.clientId = (user as any).clientId ?? null
       }
       return session
@@ -68,6 +69,7 @@ declare module 'next-auth' {
       name?: string | null
       email?: string | null
       role: 'AGENCY' | 'CLIENT'
+      agencyId: string | null
       clientId: string | null
     }
   }

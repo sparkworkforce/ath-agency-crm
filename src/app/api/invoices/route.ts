@@ -1,22 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateInvoiceSchema } from '@/lib/validations/invoices'
-import { createInvoice, listInvoicesByClient } from '@/lib/services/invoicing.service'
+import { PaginationSchema } from '@/lib/pagination'
+import { createInvoice, listInvoicesByClient, listAllInvoices } from '@/lib/services/invoicing.service'
 
 export async function GET(request: NextRequest) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
-  const clientId = request.nextUrl.searchParams.get('clientId')
-  if (!clientId) return NextResponse.json({ error: 'clientId requerido' }, { status: 400 })
+  const sp = request.nextUrl.searchParams
+  const clientId = sp.get('clientId')
+  const pageParam = sp.get('page')
 
-  const invoices = await listInvoicesByClient(clientId)
+  if (clientId) {
+    const invoices = await listInvoicesByClient(clientId, session.user.agencyId)
+    return NextResponse.json({ invoices })
+  }
+
+  if (pageParam) {
+    const pagination = PaginationSchema.parse({ page: sp.get('page'), limit: sp.get('limit') })
+    const result = await listAllInvoices(session.user.agencyId, pagination)
+    return NextResponse.json(result)
+  }
+
+  const invoices = await listAllInvoices(session.user.agencyId)
   return NextResponse.json({ invoices })
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
   const body = await request.json()
   const result = CreateInvoiceSchema.safeParse(body)
@@ -25,7 +38,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const invoice = await createInvoice(result.data, session.user.id)
+    const invoice = await createInvoice(result.data, session.user.id, session.user.agencyId)
     return NextResponse.json({ invoice }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })

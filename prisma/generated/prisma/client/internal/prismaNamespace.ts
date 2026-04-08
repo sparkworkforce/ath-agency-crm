@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  Agency: 'Agency',
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
@@ -397,10 +398,12 @@ export const ModelName = {
   Task: 'Task',
   ProjectFile: 'ProjectFile',
   Invoice: 'Invoice',
+  InvoiceLineItem: 'InvoiceLineItem',
   Payment: 'Payment',
   InvoiceAuditLog: 'InvoiceAuditLog',
   SupportTicket: 'SupportTicket',
-  CodeSnippet: 'CodeSnippet'
+  CodeSnippet: 'CodeSnippet',
+  IntegrationStatus: 'IntegrationStatus'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -416,10 +419,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "verificationToken" | "user" | "magicLink" | "loginAttempt" | "client" | "clientStatusHistory" | "communication" | "project" | "task" | "projectFile" | "invoice" | "payment" | "invoiceAuditLog" | "supportTicket" | "codeSnippet"
+    modelProps: "agency" | "account" | "session" | "verificationToken" | "user" | "magicLink" | "loginAttempt" | "client" | "clientStatusHistory" | "communication" | "project" | "task" | "projectFile" | "invoice" | "invoiceLineItem" | "payment" | "invoiceAuditLog" | "supportTicket" | "codeSnippet" | "integrationStatus"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    Agency: {
+      payload: Prisma.$AgencyPayload<ExtArgs>
+      fields: Prisma.AgencyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AgencyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AgencyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>
+        }
+        findFirst: {
+          args: Prisma.AgencyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AgencyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>
+        }
+        findMany: {
+          args: Prisma.AgencyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>[]
+        }
+        create: {
+          args: Prisma.AgencyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>
+        }
+        createMany: {
+          args: Prisma.AgencyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AgencyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>[]
+        }
+        delete: {
+          args: Prisma.AgencyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>
+        }
+        update: {
+          args: Prisma.AgencyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>
+        }
+        deleteMany: {
+          args: Prisma.AgencyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AgencyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AgencyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>[]
+        }
+        upsert: {
+          args: Prisma.AgencyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AgencyPayload>
+        }
+        aggregate: {
+          args: Prisma.AgencyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAgency>
+        }
+        groupBy: {
+          args: Prisma.AgencyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgencyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AgencyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AgencyCountAggregateOutputType> | number
+        }
+      }
+    }
     Account: {
       payload: Prisma.$AccountPayload<ExtArgs>
       fields: Prisma.AccountFieldRefs
@@ -1382,6 +1459,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InvoiceLineItem: {
+      payload: Prisma.$InvoiceLineItemPayload<ExtArgs>
+      fields: Prisma.InvoiceLineItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InvoiceLineItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InvoiceLineItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>
+        }
+        findFirst: {
+          args: Prisma.InvoiceLineItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InvoiceLineItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>
+        }
+        findMany: {
+          args: Prisma.InvoiceLineItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>[]
+        }
+        create: {
+          args: Prisma.InvoiceLineItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>
+        }
+        createMany: {
+          args: Prisma.InvoiceLineItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InvoiceLineItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>[]
+        }
+        delete: {
+          args: Prisma.InvoiceLineItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>
+        }
+        update: {
+          args: Prisma.InvoiceLineItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.InvoiceLineItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InvoiceLineItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InvoiceLineItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.InvoiceLineItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceLineItemPayload>
+        }
+        aggregate: {
+          args: Prisma.InvoiceLineItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInvoiceLineItem>
+        }
+        groupBy: {
+          args: Prisma.InvoiceLineItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceLineItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InvoiceLineItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceLineItemCountAggregateOutputType> | number
+        }
+      }
+    }
     Payment: {
       payload: Prisma.$PaymentPayload<ExtArgs>
       fields: Prisma.PaymentFieldRefs
@@ -1678,6 +1829,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    IntegrationStatus: {
+      payload: Prisma.$IntegrationStatusPayload<ExtArgs>
+      fields: Prisma.IntegrationStatusFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IntegrationStatusFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IntegrationStatusFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>
+        }
+        findFirst: {
+          args: Prisma.IntegrationStatusFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IntegrationStatusFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>
+        }
+        findMany: {
+          args: Prisma.IntegrationStatusFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>[]
+        }
+        create: {
+          args: Prisma.IntegrationStatusCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>
+        }
+        createMany: {
+          args: Prisma.IntegrationStatusCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IntegrationStatusCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>[]
+        }
+        delete: {
+          args: Prisma.IntegrationStatusDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>
+        }
+        update: {
+          args: Prisma.IntegrationStatusUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>
+        }
+        deleteMany: {
+          args: Prisma.IntegrationStatusDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IntegrationStatusUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IntegrationStatusUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>[]
+        }
+        upsert: {
+          args: Prisma.IntegrationStatusUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IntegrationStatusPayload>
+        }
+        aggregate: {
+          args: Prisma.IntegrationStatusAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIntegrationStatus>
+        }
+        groupBy: {
+          args: Prisma.IntegrationStatusGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IntegrationStatusGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IntegrationStatusCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IntegrationStatusCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1715,6 +1940,28 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AgencyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logoUrl: 'logoUrl',
+  primaryColor: 'primaryColor',
+  plan: 'plan',
+  stripeCustomerId: 'stripeCustomerId',
+  stripeSubId: 'stripeSubId',
+  stripePriceId: 'stripePriceId',
+  subStatus: 'subStatus',
+  subCurrentPeriodEnd: 'subCurrentPeriodEnd',
+  maxClients: 'maxClients',
+  maxUsers: 'maxUsers',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgencyScalarFieldEnum = (typeof AgencyScalarFieldEnum)[keyof typeof AgencyScalarFieldEnum]
 
 
 export const AccountScalarFieldEnum = {
@@ -1762,6 +2009,7 @@ export const UserScalarFieldEnum = {
   image: 'image',
   password: 'password',
   role: 'role',
+  agencyId: 'agencyId',
   clientId: 'clientId',
   active: 'active',
   createdAt: 'createdAt',
@@ -1796,6 +2044,7 @@ export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[k
 
 export const ClientScalarFieldEnum = {
   id: 'id',
+  agencyId: 'agencyId',
   businessName: 'businessName',
   contactName: 'contactName',
   contactEmail: 'contactEmail',
@@ -1840,6 +2089,8 @@ export const ProjectScalarFieldEnum = {
   name: 'name',
   clientId: 'clientId',
   completionPercentage: 'completionPercentage',
+  estimatedCompletionDate: 'estimatedCompletionDate',
+  milestonesSent: 'milestonesSent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1855,6 +2106,7 @@ export const TaskScalarFieldEnum = {
   dueDate: 'dueDate',
   status: 'status',
   order: 'order',
+  estimatedDays: 'estimatedDays',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1889,6 +2141,17 @@ export const InvoiceScalarFieldEnum = {
 } as const
 
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+export const InvoiceLineItemScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  description: 'description',
+  amount: 'amount',
+  order: 'order'
+} as const
+
+export type InvoiceLineItemScalarFieldEnum = (typeof InvoiceLineItemScalarFieldEnum)[keyof typeof InvoiceLineItemScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {
@@ -1932,6 +2195,7 @@ export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)
 
 export const CodeSnippetScalarFieldEnum = {
   id: 'id',
+  agencyId: 'agencyId',
   title: 'title',
   description: 'description',
   code: 'code',
@@ -1946,12 +2210,37 @@ export const CodeSnippetScalarFieldEnum = {
 export type CodeSnippetScalarFieldEnum = (typeof CodeSnippetScalarFieldEnum)[keyof typeof CodeSnippetScalarFieldEnum]
 
 
+export const IntegrationStatusScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  athAccountStatus: 'athAccountStatus',
+  athPublicToken: 'athPublicToken',
+  environment: 'environment',
+  webhookUrl: 'webhookUrl',
+  webhookVerified: 'webhookVerified',
+  testTransactionAt: 'testTransactionAt',
+  testTransactionOk: 'testTransactionOk',
+  goLiveAt: 'goLiveAt',
+  notes: 'notes',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IntegrationStatusScalarFieldEnum = (typeof IntegrationStatusScalarFieldEnum)[keyof typeof IntegrationStatusScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const NullableJsonNullValueInput = {
@@ -2008,16 +2297,16 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'AgencyPlan'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type EnumAgencyPlanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgencyPlan'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'AgencyPlan[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListEnumAgencyPlanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgencyPlan[]'>
     
 
 
@@ -2032,6 +2321,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2099,6 +2402,20 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'TaskStatus'
  */
 export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
@@ -2141,20 +2458,6 @@ export type ListEnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
  * Reference to a field of type 'TicketStatus'
  */
 export type EnumTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketStatus'>
@@ -2193,6 +2496,20 @@ export type EnumSnippetCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'SnippetCategory[]'
  */
 export type ListEnumSnippetCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SnippetCategory[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ATHAccountStatus'
+ */
+export type EnumATHAccountStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ATHAccountStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ATHAccountStatus[]'
+ */
+export type ListEnumATHAccountStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ATHAccountStatus[]'>
     
 
 /**
@@ -2290,6 +2607,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  agency?: Prisma.AgencyOmit
   account?: Prisma.AccountOmit
   session?: Prisma.SessionOmit
   verificationToken?: Prisma.VerificationTokenOmit
@@ -2303,10 +2621,12 @@ export type GlobalOmitConfig = {
   task?: Prisma.TaskOmit
   projectFile?: Prisma.ProjectFileOmit
   invoice?: Prisma.InvoiceOmit
+  invoiceLineItem?: Prisma.InvoiceLineItemOmit
   payment?: Prisma.PaymentOmit
   invoiceAuditLog?: Prisma.InvoiceAuditLogOmit
   supportTicket?: Prisma.SupportTicketOmit
   codeSnippet?: Prisma.CodeSnippetOmit
+  integrationStatus?: Prisma.IntegrationStatusOmit
 }
 
 /* Types for Logging */

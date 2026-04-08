@@ -17,6 +17,15 @@ export const UserRole = {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const AgencyPlan = {
+  FREE: 'FREE',
+  PROFESSIONAL: 'PROFESSIONAL',
+  BUSINESS: 'BUSINESS'
+} as const
+
+export type AgencyPlan = (typeof AgencyPlan)[keyof typeof AgencyPlan]
+
+
 export const ClientStatus = {
   prospecto: 'prospecto',
   en_progreso: 'en_progreso',
@@ -81,3 +90,14 @@ export const SnippetCategory = {
 } as const
 
 export type SnippetCategory = (typeof SnippetCategory)[keyof typeof SnippetCategory]
+
+
+export const ATHAccountStatus = {
+  pending: 'pending',
+  submitted: 'submitted',
+  approved: 'approved',
+  active: 'active',
+  rejected: 'rejected'
+} as const
+
+export type ATHAccountStatus = (typeof ATHAccountStatus)[keyof typeof ATHAccountStatus]

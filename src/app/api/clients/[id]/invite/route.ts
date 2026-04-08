@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAgencyAuth } from '@/lib/tenant'
 import { InviteClientUserSchema } from '@/lib/validations/clients'
 import { inviteClientUser } from '@/lib/services/clients.service'
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
   const { id } = await params
   const body = await request.json()
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   }
 
   try {
-    await inviteClientUser(id, result.data.email, result.data.name)
+    await inviteClientUser(id, result.data.email, result.data.name, session.user.agencyId)
     return NextResponse.json({ success: true }, { status: 201 })
   } catch (err: any) {
     if (err.message === 'CLIENT_NOT_FOUND') {

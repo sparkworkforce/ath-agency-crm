@@ -17,7 +17,7 @@ vi.mock('@/lib/prisma', () => ({
       updateMany: vi.fn(),
     },
     invoiceAuditLog: { create: vi.fn() },
-    payment: { aggregate: vi.fn() },
+    payment: { aggregate: vi.fn(), findMany: vi.fn() },
   },
 }))
 
@@ -50,7 +50,7 @@ describe('getMonthlyRevenueChart', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('returns 6 months of data with zero for empty months', async () => {
-    mockPrisma.payment.aggregate.mockResolvedValue({ _sum: { amount: null } })
+    mockPrisma.payment.findMany.mockResolvedValue([])
     const result = await getMonthlyRevenueChart(6)
     expect(result).toHaveLength(6)
     expect(result.every((r) => r.revenue === 0)).toBe(true)

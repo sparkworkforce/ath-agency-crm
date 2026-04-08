@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Agency: 'Agency',
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
@@ -64,10 +65,12 @@ export const ModelName = {
   Task: 'Task',
   ProjectFile: 'ProjectFile',
   Invoice: 'Invoice',
+  InvoiceLineItem: 'InvoiceLineItem',
   Payment: 'Payment',
   InvoiceAuditLog: 'InvoiceAuditLog',
   SupportTicket: 'SupportTicket',
-  CodeSnippet: 'CodeSnippet'
+  CodeSnippet: 'CodeSnippet',
+  IntegrationStatus: 'IntegrationStatus'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -84,6 +87,28 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AgencyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logoUrl: 'logoUrl',
+  primaryColor: 'primaryColor',
+  plan: 'plan',
+  stripeCustomerId: 'stripeCustomerId',
+  stripeSubId: 'stripeSubId',
+  stripePriceId: 'stripePriceId',
+  subStatus: 'subStatus',
+  subCurrentPeriodEnd: 'subCurrentPeriodEnd',
+  maxClients: 'maxClients',
+  maxUsers: 'maxUsers',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgencyScalarFieldEnum = (typeof AgencyScalarFieldEnum)[keyof typeof AgencyScalarFieldEnum]
 
 
 export const AccountScalarFieldEnum = {
@@ -131,6 +156,7 @@ export const UserScalarFieldEnum = {
   image: 'image',
   password: 'password',
   role: 'role',
+  agencyId: 'agencyId',
   clientId: 'clientId',
   active: 'active',
   createdAt: 'createdAt',
@@ -165,6 +191,7 @@ export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[k
 
 export const ClientScalarFieldEnum = {
   id: 'id',
+  agencyId: 'agencyId',
   businessName: 'businessName',
   contactName: 'contactName',
   contactEmail: 'contactEmail',
@@ -209,6 +236,8 @@ export const ProjectScalarFieldEnum = {
   name: 'name',
   clientId: 'clientId',
   completionPercentage: 'completionPercentage',
+  estimatedCompletionDate: 'estimatedCompletionDate',
+  milestonesSent: 'milestonesSent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -224,6 +253,7 @@ export const TaskScalarFieldEnum = {
   dueDate: 'dueDate',
   status: 'status',
   order: 'order',
+  estimatedDays: 'estimatedDays',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -258,6 +288,17 @@ export const InvoiceScalarFieldEnum = {
 } as const
 
 export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
+export const InvoiceLineItemScalarFieldEnum = {
+  id: 'id',
+  invoiceId: 'invoiceId',
+  description: 'description',
+  amount: 'amount',
+  order: 'order'
+} as const
+
+export type InvoiceLineItemScalarFieldEnum = (typeof InvoiceLineItemScalarFieldEnum)[keyof typeof InvoiceLineItemScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {
@@ -301,6 +342,7 @@ export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)
 
 export const CodeSnippetScalarFieldEnum = {
   id: 'id',
+  agencyId: 'agencyId',
   title: 'title',
   description: 'description',
   code: 'code',
@@ -315,12 +357,37 @@ export const CodeSnippetScalarFieldEnum = {
 export type CodeSnippetScalarFieldEnum = (typeof CodeSnippetScalarFieldEnum)[keyof typeof CodeSnippetScalarFieldEnum]
 
 
+export const IntegrationStatusScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  athAccountStatus: 'athAccountStatus',
+  athPublicToken: 'athPublicToken',
+  environment: 'environment',
+  webhookUrl: 'webhookUrl',
+  webhookVerified: 'webhookVerified',
+  testTransactionAt: 'testTransactionAt',
+  testTransactionOk: 'testTransactionOk',
+  goLiveAt: 'goLiveAt',
+  notes: 'notes',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IntegrationStatusScalarFieldEnum = (typeof IntegrationStatusScalarFieldEnum)[keyof typeof IntegrationStatusScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const NullableJsonNullValueInput = {

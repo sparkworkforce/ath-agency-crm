@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Accounts
- * const accounts = await prisma.account.findMany()
+ * // Fetch zero or more Agencies
+ * const agencies = await prisma.agency.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -41,6 +41,11 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model Agency
+ * 
+ */
+export type Agency = Prisma.AgencyModel
 /**
  * Model Account
  * 
@@ -107,6 +112,11 @@ export type ProjectFile = Prisma.ProjectFileModel
  */
 export type Invoice = Prisma.InvoiceModel
 /**
+ * Model InvoiceLineItem
+ * 
+ */
+export type InvoiceLineItem = Prisma.InvoiceLineItemModel
+/**
  * Model Payment
  * 
  */
@@ -126,3 +136,8 @@ export type SupportTicket = Prisma.SupportTicketModel
  * 
  */
 export type CodeSnippet = Prisma.CodeSnippetModel
+/**
+ * Model IntegrationStatus
+ * 
+ */
+export type IntegrationStatus = Prisma.IntegrationStatusModel

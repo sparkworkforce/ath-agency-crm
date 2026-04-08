@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model Agency
+ * 
+ */
+export type Agency = Prisma.AgencyModel
+/**
  * Model Account
  * 
  */
@@ -83,6 +88,11 @@ export type ProjectFile = Prisma.ProjectFileModel
  */
 export type Invoice = Prisma.InvoiceModel
 /**
+ * Model InvoiceLineItem
+ * 
+ */
+export type InvoiceLineItem = Prisma.InvoiceLineItemModel
+/**
  * Model Payment
  * 
  */
@@ -102,3 +112,8 @@ export type SupportTicket = Prisma.SupportTicketModel
  * 
  */
 export type CodeSnippet = Prisma.CodeSnippetModel
+/**
+ * Model IntegrationStatus
+ * 
+ */
+export type IntegrationStatus = Prisma.IntegrationStatusModel

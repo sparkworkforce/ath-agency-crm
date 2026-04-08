@@ -3,6 +3,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 // Mock Prisma before importing the service
 vi.mock('@/lib/prisma', () => ({
   prisma: {
+    $transaction: vi.fn((fn) => fn({
+      magicLink: { findUnique: vi.fn(), update: vi.fn() },
+    })),
     magicLink: {
       updateMany: vi.fn(),
       create: vi.fn(),
@@ -31,8 +34,7 @@ vi.mock('@/lib/resend', () => ({
 import { prisma } from '@/lib/prisma'
 import {
   generateMagicLinkToken,
-  validateMagicLinkToken,
-  invalidateMagicLinkToken,
+  consumeMagicLinkToken,
   checkIfLocked,
   checkAndIncrementLoginAttempts,
   resetLoginAttempts,
@@ -59,44 +61,50 @@ describe('generateMagicLinkToken', () => {
   })
 })
 
-describe('validateMagicLinkToken', () => {
+describe('consumeMagicLinkToken', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('returns invalid when token does not exist', async () => {
-    mockPrisma.magicLink.findUnique.mockResolvedValue(null)
-    const result = await validateMagicLinkToken('nonexistent')
+    mockPrisma.$transaction.mockImplementation(async (fn: any) =>
+      fn({ magicLink: { findUnique: vi.fn().mockResolvedValue(null), update: vi.fn() } })
+    )
+    const result = await consumeMagicLinkToken('nonexistent')
     expect(result).toEqual({ valid: false, reason: 'invalid' })
   })
 
   it('returns used when token has usedAt set', async () => {
-    mockPrisma.magicLink.findUnique.mockResolvedValue({
-      token: 'used-token',
-      usedAt: new Date(),
-      expiresAt: new Date(Date.now() + 10000),
-    })
-    const result = await validateMagicLinkToken('used-token')
+    mockPrisma.$transaction.mockImplementation(async (fn: any) =>
+      fn({ magicLink: { findUnique: vi.fn().mockResolvedValue({
+        token: 'used-token', usedAt: new Date(), expiresAt: new Date(Date.now() + 10000),
+      }), update: vi.fn() } })
+    )
+    const result = await consumeMagicLinkToken('used-token')
     expect(result).toEqual({ valid: false, reason: 'used' })
   })
 
   it('returns expired when token is past expiresAt', async () => {
-    mockPrisma.magicLink.findUnique.mockResolvedValue({
-      token: 'expired-token',
-      usedAt: null,
-      expiresAt: new Date(Date.now() - 1000),
-    })
-    const result = await validateMagicLinkToken('expired-token')
+    mockPrisma.$transaction.mockImplementation(async (fn: any) =>
+      fn({ magicLink: { findUnique: vi.fn().mockResolvedValue({
+        token: 'expired-token', usedAt: null, expiresAt: new Date(Date.now() - 1000),
+      }), update: vi.fn() } })
+    )
+    const result = await consumeMagicLinkToken('expired-token')
     expect(result).toEqual({ valid: false, reason: 'expired' })
   })
 
-  it('returns valid with userId for a valid token', async () => {
-    mockPrisma.magicLink.findUnique.mockResolvedValue({
-      token: 'valid-token',
-      userId: 'user-123',
-      usedAt: null,
-      expiresAt: new Date(Date.now() + 100000),
-    })
-    const result = await validateMagicLinkToken('valid-token')
+  it('returns valid and marks token used atomically', async () => {
+    const mockUpdate = vi.fn()
+    mockPrisma.$transaction.mockImplementation(async (fn: any) =>
+      fn({ magicLink: { findUnique: vi.fn().mockResolvedValue({
+        id: 'link-1', token: 'valid-token', userId: 'user-123', usedAt: null,
+        expiresAt: new Date(Date.now() + 100000),
+      }), update: mockUpdate } })
+    )
+    const result = await consumeMagicLinkToken('valid-token')
     expect(result).toEqual({ valid: true, userId: 'user-123' })
+    expect(mockUpdate).toHaveBeenCalledWith(expect.objectContaining({
+      where: { id: 'link-1' },
+    }))
   })
 })
 

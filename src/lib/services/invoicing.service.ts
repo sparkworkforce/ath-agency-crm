@@ -1,8 +1,13 @@
 import { prisma } from '../prisma'
-import { resend } from '../resend'
+import { sendEmail, esc } from '../email'
 import type { CreateInvoiceInput, RecordPaymentInput } from '../validations/invoices'
+import { paginationArgs, paginated, type PaginationInput, type PaginatedResult } from '../pagination'
 
-export async function createInvoice(data: CreateInvoiceInput, createdBy: string) {
+export async function createInvoice(data: CreateInvoiceInput, createdBy: string, agencyId: string) {
+  // Verify client belongs to this agency
+  const client = await prisma.client.findFirst({ where: { id: data.clientId, agencyId, deletedAt: null } })
+  if (!client) throw new Error('CLIENT_NOT_FOUND')
+
   const invoice = await prisma.invoice.create({
     data: {
       clientId: data.clientId,
@@ -11,6 +16,13 @@ export async function createInvoice(data: CreateInvoiceInput, createdBy: string)
       isRetainer: data.isRetainer,
       status: 'pendiente',
       createdBy,
+      lineItems: {
+        create: data.lineItems.map((item, i) => ({
+          description: item.description,
+          amount: item.amount,
+          order: i,
+        })),
+      },
     },
   })
 
@@ -26,20 +38,38 @@ export async function createInvoice(data: CreateInvoiceInput, createdBy: string)
   return invoice
 }
 
-export async function getInvoiceById(invoiceId: string) {
-  return prisma.invoice.findUnique({
-    where: { id: invoiceId },
+export async function getInvoiceById(invoiceId: string, agencyId: string) {
+  return prisma.invoice.findFirst({
+    where: { id: invoiceId, client: { agencyId } },
     include: {
       payments: { orderBy: { receivedAt: 'desc' } },
+      lineItems: { orderBy: { order: 'asc' } },
       client: { select: { id: true, businessName: true, contactEmail: true } },
       auditLog: { orderBy: { createdAt: 'desc' } },
     },
   })
 }
 
-export async function listInvoicesByClient(clientId: string) {
+export async function listAllInvoices(agencyId: string, pagination?: undefined): Promise<any[]>
+export async function listAllInvoices(agencyId: string, pagination: PaginationInput): Promise<PaginatedResult<any>>
+export async function listAllInvoices(agencyId: string, pagination?: PaginationInput) {
+  const where = { client: { agencyId, deletedAt: null } }
+  const include = { client: { select: { id: true, businessName: true } }, payments: { select: { amount: true } } }
+
+  if (!pagination) {
+    return prisma.invoice.findMany({ where, include, orderBy: { createdAt: 'desc' } })
+  }
+
+  const [data, total] = await Promise.all([
+    prisma.invoice.findMany({ where, include, orderBy: { createdAt: 'desc' }, ...paginationArgs(pagination) }),
+    prisma.invoice.count({ where }),
+  ])
+  return paginated(data, total, pagination)
+}
+
+export async function listInvoicesByClient(clientId: string, agencyId: string) {
   return prisma.invoice.findMany({
-    where: { clientId },
+    where: { clientId, client: { agencyId } },
     include: { payments: { select: { amount: true } } },
     orderBy: { createdAt: 'desc' },
   })
@@ -48,11 +78,12 @@ export async function listInvoicesByClient(clientId: string) {
 export async function recordPayment(
   invoiceId: string,
   data: RecordPaymentInput,
-  recordedBy: string
+  recordedBy: string,
+  agencyId: string
 ) {
   return prisma.$transaction(async (tx) => {
-    const invoice = await tx.invoice.findUnique({
-      where: { id: invoiceId },
+    const invoice = await tx.invoice.findFirst({
+      where: { id: invoiceId, client: { agencyId } },
       include: { payments: { select: { amount: true } } },
     })
     if (!invoice) throw new Error('INVOICE_NOT_FOUND')
@@ -109,9 +140,13 @@ export async function checkAndUpdateOverdueInvoices(): Promise<void> {
     include: {
       client: {
         include: {
-          users: {
-            where: { role: 'AGENCY', active: true },
-            take: 1,
+          agency: {
+            include: {
+              users: {
+                where: { role: 'AGENCY', active: true },
+                take: 1,
+              },
+            },
           },
         },
       },
@@ -129,62 +164,56 @@ export async function checkAndUpdateOverdueInvoices(): Promise<void> {
 
   // Send alerts only for retainers that just became vencido (not previously alerted)
   for (const invoice of newlyOverdue) {
-    const agencyUser = invoice.client.users[0]
+    const agencyUser = (invoice.client as any).agency?.users?.[0]
     if (!agencyUser?.email) continue
 
     const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
 
-    await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL!,
-      to: agencyUser.email,
-      subject: `⚠️ Retainer Vencido — ${invoice.client.businessName}`,
-      html: `
-        <p>El retainer del cliente <strong>${invoice.client.businessName}</strong> está vencido.</p>
-        <ul>
-          <li><strong>Factura:</strong> ${invoice.id}</li>
-          <li><strong>Fecha límite:</strong> ${invoice.dueDate.toLocaleDateString('es-PR')}</li>
-          <li><strong>Monto:</strong> $${Number(invoice.totalAmount).toFixed(2)}</li>
-        </ul>
-        <p><a href="${baseUrl}/invoices/${invoice.id}">Ver factura</a></p>
-      `,
-    }).catch(() => {
+    await sendEmail(agencyUser.email, `⚠️ Retainer Vencido — ${invoice.client.businessName}`,
+      `<p>El retainer del cliente <strong>${esc(invoice.client.businessName)}</strong> está vencido.</p><p><strong>Factura:</strong> ${invoice.id}</p><p><strong>Fecha límite:</strong> ${invoice.dueDate.toLocaleDateString('es-PR')}</p><p><strong>Monto:</strong> $${invoice.totalAmount}</p>`
+    ).catch(() => {
       console.error(`Failed to send retainer alert for invoice ${invoice.id}`)
     })
   }
 }
 
-export async function getCurrentMonthRevenue(): Promise<number> {
+export async function getCurrentMonthRevenue(agencyId: string): Promise<number> {
   const now = new Date()
   const start = new Date(now.getFullYear(), now.getMonth(), 1)
   const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
 
   const result = await prisma.payment.aggregate({
     _sum: { amount: true },
-    where: { receivedAt: { gte: start, lte: end } },
+    where: { receivedAt: { gte: start, lte: end }, invoice: { client: { agencyId } } },
   })
 
   return Number(result._sum.amount ?? 0)
 }
 
-export async function getMonthlyRevenueChart(months = 6): Promise<{ month: string; revenue: number }[]> {
+export async function getMonthlyRevenueChart(agencyId: string, months = 6): Promise<{ month: string; revenue: number }[]> {
   const now = new Date()
-  const result: { month: string; revenue: number }[] = []
+  const start = new Date(now.getFullYear(), now.getMonth() - months + 1, 1)
 
+  const payments = await prisma.payment.findMany({
+    where: { receivedAt: { gte: start }, invoice: { client: { agencyId } } },
+    select: { amount: true, receivedAt: true },
+  })
+
+  const buckets = new Map<string, number>()
   for (let i = months - 1; i >= 0; i--) {
-    const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    const start = new Date(date.getFullYear(), date.getMonth(), 1)
-    const end = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59)
-
-    const agg = await prisma.payment.aggregate({
-      _sum: { amount: true },
-      where: { receivedAt: { gte: start, lte: end } },
-    })
-
-    result.push({
-      month: date.toLocaleDateString('es-PR', { month: 'short', year: '2-digit' }),
-      revenue: Number(agg._sum.amount ?? 0),
-    })
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    buckets.set(`${d.getFullYear()}-${d.getMonth()}`, 0)
   }
 
-  return result
+  for (const p of payments) {
+    const d = new Date(p.receivedAt)
+    const key = `${d.getFullYear()}-${d.getMonth()}`
+    if (buckets.has(key)) buckets.set(key, buckets.get(key)! + Number(p.amount))
+  }
+
+  return Array.from(buckets.entries()).map(([key, revenue]) => {
+    const [y, m] = key.split('-').map(Number)
+    const d = new Date(y, m, 1)
+    return { month: d.toLocaleDateString('es-PR', { month: 'short', year: '2-digit' }), revenue }
+  })
 }

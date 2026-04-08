@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { validateMagicLinkToken, invalidateMagicLinkToken } from '@/lib/services/auth.service'
+import { consumeMagicLinkToken } from '@/lib/services/auth.service'
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get('token')
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=invalid', request.url))
   }
 
-  const result = await validateMagicLinkToken(token)
+  const result = await consumeMagicLinkToken(token)
 
   if (!result.valid) {
     return NextResponse.redirect(new URL(`/login?error=${result.reason}`, request.url))
@@ -20,9 +20,6 @@ export async function GET(request: NextRequest) {
   if (!user || !user.active) {
     return NextResponse.redirect(new URL('/login?error=inactive', request.url))
   }
-
-  // Invalidate the token (single-use)
-  await invalidateMagicLinkToken(token)
 
   // Create session directly for magic link users (CLIENT role, 1h expiry)
   const sessionToken = crypto.randomUUID()

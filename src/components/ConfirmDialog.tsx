@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 interface ConfirmDialogProps {
   open: boolean
   title: string
@@ -23,6 +25,13 @@ export default function ConfirmDialog({
   cancelLabel = 'Cancelar',
   destructive = false,
 }: ConfirmDialogProps) {
+  useEffect(() => {
+    if (!open) return
+    const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel() }
+    document.addEventListener('keydown', h)
+    return () => document.removeEventListener('keydown', h)
+  }, [open, onCancel])
+
   if (!open) return null
 
   return (
@@ -40,7 +49,7 @@ export default function ConfirmDialog({
         <p className="text-sm text-gray-600 mb-6">{description}</p>
         <div className="flex justify-end gap-3">
           <button
-            onClick={onCancel}
+            onClick={onCancel} autoFocus
             disabled={loading}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
             data-testid="confirm-dialog-cancel"
@@ -51,7 +60,7 @@ export default function ConfirmDialog({
             onClick={onConfirm}
             disabled={loading}
             className={`px-4 py-2 text-sm font-medium text-white rounded-md disabled:opacity-50 ${
-              destructive ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
+              destructive ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'
             }`}
             data-testid="confirm-dialog-confirm"
           >

@@ -1,22 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateProjectSchema } from '@/lib/validations/projects'
-import { createProject, listProjectsByClient } from '@/lib/services/projects.service'
+import { PaginationSchema } from '@/lib/pagination'
+import { createProject, listProjectsByClient, listAllProjects } from '@/lib/services/projects.service'
 
 export async function GET(request: NextRequest) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
-  const clientId = request.nextUrl.searchParams.get('clientId')
-  if (!clientId) return NextResponse.json({ error: 'clientId requerido' }, { status: 400 })
+  const sp = request.nextUrl.searchParams
+  const clientId = sp.get('clientId')
+  const pageParam = sp.get('page')
 
-  const projects = await listProjectsByClient(clientId)
+  if (clientId) {
+    const projects = await listProjectsByClient(clientId, session.user.agencyId)
+    return NextResponse.json({ projects })
+  }
+
+  if (pageParam) {
+    const pagination = PaginationSchema.parse({ page: sp.get('page'), limit: sp.get('limit') })
+    const result = await listAllProjects(session.user.agencyId, pagination)
+    return NextResponse.json(result)
+  }
+
+  const projects = await listAllProjects(session.user.agencyId)
   return NextResponse.json({ projects })
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
   const body = await request.json()
   const result = CreateProjectSchema.safeParse(body)
@@ -25,7 +38,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const project = await createProject(result.data)
+    const project = await createProject(result.data, session.user.agencyId)
     return NextResponse.json({ project }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })

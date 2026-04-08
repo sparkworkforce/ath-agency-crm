@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: '/invoices', label: 'Facturas' },
   { href: '/snippets', label: 'Snippets' },
   { href: '/users', label: 'Usuarios' },
+  { href: '/settings', label: 'Configuración' },
 ]
 
 interface AgencySidebarProps {
@@ -23,7 +24,7 @@ export default function AgencySidebar({ userName }: AgencySidebarProps) {
   return (
     <aside className="w-56 bg-white border-r border-gray-200 flex flex-col" data-testid="agency-sidebar">
       <div className="p-4 border-b border-gray-200">
-        <p className="text-xs text-gray-500 truncate">{process.env.NEXT_PUBLIC_AGENCY_NAME}</p>
+        <p className="text-sm font-bold text-gray-900">🐍 CobraHub</p>
       </div>
 
       <nav className="flex-1 p-3 space-y-1" aria-label="Navegación principal">
@@ -33,7 +34,7 @@ export default function AgencySidebar({ userName }: AgencySidebarProps) {
             href={item.href}
             className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               pathname.startsWith(item.href)
-                ? 'bg-blue-50 text-blue-700'
+                ? 'bg-emerald-50 text-emerald-700'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
             data-testid={`nav-${item.href.replace('/', '')}`}

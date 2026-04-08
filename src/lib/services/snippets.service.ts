@@ -1,9 +1,10 @@
 import { prisma } from '../prisma'
 import type { CreateSnippetInput, SnippetSearchInput } from '../validations/snippets'
 
-export async function searchSnippets(query: SnippetSearchInput) {
+export async function searchSnippets(agencyId: string, query: SnippetSearchInput) {
   return prisma.codeSnippet.findMany({
     where: {
+      agencyId,
       ...(query.platform ? { platform: query.platform } : {}),
       ...(query.category ? { category: query.category } : {}),
       ...(query.q
@@ -21,22 +22,23 @@ export async function searchSnippets(query: SnippetSearchInput) {
   })
 }
 
-export async function createSnippet(data: CreateSnippetInput, authorId: string) {
+export async function createSnippet(data: CreateSnippetInput, authorId: string, agencyId: string) {
   return prisma.codeSnippet.create({
-    data: { ...data, authorId },
+    data: { ...data, authorId, agencyId },
   })
 }
 
 export async function updateSnippet(
   snippetId: string,
-  data: Partial<CreateSnippetInput>
+  data: Partial<CreateSnippetInput>,
+  agencyId: string
 ) {
   return prisma.codeSnippet.update({
-    where: { id: snippetId },
+    where: { id: snippetId, agencyId },
     data,
   })
 }
 
-export async function deleteSnippet(snippetId: string) {
-  return prisma.codeSnippet.delete({ where: { id: snippetId } })
+export async function deleteSnippet(snippetId: string, agencyId: string) {
+  return prisma.codeSnippet.delete({ where: { id: snippetId, agencyId } })
 }

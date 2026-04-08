@@ -57,7 +57,7 @@ describe('recalculateCompletionPercentage', () => {
       { status: 'pendiente' },
       { status: 'pendiente' },
     ])
-    mockPrisma.project.update.mockResolvedValue({})
+    mockPrisma.project.update.mockResolvedValue({ id: 'proj-1', completionPercentage: 50, milestonesSent: [], name: 'Test', client: { contactName: 'A', contactEmail: 'a@b.com', users: [], agency: { name: 'Ag' } } })
     const result = await recalculateCompletionPercentage('proj-1')
     expect(result).toBe(50)
   })
@@ -67,7 +67,7 @@ describe('recalculateCompletionPercentage', () => {
       { status: 'completado' },
       { status: 'completado' },
     ])
-    mockPrisma.project.update.mockResolvedValue({})
+    mockPrisma.project.update.mockResolvedValue({ id: 'proj-1', completionPercentage: 100, milestonesSent: [], name: 'Test', client: { contactName: 'A', contactEmail: 'a@b.com', users: [], agency: { name: 'Ag' } } })
     const result = await recalculateCompletionPercentage('proj-1')
     expect(result).toBe(100)
   })

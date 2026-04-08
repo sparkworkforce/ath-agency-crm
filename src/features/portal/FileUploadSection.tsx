@@ -53,7 +53,7 @@ export default function FileUploadSection() {
           accept={ALLOWED_EXTENSIONS}
           onChange={handleUpload}
           disabled={uploading}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 disabled:opacity-50"
           data-testid="file-upload-input"
         />
       </label>

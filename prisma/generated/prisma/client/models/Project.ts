@@ -39,6 +39,7 @@ export type ProjectMinAggregateOutputType = {
   name: string | null
   clientId: string | null
   completionPercentage: number | null
+  estimatedCompletionDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,6 +49,7 @@ export type ProjectMaxAggregateOutputType = {
   name: string | null
   clientId: string | null
   completionPercentage: number | null
+  estimatedCompletionDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -57,6 +59,8 @@ export type ProjectCountAggregateOutputType = {
   name: number
   clientId: number
   completionPercentage: number
+  estimatedCompletionDate: number
+  milestonesSent: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -76,6 +80,7 @@ export type ProjectMinAggregateInputType = {
   name?: true
   clientId?: true
   completionPercentage?: true
+  estimatedCompletionDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -85,6 +90,7 @@ export type ProjectMaxAggregateInputType = {
   name?: true
   clientId?: true
   completionPercentage?: true
+  estimatedCompletionDate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +100,8 @@ export type ProjectCountAggregateInputType = {
   name?: true
   clientId?: true
   completionPercentage?: true
+  estimatedCompletionDate?: true
+  milestonesSent?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -190,6 +198,8 @@ export type ProjectGroupByOutputType = {
   name: string
   clientId: string
   completionPercentage: number
+  estimatedCompletionDate: Date | null
+  milestonesSent: runtime.JsonValue
   createdAt: Date
   updatedAt: Date
   _count: ProjectCountAggregateOutputType | null
@@ -222,11 +232,14 @@ export type ProjectWhereInput = {
   name?: Prisma.StringFilter<"Project"> | string
   clientId?: Prisma.StringFilter<"Project"> | string
   completionPercentage?: Prisma.FloatFilter<"Project"> | number
+  estimatedCompletionDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  milestonesSent?: Prisma.JsonFilter<"Project">
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   tasks?: Prisma.TaskListRelationFilter
   files?: Prisma.ProjectFileListRelationFilter
+  integrationStatus?: Prisma.XOR<Prisma.IntegrationStatusNullableScalarRelationFilter, Prisma.IntegrationStatusWhereInput> | null
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -234,11 +247,14 @@ export type ProjectOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   completionPercentage?: Prisma.SortOrder
+  estimatedCompletionDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  milestonesSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   client?: Prisma.ClientOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
   files?: Prisma.ProjectFileOrderByRelationAggregateInput
+  integrationStatus?: Prisma.IntegrationStatusOrderByWithRelationInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -249,11 +265,14 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Project"> | string
   clientId?: Prisma.StringFilter<"Project"> | string
   completionPercentage?: Prisma.FloatFilter<"Project"> | number
+  estimatedCompletionDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  milestonesSent?: Prisma.JsonFilter<"Project">
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   tasks?: Prisma.TaskListRelationFilter
   files?: Prisma.ProjectFileListRelationFilter
+  integrationStatus?: Prisma.XOR<Prisma.IntegrationStatusNullableScalarRelationFilter, Prisma.IntegrationStatusWhereInput> | null
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -261,6 +280,8 @@ export type ProjectOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   completionPercentage?: Prisma.SortOrder
+  estimatedCompletionDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  milestonesSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
@@ -278,6 +299,8 @@ export type ProjectScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Project"> | string
   clientId?: Prisma.StringWithAggregatesFilter<"Project"> | string
   completionPercentage?: Prisma.FloatWithAggregatesFilter<"Project"> | number
+  estimatedCompletionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+  milestonesSent?: Prisma.JsonWithAggregatesFilter<"Project">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
 }
@@ -286,11 +309,14 @@ export type ProjectCreateInput = {
   id?: string
   name: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -298,21 +324,27 @@ export type ProjectUncheckedCreateInput = {
   name: string
   clientId: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -320,10 +352,13 @@ export type ProjectUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -331,6 +366,8 @@ export type ProjectCreateManyInput = {
   name: string
   clientId: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -339,6 +376,8 @@ export type ProjectUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -348,6 +387,8 @@ export type ProjectUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -367,6 +408,8 @@ export type ProjectCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   completionPercentage?: Prisma.SortOrder
+  estimatedCompletionDate?: Prisma.SortOrder
+  milestonesSent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -380,6 +423,7 @@ export type ProjectMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   completionPercentage?: Prisma.SortOrder
+  estimatedCompletionDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -389,6 +433,7 @@ export type ProjectMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   completionPercentage?: Prisma.SortOrder
+  estimatedCompletionDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -480,24 +525,44 @@ export type ProjectUpdateOneRequiredWithoutFilesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutFilesInput, Prisma.ProjectUpdateWithoutFilesInput>, Prisma.ProjectUncheckedUpdateWithoutFilesInput>
 }
 
+export type ProjectCreateNestedOneWithoutIntegrationStatusInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutIntegrationStatusInput, Prisma.ProjectUncheckedCreateWithoutIntegrationStatusInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutIntegrationStatusInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutIntegrationStatusNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutIntegrationStatusInput, Prisma.ProjectUncheckedCreateWithoutIntegrationStatusInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutIntegrationStatusInput
+  upsert?: Prisma.ProjectUpsertWithoutIntegrationStatusInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutIntegrationStatusInput, Prisma.ProjectUpdateWithoutIntegrationStatusInput>, Prisma.ProjectUncheckedUpdateWithoutIntegrationStatusInput>
+}
+
 export type ProjectCreateWithoutClientInput = {
   id?: string
   name: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutClientInput = {
   id?: string
   name: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutClientInput = {
@@ -534,6 +599,8 @@ export type ProjectScalarWhereInput = {
   name?: Prisma.StringFilter<"Project"> | string
   clientId?: Prisma.StringFilter<"Project"> | string
   completionPercentage?: Prisma.FloatFilter<"Project"> | number
+  estimatedCompletionDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
+  milestonesSent?: Prisma.JsonFilter<"Project">
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
 }
@@ -542,10 +609,13 @@ export type ProjectCreateWithoutTasksInput = {
   id?: string
   name: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProjectsInput
   files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -553,9 +623,12 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   name: string
   clientId: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -578,10 +651,13 @@ export type ProjectUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
   files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -589,19 +665,25 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutFilesInput = {
   id?: string
   name: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFilesInput = {
@@ -609,9 +691,12 @@ export type ProjectUncheckedCreateWithoutFilesInput = {
   name: string
   clientId: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFilesInput = {
@@ -634,10 +719,13 @@ export type ProjectUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFilesInput = {
@@ -645,15 +733,88 @@ export type ProjectUncheckedUpdateWithoutFilesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutIntegrationStatusInput = {
+  id?: string
+  name: string
+  completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  client: Prisma.ClientCreateNestedOneWithoutProjectsInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutIntegrationStatusInput = {
+  id?: string
+  name: string
+  clientId: string
+  completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutIntegrationStatusInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutIntegrationStatusInput, Prisma.ProjectUncheckedCreateWithoutIntegrationStatusInput>
+}
+
+export type ProjectUpsertWithoutIntegrationStatusInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutIntegrationStatusInput, Prisma.ProjectUncheckedUpdateWithoutIntegrationStatusInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutIntegrationStatusInput, Prisma.ProjectUncheckedCreateWithoutIntegrationStatusInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutIntegrationStatusInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutIntegrationStatusInput, Prisma.ProjectUncheckedUpdateWithoutIntegrationStatusInput>
+}
+
+export type ProjectUpdateWithoutIntegrationStatusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutIntegrationStatusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyClientInput = {
   id?: string
   name: string
   completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -662,26 +823,34 @@ export type ProjectUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -731,11 +900,14 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   clientId?: boolean
   completionPercentage?: boolean
+  estimatedCompletionDate?: boolean
+  milestonesSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Project$tasksArgs<ExtArgs>
   files?: boolean | Prisma.Project$filesArgs<ExtArgs>
+  integrationStatus?: boolean | Prisma.Project$integrationStatusArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -744,6 +916,8 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   clientId?: boolean
   completionPercentage?: boolean
+  estimatedCompletionDate?: boolean
+  milestonesSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -754,6 +928,8 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   clientId?: boolean
   completionPercentage?: boolean
+  estimatedCompletionDate?: boolean
+  milestonesSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -764,15 +940,18 @@ export type ProjectSelectScalar = {
   name?: boolean
   clientId?: boolean
   completionPercentage?: boolean
+  estimatedCompletionDate?: boolean
+  milestonesSent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "clientId" | "completionPercentage" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "clientId" | "completionPercentage" | "estimatedCompletionDate" | "milestonesSent" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   tasks?: boolean | Prisma.Project$tasksArgs<ExtArgs>
   files?: boolean | Prisma.Project$filesArgs<ExtArgs>
+  integrationStatus?: boolean | Prisma.Project$integrationStatusArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -788,12 +967,15 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     client: Prisma.$ClientPayload<ExtArgs>
     tasks: Prisma.$TaskPayload<ExtArgs>[]
     files: Prisma.$ProjectFilePayload<ExtArgs>[]
+    integrationStatus: Prisma.$IntegrationStatusPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     clientId: string
     completionPercentage: number
+    estimatedCompletionDate: Date | null
+    milestonesSent: runtime.JsonValue
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["project"]>
@@ -1193,6 +1375,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tasks<T extends Prisma.Project$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   files<T extends Prisma.Project$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  integrationStatus<T extends Prisma.Project$integrationStatusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$integrationStatusArgs<ExtArgs>>): Prisma.Prisma__IntegrationStatusClient<runtime.Types.Result.GetResult<Prisma.$IntegrationStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1226,6 +1409,8 @@ export interface ProjectFieldRefs {
   readonly name: Prisma.FieldRef<"Project", 'String'>
   readonly clientId: Prisma.FieldRef<"Project", 'String'>
   readonly completionPercentage: Prisma.FieldRef<"Project", 'Float'>
+  readonly estimatedCompletionDate: Prisma.FieldRef<"Project", 'DateTime'>
+  readonly milestonesSent: Prisma.FieldRef<"Project", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
 }
@@ -1674,6 +1859,25 @@ export type Project$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ProjectFileScalarFieldEnum | Prisma.ProjectFileScalarFieldEnum[]
+}
+
+/**
+ * Project.integrationStatus
+ */
+export type Project$integrationStatusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the IntegrationStatus
+   */
+  select?: Prisma.IntegrationStatusSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the IntegrationStatus
+   */
+  omit?: Prisma.IntegrationStatusOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.IntegrationStatusInclude<ExtArgs> | null
+  where?: Prisma.IntegrationStatusWhereInput
 }
 
 /**

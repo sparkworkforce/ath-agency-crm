@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Agency'
 export type * from './models/Account'
 export type * from './models/Session'
 export type * from './models/VerificationToken'
@@ -21,8 +22,10 @@ export type * from './models/Project'
 export type * from './models/Task'
 export type * from './models/ProjectFile'
 export type * from './models/Invoice'
+export type * from './models/InvoiceLineItem'
 export type * from './models/Payment'
 export type * from './models/InvoiceAuditLog'
 export type * from './models/SupportTicket'
 export type * from './models/CodeSnippet'
+export type * from './models/IntegrationStatus'
 export type * from './commonInputTypes'

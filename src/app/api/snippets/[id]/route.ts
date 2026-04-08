@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateSnippetSchema } from '@/lib/validations/snippets'
 import { updateSnippet, deleteSnippet } from '@/lib/services/snippets.service'
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
   const { id } = await params
   const body = await request.json()
@@ -15,7 +15,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   }
 
   try {
-    const snippet = await updateSnippet(id, result.data)
+    const snippet = await updateSnippet(id, result.data, session.user.agencyId)
     return NextResponse.json({ snippet })
   } catch {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
@@ -23,12 +23,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth()
-  if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
 
   const { id } = await params
   try {
-    await deleteSnippet(id)
+    await deleteSnippet(id, session.user.agencyId)
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })

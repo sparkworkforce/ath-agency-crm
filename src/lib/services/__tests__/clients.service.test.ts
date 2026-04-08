@@ -11,6 +11,7 @@ vi.mock('@/lib/prisma', () => ({
     client: {
       findMany: vi.fn(),
       findFirst: vi.fn(),
+      findUnique: vi.fn(),
       update: vi.fn(),
     },
     communication: {
@@ -19,6 +20,7 @@ vi.mock('@/lib/prisma', () => ({
     },
     user: {
       findFirst: vi.fn(),
+      findUnique: vi.fn(),
       create: vi.fn(),
     },
   },
@@ -40,7 +42,7 @@ describe('searchClients', () => {
 
   it('returns only non-deleted clients', async () => {
     mockPrisma.client.findMany.mockResolvedValue([{ id: '1', businessName: 'Test' }])
-    const result = await searchClients()
+    const result = await searchClients('agency-1')
     expect(mockPrisma.client.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: expect.objectContaining({ deletedAt: null }) })
     )
@@ -49,7 +51,7 @@ describe('searchClients', () => {
 
   it('filters by query when provided', async () => {
     mockPrisma.client.findMany.mockResolvedValue([])
-    await searchClients('test')
+    await searchClients('agency-1', 'test')
     expect(mockPrisma.client.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: expect.objectContaining({ OR: expect.any(Array) }),
@@ -63,12 +65,12 @@ describe('inviteClientUser', () => {
 
   it('throws CLIENT_NOT_FOUND when client does not exist', async () => {
     mockPrisma.client.findFirst.mockResolvedValue(null)
-    await expect(inviteClientUser('bad-id', 'test@test.com', 'Test')).rejects.toThrow('CLIENT_NOT_FOUND')
+    await expect(inviteClientUser('bad-id', 'test@test.com', 'Test', 'agency-1')).rejects.toThrow('CLIENT_NOT_FOUND')
   })
 
   it('throws EMAIL_ALREADY_EXISTS when user with email exists', async () => {
     mockPrisma.client.findFirst.mockResolvedValue({ id: 'client-1' })
-    mockPrisma.user.findFirst.mockResolvedValue({ id: 'existing-user' })
-    await expect(inviteClientUser('client-1', 'existing@test.com', 'Test')).rejects.toThrow('EMAIL_ALREADY_EXISTS')
+    mockPrisma.user.findUnique.mockResolvedValue({ id: 'existing-user' })
+    await expect(inviteClientUser('client-1', 'existing@test.com', 'Test', 'agency-1')).rejects.toThrow('EMAIL_ALREADY_EXISTS')
   })
 })
