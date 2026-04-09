@@ -90,6 +90,18 @@ export async function POST(request: NextRequest) {
       `<p>Hola ${name},</p><p>Tu agencia <strong>${agencyName}</strong> ha sido creada. Verifica tu correo para comenzar:</p><p>${emailButton(url, 'Verificar email')}</p>`
     ).catch(() => {}) // Don't fail registration if email fails
 
+    // Handle referral code
+    const referralCode = body.referralCode as string | undefined
+    if (referralCode) {
+      const ref = await prisma.referral.findFirst({ where: { code: referralCode, referredAgencyId: null } })
+      if (ref) {
+        await prisma.referral.update({ where: { id: ref.id }, data: { referredAgencyId: agency.id, redeemedAt: new Date(), rewardApplied: true } })
+        // Create a fresh code for the referrer's next referral
+        const newCode = `cbh-${crypto.randomUUID().slice(0, 8)}`
+        await prisma.referral.create({ data: { referrerAgencyId: ref.referrerAgencyId, code: newCode } })
+      }
+    }
+
     return NextResponse.json({ agency: { id: agency.id, slug: agency.slug } }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })

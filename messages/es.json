@@ -1,0 +1,94 @@
+{
+  "landing": {
+    "heroTitle": "Gestiona tus integraciones\nATH Business como un pro",
+    "heroSub": "CobraHub es la plataforma todo-en-uno para agencias que integran ATH Business. CRM, proyectos, facturación y portal de cliente — conectado y automatizado.",
+    "heroBadge": "Diseñado para agencias en Puerto Rico 🇵🇷",
+    "heroNote": "Sin tarjeta de crédito. Gratis para siempre hasta 3 clientes.",
+    "cta": "Comenzar gratis",
+    "demo": "Ver demo",
+    "login": "Iniciar sesión",
+    "createAccount": "Crear cuenta",
+    "nav.features": "Funciones",
+    "nav.pricing": "Precios",
+    "integrations": "Integra con las plataformas que ya usas",
+    "featuresTitle": "Todo lo que necesitas para cobrar",
+    "featuresSub": "Desde el primer contacto hasta el soporte mensual.",
+    "features": {
+      "crm": {
+        "title": "CRM de Clientes",
+        "desc": "Pipeline completo: prospecto → en progreso → completado → soporte mensual. Historial de comunicaciones y documentos."
+      },
+      "projects": {
+        "title": "Gestión de Proyectos",
+        "desc": "Tareas automáticas por plataforma (WooCommerce, Shopify, custom). Progreso en tiempo real con estimados de entrega."
+      },
+      "invoicing": {
+        "title": "Facturación Inteligente",
+        "desc": "Facturas con IVU, PDFs profesionales, tracking de pagos, retainers automáticos y recordatorios de cobro."
+      },
+      "portal": {
+        "title": "Portal de Cliente",
+        "desc": "Acceso seguro por magic link. Tus clientes ven progreso, suben archivos y abren tickets — con tu branding."
+      },
+      "dashboard": {
+        "title": "Dashboard & KPIs",
+        "desc": "7 métricas clave: revenue, clientes activos, proyectos, tareas vencidas, revenue/cliente, tiempo promedio y pipeline."
+      },
+      "golive": {
+        "title": "Go-Live Checklist",
+        "desc": "Checklist integrado para cada integración ATH Business: cuenta, API keys, webhooks, sandbox y producción."
+      }
+    },
+    "pricingTitle": "Planes simples y transparentes",
+    "pricingSub": "Comienza gratis. Escala cuando crezcas.",
+    "popular": "Más popular",
+    "comparisonTitle": "Comparación de planes",
+    "faqTitle": "Preguntas frecuentes",
+    "faq": {
+      "q1": "¿Necesito tarjeta de crédito para comenzar?",
+      "a1": "No. El plan Gratis es completamente gratis y no requiere tarjeta de crédito. Puedes gestionar hasta 3 clientes sin costo.",
+      "q2": "¿Puedo cambiar de plan en cualquier momento?",
+      "a2": "Sí. Puedes subir o bajar de plan cuando quieras desde la configuración de tu cuenta. Los cambios se aplican inmediatamente.",
+      "q3": "¿Mis clientes necesitan crear cuenta?",
+      "a3": "No. Los clientes acceden al portal mediante un magic link que les envías por email. No necesitan contraseña ni crear cuenta.",
+      "q4": "¿Qué pasa con mis datos si cancelo?",
+      "a4": "Tus datos se mantienen por 90 días después de cancelar. Puedes exportar todo a CSV antes de cancelar.",
+      "q5": "¿Funciona con cualquier plataforma de e-commerce?",
+      "a5": "Sí. CobraHub tiene templates para WooCommerce, Shopify y plataformas custom. Las tareas se generan automáticamente según la plataforma del cliente."
+    },
+    "footer": "Todos los derechos reservados.",
+    "terms": "Términos",
+    "privacy": "Privacidad"
+  },
+  "portal": {
+    "welcome": "Bienvenido a tu portal",
+    "projectProgress": "Progreso del proyecto",
+    "goLiveScore": "Go-Live Score",
+    "readyForProduction": "Listo para producción",
+    "inProgress": "En progreso",
+    "pendingSetup": "Configuración pendiente",
+    "tasks": "Tareas",
+    "completed": "Completado",
+    "files": "Archivos",
+    "uploadFile": "Subir archivo",
+    "tickets": "Tickets de soporte",
+    "newTicket": "Nuevo ticket",
+    "survey": "¿Cómo fue tu experiencia?",
+    "surveySubmit": "Enviar",
+    "activityFeed": "Actividad reciente",
+    "estimatedTimeline": "Línea de tiempo estimada",
+    "estimated": "Estimado",
+    "noActiveProject": "No hay proyectos activos en este momento."
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "noResults": "Sin resultados",
+    "back": "Volver"
+  }
+}

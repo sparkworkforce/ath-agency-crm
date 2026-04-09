@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import StatusBadge from '@/components/StatusBadge'
+import { computeGoLiveScore, scoreColor } from '@/lib/go-live-score'
 
 type TaskStatus = 'pendiente' | 'en_progreso' | 'completado' | 'vencido'
 
@@ -34,12 +35,13 @@ interface Project {
   client: { id: string; businessName: string }
   tasks: Task[]
   files: ProjectFile[]
-  integrationStatus?: IntegrationStatus | null
+  integrationStatus: IntegrationStatus[]
 }
 
 interface IntegrationStatus {
-  athAccountStatus: string
-  athPublicToken?: string | null
+  processor: string
+  accountStatus: string
+  publicToken?: string | null
   environment: string
   webhookUrl?: string | null
   webhookVerified: boolean
@@ -216,7 +218,7 @@ export default function ProjectDetail({ project: initial, agencyUsers }: Props) 
         <div className="px-4 py-3 border-b border-gray-200">
           <h2 className="text-sm font-semibold text-gray-900">Estado de Integración ATH Business</h2>
         </div>
-        <IntegrationPanel projectId={project.id} initial={project.integrationStatus ?? null} />
+        <IntegrationPanel projectId={project.id} initial={project.integrationStatus?.[0] ?? null} />
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200">
@@ -270,7 +272,7 @@ const ATH_STATUSES = [
 
 function IntegrationPanel({ projectId, initial }: { projectId: string; initial: IntegrationStatus | null }) {
   const [status, setStatus] = useState<IntegrationStatus>(initial ?? {
-    athAccountStatus: 'pending', environment: 'sandbox', webhookVerified: false,
+    accountStatus: 'pending', processor: 'ath_business', environment: 'sandbox', webhookVerified: false, publicToken: null, webhookUrl: null, testTransactionAt: null, testTransactionOk: null, goLiveAt: null, notes: null,
   })
   const [saving, setSaving] = useState(false)
 
@@ -288,26 +290,19 @@ function IntegrationPanel({ projectId, initial }: { projectId: string; initial: 
     setSaving(false)
   }
 
-  const checks = [
-    { label: 'Cuenta ATH Business', done: status.athAccountStatus === 'active' || status.athAccountStatus === 'approved' },
-    { label: 'Token configurado', done: !!status.athPublicToken },
-    { label: 'Webhook verificado', done: status.webhookVerified },
-    { label: 'Transacción de prueba', done: status.testTransactionOk === true },
-    { label: 'Producción', done: status.environment === 'production' },
-  ]
-  const progress = checks.filter(c => c.done).length
+  const { score, checks } = computeGoLiveScore(status)
 
   return (
     <div className="p-4 space-y-4">
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-medium text-gray-500">Go-Live Checklist</span>
-          <span className="text-xs text-gray-400">{progress}/5</span>
+          <span className="text-xs font-medium text-gray-500">Go-Live Score</span>
+          <span className="text-sm font-bold" style={{ color: scoreColor(score) }}>{score}/100</span>
         </div>
         <div className="w-full bg-gray-100 rounded-full h-2 mb-3">
-          <div className="bg-green-500 h-2 rounded-full transition-all" style={{ width: `${(progress / 5) * 100}%` }} />
+          <div className="h-2 rounded-full transition-all" style={{ width: `${score}%`, backgroundColor: scoreColor(score) }} />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {checks.map(c => (
             <div key={c.label} className="flex items-center gap-1.5 text-xs">
               <span className={c.done ? 'text-green-500' : 'text-gray-300'}>{c.done ? '✓' : '○'}</span>
@@ -320,7 +315,7 @@ function IntegrationPanel({ projectId, initial }: { projectId: string; initial: 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div>
           <label className="block text-xs text-gray-500 mb-1">Estado de cuenta</label>
-          <select value={status.athAccountStatus} onChange={e => save({ athAccountStatus: e.target.value })} disabled={saving} className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5">
+          <select value={status.accountStatus} onChange={e => save({ accountStatus: e.target.value })} disabled={saving} className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5">
             {ATH_STATUSES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
         </div>
@@ -333,7 +328,7 @@ function IntegrationPanel({ projectId, initial }: { projectId: string; initial: 
         </div>
         <div>
           <label className="block text-xs text-gray-500 mb-1">Token público</label>
-          <input type="text" value={status.athPublicToken ?? ''} onChange={e => setStatus(s => ({ ...s, athPublicToken: e.target.value }))} onBlur={() => save({ athPublicToken: status.athPublicToken ?? '' })} placeholder="ATH public token" className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5" />
+          <input type="text" value={status.publicToken ?? ''} onChange={e => setStatus(s => ({ ...s, publicToken: e.target.value }))} onBlur={() => save({ publicToken: status.publicToken ?? '' })} placeholder="ATH public token" className="w-full text-sm border border-gray-300 rounded-md px-2 py-1.5" />
         </div>
       </div>
 
@@ -355,7 +350,7 @@ function IntegrationPanel({ projectId, initial }: { projectId: string; initial: 
         </div>
       </div>
 
-      {progress === 5 && !status.goLiveAt && (
+      {score === 100 && !status.goLiveAt && (
         <button onClick={() => save({ goLiveAt: new Date().toISOString() })} className="w-full bg-green-600 text-white text-sm py-2 rounded-md hover:bg-green-700">
           🚀 Marcar como Go Live
         </button>

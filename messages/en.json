@@ -1,0 +1,94 @@
+{
+  "landing": {
+    "heroTitle": "Manage your ATH Business\nintegrations like a pro",
+    "heroSub": "CobraHub is the all-in-one platform for agencies integrating ATH Business. CRM, projects, invoicing, and client portal — connected and automated.",
+    "heroBadge": "Built for agencies in Puerto Rico 🇵🇷",
+    "heroNote": "No credit card required. Free forever up to 3 clients.",
+    "cta": "Start free",
+    "demo": "View demo",
+    "login": "Sign in",
+    "createAccount": "Create account",
+    "nav.features": "Features",
+    "nav.pricing": "Pricing",
+    "integrations": "Integrates with the platforms you already use",
+    "featuresTitle": "Everything you need to get paid",
+    "featuresSub": "From first contact to monthly support.",
+    "features": {
+      "crm": {
+        "title": "Client CRM",
+        "desc": "Full pipeline: prospect → in progress → completed → monthly support. Communication history and documents."
+      },
+      "projects": {
+        "title": "Project Management",
+        "desc": "Auto-generated tasks by platform (WooCommerce, Shopify, custom). Real-time progress with delivery estimates."
+      },
+      "invoicing": {
+        "title": "Smart Invoicing",
+        "desc": "Invoices with IVU tax, professional PDFs, payment tracking, auto-retainers, and payment reminders."
+      },
+      "portal": {
+        "title": "Client Portal",
+        "desc": "Secure magic link access. Your clients see progress, upload files, and open tickets — with your branding."
+      },
+      "dashboard": {
+        "title": "Dashboard & KPIs",
+        "desc": "7 key metrics: revenue, active clients, projects, overdue tasks, revenue/client, avg time, and pipeline."
+      },
+      "golive": {
+        "title": "Go-Live Checklist",
+        "desc": "Built-in checklist for every ATH Business integration: account, API keys, webhooks, sandbox, and production."
+      }
+    },
+    "pricingTitle": "Simple, transparent pricing",
+    "pricingSub": "Start free. Scale as you grow.",
+    "popular": "Most popular",
+    "comparisonTitle": "Plan comparison",
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "q1": "Do I need a credit card to get started?",
+      "a1": "No. The Free plan is completely free and doesn't require a credit card. You can manage up to 3 clients at no cost.",
+      "q2": "Can I change plans at any time?",
+      "a2": "Yes. You can upgrade or downgrade anytime from your account settings. Changes take effect immediately.",
+      "q3": "Do my clients need to create an account?",
+      "a3": "No. Clients access the portal via a magic link you send by email. No password or account creation needed.",
+      "q4": "What happens to my data if I cancel?",
+      "a4": "Your data is kept for 90 days after cancellation. You can export everything to CSV before canceling.",
+      "q5": "Does it work with any e-commerce platform?",
+      "a5": "Yes. CobraHub has templates for WooCommerce, Shopify, and custom platforms. Tasks are auto-generated based on the client's platform."
+    },
+    "footer": "All rights reserved.",
+    "terms": "Terms",
+    "privacy": "Privacy"
+  },
+  "portal": {
+    "welcome": "Welcome to your portal",
+    "projectProgress": "Project progress",
+    "goLiveScore": "Go-Live Score",
+    "readyForProduction": "Ready for production",
+    "inProgress": "In progress",
+    "pendingSetup": "Pending setup",
+    "tasks": "Tasks",
+    "completed": "Completed",
+    "files": "Files",
+    "uploadFile": "Upload file",
+    "tickets": "Support tickets",
+    "newTicket": "New ticket",
+    "survey": "How was your experience?",
+    "surveySubmit": "Submit",
+    "activityFeed": "Recent activity",
+    "estimatedTimeline": "Estimated timeline",
+    "estimated": "Estimated",
+    "noActiveProject": "No active projects at this time."
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "noResults": "No results",
+    "back": "Back"
+  }
+}

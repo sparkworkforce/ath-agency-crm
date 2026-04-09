@@ -27,8 +27,9 @@ export type AggregateIntegrationStatus = {
 export type IntegrationStatusMinAggregateOutputType = {
   id: string | null
   projectId: string | null
-  athAccountStatus: $Enums.ATHAccountStatus | null
-  athPublicToken: string | null
+  processor: string | null
+  accountStatus: $Enums.ATHAccountStatus | null
+  publicToken: string | null
   environment: string | null
   webhookUrl: string | null
   webhookVerified: boolean | null
@@ -42,8 +43,9 @@ export type IntegrationStatusMinAggregateOutputType = {
 export type IntegrationStatusMaxAggregateOutputType = {
   id: string | null
   projectId: string | null
-  athAccountStatus: $Enums.ATHAccountStatus | null
-  athPublicToken: string | null
+  processor: string | null
+  accountStatus: $Enums.ATHAccountStatus | null
+  publicToken: string | null
   environment: string | null
   webhookUrl: string | null
   webhookVerified: boolean | null
@@ -57,8 +59,9 @@ export type IntegrationStatusMaxAggregateOutputType = {
 export type IntegrationStatusCountAggregateOutputType = {
   id: number
   projectId: number
-  athAccountStatus: number
-  athPublicToken: number
+  processor: number
+  accountStatus: number
+  publicToken: number
   environment: number
   webhookUrl: number
   webhookVerified: number
@@ -74,8 +77,9 @@ export type IntegrationStatusCountAggregateOutputType = {
 export type IntegrationStatusMinAggregateInputType = {
   id?: true
   projectId?: true
-  athAccountStatus?: true
-  athPublicToken?: true
+  processor?: true
+  accountStatus?: true
+  publicToken?: true
   environment?: true
   webhookUrl?: true
   webhookVerified?: true
@@ -89,8 +93,9 @@ export type IntegrationStatusMinAggregateInputType = {
 export type IntegrationStatusMaxAggregateInputType = {
   id?: true
   projectId?: true
-  athAccountStatus?: true
-  athPublicToken?: true
+  processor?: true
+  accountStatus?: true
+  publicToken?: true
   environment?: true
   webhookUrl?: true
   webhookVerified?: true
@@ -104,8 +109,9 @@ export type IntegrationStatusMaxAggregateInputType = {
 export type IntegrationStatusCountAggregateInputType = {
   id?: true
   projectId?: true
-  athAccountStatus?: true
-  athPublicToken?: true
+  processor?: true
+  accountStatus?: true
+  publicToken?: true
   environment?: true
   webhookUrl?: true
   webhookVerified?: true
@@ -192,8 +198,9 @@ export type IntegrationStatusGroupByArgs<ExtArgs extends runtime.Types.Extension
 export type IntegrationStatusGroupByOutputType = {
   id: string
   projectId: string
-  athAccountStatus: $Enums.ATHAccountStatus
-  athPublicToken: string | null
+  processor: string
+  accountStatus: $Enums.ATHAccountStatus
+  publicToken: string | null
   environment: string
   webhookUrl: string | null
   webhookVerified: boolean
@@ -228,8 +235,9 @@ export type IntegrationStatusWhereInput = {
   NOT?: Prisma.IntegrationStatusWhereInput | Prisma.IntegrationStatusWhereInput[]
   id?: Prisma.StringFilter<"IntegrationStatus"> | string
   projectId?: Prisma.StringFilter<"IntegrationStatus"> | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusFilter<"IntegrationStatus"> | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
+  processor?: Prisma.StringFilter<"IntegrationStatus"> | string
+  accountStatus?: Prisma.EnumATHAccountStatusFilter<"IntegrationStatus"> | $Enums.ATHAccountStatus
+  publicToken?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
   environment?: Prisma.StringFilter<"IntegrationStatus"> | string
   webhookUrl?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
   webhookVerified?: Prisma.BoolFilter<"IntegrationStatus"> | boolean
@@ -244,8 +252,9 @@ export type IntegrationStatusWhereInput = {
 export type IntegrationStatusOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
-  athAccountStatus?: Prisma.SortOrder
-  athPublicToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  processor?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrderInput | Prisma.SortOrder
   environment?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   webhookVerified?: Prisma.SortOrder
@@ -259,12 +268,14 @@ export type IntegrationStatusOrderByWithRelationInput = {
 
 export type IntegrationStatusWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  projectId?: string
+  projectId_processor?: Prisma.IntegrationStatusProjectIdProcessorCompoundUniqueInput
   AND?: Prisma.IntegrationStatusWhereInput | Prisma.IntegrationStatusWhereInput[]
   OR?: Prisma.IntegrationStatusWhereInput[]
   NOT?: Prisma.IntegrationStatusWhereInput | Prisma.IntegrationStatusWhereInput[]
-  athAccountStatus?: Prisma.EnumATHAccountStatusFilter<"IntegrationStatus"> | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
+  projectId?: Prisma.StringFilter<"IntegrationStatus"> | string
+  processor?: Prisma.StringFilter<"IntegrationStatus"> | string
+  accountStatus?: Prisma.EnumATHAccountStatusFilter<"IntegrationStatus"> | $Enums.ATHAccountStatus
+  publicToken?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
   environment?: Prisma.StringFilter<"IntegrationStatus"> | string
   webhookUrl?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
   webhookVerified?: Prisma.BoolFilter<"IntegrationStatus"> | boolean
@@ -274,13 +285,14 @@ export type IntegrationStatusWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
   updatedAt?: Prisma.DateTimeFilter<"IntegrationStatus"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
-}, "id" | "projectId">
+}, "id" | "projectId_processor">
 
 export type IntegrationStatusOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
-  athAccountStatus?: Prisma.SortOrder
-  athPublicToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  processor?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrderInput | Prisma.SortOrder
   environment?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   webhookVerified?: Prisma.SortOrder
@@ -300,8 +312,9 @@ export type IntegrationStatusScalarWhereWithAggregatesInput = {
   NOT?: Prisma.IntegrationStatusScalarWhereWithAggregatesInput | Prisma.IntegrationStatusScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"IntegrationStatus"> | string
   projectId?: Prisma.StringWithAggregatesFilter<"IntegrationStatus"> | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusWithAggregatesFilter<"IntegrationStatus"> | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.StringNullableWithAggregatesFilter<"IntegrationStatus"> | string | null
+  processor?: Prisma.StringWithAggregatesFilter<"IntegrationStatus"> | string
+  accountStatus?: Prisma.EnumATHAccountStatusWithAggregatesFilter<"IntegrationStatus"> | $Enums.ATHAccountStatus
+  publicToken?: Prisma.StringNullableWithAggregatesFilter<"IntegrationStatus"> | string | null
   environment?: Prisma.StringWithAggregatesFilter<"IntegrationStatus"> | string
   webhookUrl?: Prisma.StringNullableWithAggregatesFilter<"IntegrationStatus"> | string | null
   webhookVerified?: Prisma.BoolWithAggregatesFilter<"IntegrationStatus"> | boolean
@@ -314,8 +327,9 @@ export type IntegrationStatusScalarWhereWithAggregatesInput = {
 
 export type IntegrationStatusCreateInput = {
   id?: string
-  athAccountStatus?: $Enums.ATHAccountStatus
-  athPublicToken?: string | null
+  processor?: string
+  accountStatus?: $Enums.ATHAccountStatus
+  publicToken?: string | null
   environment?: string
   webhookUrl?: string | null
   webhookVerified?: boolean
@@ -330,8 +344,9 @@ export type IntegrationStatusCreateInput = {
 export type IntegrationStatusUncheckedCreateInput = {
   id?: string
   projectId: string
-  athAccountStatus?: $Enums.ATHAccountStatus
-  athPublicToken?: string | null
+  processor?: string
+  accountStatus?: $Enums.ATHAccountStatus
+  publicToken?: string | null
   environment?: string
   webhookUrl?: string | null
   webhookVerified?: boolean
@@ -344,8 +359,9 @@ export type IntegrationStatusUncheckedCreateInput = {
 
 export type IntegrationStatusUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processor?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   environment?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   webhookVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -360,8 +376,9 @@ export type IntegrationStatusUpdateInput = {
 export type IntegrationStatusUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processor?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   environment?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   webhookVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -375,8 +392,9 @@ export type IntegrationStatusUncheckedUpdateInput = {
 export type IntegrationStatusCreateManyInput = {
   id?: string
   projectId: string
-  athAccountStatus?: $Enums.ATHAccountStatus
-  athPublicToken?: string | null
+  processor?: string
+  accountStatus?: $Enums.ATHAccountStatus
+  publicToken?: string | null
   environment?: string
   webhookUrl?: string | null
   webhookVerified?: boolean
@@ -389,8 +407,9 @@ export type IntegrationStatusCreateManyInput = {
 
 export type IntegrationStatusUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processor?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   environment?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   webhookVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -404,8 +423,9 @@ export type IntegrationStatusUpdateManyMutationInput = {
 export type IntegrationStatusUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processor?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   environment?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   webhookVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -416,16 +436,27 @@ export type IntegrationStatusUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type IntegrationStatusNullableScalarRelationFilter = {
-  is?: Prisma.IntegrationStatusWhereInput | null
-  isNot?: Prisma.IntegrationStatusWhereInput | null
+export type IntegrationStatusListRelationFilter = {
+  every?: Prisma.IntegrationStatusWhereInput
+  some?: Prisma.IntegrationStatusWhereInput
+  none?: Prisma.IntegrationStatusWhereInput
+}
+
+export type IntegrationStatusOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type IntegrationStatusProjectIdProcessorCompoundUniqueInput = {
+  projectId: string
+  processor: string
 }
 
 export type IntegrationStatusCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
-  athAccountStatus?: Prisma.SortOrder
-  athPublicToken?: Prisma.SortOrder
+  processor?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrder
   environment?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrder
   webhookVerified?: Prisma.SortOrder
@@ -439,8 +470,9 @@ export type IntegrationStatusCountOrderByAggregateInput = {
 export type IntegrationStatusMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
-  athAccountStatus?: Prisma.SortOrder
-  athPublicToken?: Prisma.SortOrder
+  processor?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrder
   environment?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrder
   webhookVerified?: Prisma.SortOrder
@@ -454,8 +486,9 @@ export type IntegrationStatusMaxOrderByAggregateInput = {
 export type IntegrationStatusMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
-  athAccountStatus?: Prisma.SortOrder
-  athPublicToken?: Prisma.SortOrder
+  processor?: Prisma.SortOrder
+  accountStatus?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrder
   environment?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrder
   webhookVerified?: Prisma.SortOrder
@@ -466,36 +499,46 @@ export type IntegrationStatusMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type IntegrationStatusCreateNestedOneWithoutProjectInput = {
-  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput
-  connect?: Prisma.IntegrationStatusWhereUniqueInput
+export type IntegrationStatusCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput> | Prisma.IntegrationStatusCreateWithoutProjectInput[] | Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput | Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.IntegrationStatusCreateManyProjectInputEnvelope
+  connect?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
 }
 
-export type IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput = {
-  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput
-  connect?: Prisma.IntegrationStatusWhereUniqueInput
+export type IntegrationStatusUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput> | Prisma.IntegrationStatusCreateWithoutProjectInput[] | Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput | Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.IntegrationStatusCreateManyProjectInputEnvelope
+  connect?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
 }
 
-export type IntegrationStatusUpdateOneWithoutProjectNestedInput = {
-  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput
-  upsert?: Prisma.IntegrationStatusUpsertWithoutProjectInput
-  disconnect?: Prisma.IntegrationStatusWhereInput | boolean
-  delete?: Prisma.IntegrationStatusWhereInput | boolean
-  connect?: Prisma.IntegrationStatusWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.IntegrationStatusUpdateToOneWithWhereWithoutProjectInput, Prisma.IntegrationStatusUpdateWithoutProjectInput>, Prisma.IntegrationStatusUncheckedUpdateWithoutProjectInput>
+export type IntegrationStatusUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput> | Prisma.IntegrationStatusCreateWithoutProjectInput[] | Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput | Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.IntegrationStatusUpsertWithWhereUniqueWithoutProjectInput | Prisma.IntegrationStatusUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.IntegrationStatusCreateManyProjectInputEnvelope
+  set?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  disconnect?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  delete?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  connect?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  update?: Prisma.IntegrationStatusUpdateWithWhereUniqueWithoutProjectInput | Prisma.IntegrationStatusUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.IntegrationStatusUpdateManyWithWhereWithoutProjectInput | Prisma.IntegrationStatusUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.IntegrationStatusScalarWhereInput | Prisma.IntegrationStatusScalarWhereInput[]
 }
 
-export type IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput = {
-  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput>
-  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput
-  upsert?: Prisma.IntegrationStatusUpsertWithoutProjectInput
-  disconnect?: Prisma.IntegrationStatusWhereInput | boolean
-  delete?: Prisma.IntegrationStatusWhereInput | boolean
-  connect?: Prisma.IntegrationStatusWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.IntegrationStatusUpdateToOneWithWhereWithoutProjectInput, Prisma.IntegrationStatusUpdateWithoutProjectInput>, Prisma.IntegrationStatusUncheckedUpdateWithoutProjectInput>
+export type IntegrationStatusUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput> | Prisma.IntegrationStatusCreateWithoutProjectInput[] | Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput | Prisma.IntegrationStatusCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.IntegrationStatusUpsertWithWhereUniqueWithoutProjectInput | Prisma.IntegrationStatusUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.IntegrationStatusCreateManyProjectInputEnvelope
+  set?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  disconnect?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  delete?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  connect?: Prisma.IntegrationStatusWhereUniqueInput | Prisma.IntegrationStatusWhereUniqueInput[]
+  update?: Prisma.IntegrationStatusUpdateWithWhereUniqueWithoutProjectInput | Prisma.IntegrationStatusUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.IntegrationStatusUpdateManyWithWhereWithoutProjectInput | Prisma.IntegrationStatusUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.IntegrationStatusScalarWhereInput | Prisma.IntegrationStatusScalarWhereInput[]
 }
 
 export type EnumATHAccountStatusFieldUpdateOperationsInput = {
@@ -508,8 +551,9 @@ export type NullableBoolFieldUpdateOperationsInput = {
 
 export type IntegrationStatusCreateWithoutProjectInput = {
   id?: string
-  athAccountStatus?: $Enums.ATHAccountStatus
-  athPublicToken?: string | null
+  processor?: string
+  accountStatus?: $Enums.ATHAccountStatus
+  publicToken?: string | null
   environment?: string
   webhookUrl?: string | null
   webhookVerified?: boolean
@@ -522,8 +566,9 @@ export type IntegrationStatusCreateWithoutProjectInput = {
 
 export type IntegrationStatusUncheckedCreateWithoutProjectInput = {
   id?: string
-  athAccountStatus?: $Enums.ATHAccountStatus
-  athPublicToken?: string | null
+  processor?: string
+  accountStatus?: $Enums.ATHAccountStatus
+  publicToken?: string | null
   environment?: string
   webhookUrl?: string | null
   webhookVerified?: boolean
@@ -539,21 +584,66 @@ export type IntegrationStatusCreateOrConnectWithoutProjectInput = {
   create: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput>
 }
 
-export type IntegrationStatusUpsertWithoutProjectInput = {
-  update: Prisma.XOR<Prisma.IntegrationStatusUpdateWithoutProjectInput, Prisma.IntegrationStatusUncheckedUpdateWithoutProjectInput>
-  create: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput>
-  where?: Prisma.IntegrationStatusWhereInput
+export type IntegrationStatusCreateManyProjectInputEnvelope = {
+  data: Prisma.IntegrationStatusCreateManyProjectInput | Prisma.IntegrationStatusCreateManyProjectInput[]
+  skipDuplicates?: boolean
 }
 
-export type IntegrationStatusUpdateToOneWithWhereWithoutProjectInput = {
-  where?: Prisma.IntegrationStatusWhereInput
+export type IntegrationStatusUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.IntegrationStatusWhereUniqueInput
+  update: Prisma.XOR<Prisma.IntegrationStatusUpdateWithoutProjectInput, Prisma.IntegrationStatusUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.IntegrationStatusCreateWithoutProjectInput, Prisma.IntegrationStatusUncheckedCreateWithoutProjectInput>
+}
+
+export type IntegrationStatusUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.IntegrationStatusWhereUniqueInput
   data: Prisma.XOR<Prisma.IntegrationStatusUpdateWithoutProjectInput, Prisma.IntegrationStatusUncheckedUpdateWithoutProjectInput>
+}
+
+export type IntegrationStatusUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.IntegrationStatusScalarWhereInput
+  data: Prisma.XOR<Prisma.IntegrationStatusUpdateManyMutationInput, Prisma.IntegrationStatusUncheckedUpdateManyWithoutProjectInput>
+}
+
+export type IntegrationStatusScalarWhereInput = {
+  AND?: Prisma.IntegrationStatusScalarWhereInput | Prisma.IntegrationStatusScalarWhereInput[]
+  OR?: Prisma.IntegrationStatusScalarWhereInput[]
+  NOT?: Prisma.IntegrationStatusScalarWhereInput | Prisma.IntegrationStatusScalarWhereInput[]
+  id?: Prisma.StringFilter<"IntegrationStatus"> | string
+  projectId?: Prisma.StringFilter<"IntegrationStatus"> | string
+  processor?: Prisma.StringFilter<"IntegrationStatus"> | string
+  accountStatus?: Prisma.EnumATHAccountStatusFilter<"IntegrationStatus"> | $Enums.ATHAccountStatus
+  publicToken?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
+  environment?: Prisma.StringFilter<"IntegrationStatus"> | string
+  webhookUrl?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
+  webhookVerified?: Prisma.BoolFilter<"IntegrationStatus"> | boolean
+  testTransactionAt?: Prisma.DateTimeNullableFilter<"IntegrationStatus"> | Date | string | null
+  testTransactionOk?: Prisma.BoolNullableFilter<"IntegrationStatus"> | boolean | null
+  goLiveAt?: Prisma.DateTimeNullableFilter<"IntegrationStatus"> | Date | string | null
+  notes?: Prisma.StringNullableFilter<"IntegrationStatus"> | string | null
+  updatedAt?: Prisma.DateTimeFilter<"IntegrationStatus"> | Date | string
+}
+
+export type IntegrationStatusCreateManyProjectInput = {
+  id?: string
+  processor?: string
+  accountStatus?: $Enums.ATHAccountStatus
+  publicToken?: string | null
+  environment?: string
+  webhookUrl?: string | null
+  webhookVerified?: boolean
+  testTransactionAt?: Date | string | null
+  testTransactionOk?: boolean | null
+  goLiveAt?: Date | string | null
+  notes?: string | null
+  updatedAt?: Date | string
 }
 
 export type IntegrationStatusUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processor?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   environment?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   webhookVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -566,8 +656,24 @@ export type IntegrationStatusUpdateWithoutProjectInput = {
 
 export type IntegrationStatusUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  athAccountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
-  athPublicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  processor?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  environment?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  webhookVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  testTransactionAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  testTransactionOk?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  goLiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type IntegrationStatusUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  processor?: Prisma.StringFieldUpdateOperationsInput | string
+  accountStatus?: Prisma.EnumATHAccountStatusFieldUpdateOperationsInput | $Enums.ATHAccountStatus
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   environment?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   webhookVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -583,8 +689,9 @@ export type IntegrationStatusUncheckedUpdateWithoutProjectInput = {
 export type IntegrationStatusSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
-  athAccountStatus?: boolean
-  athPublicToken?: boolean
+  processor?: boolean
+  accountStatus?: boolean
+  publicToken?: boolean
   environment?: boolean
   webhookUrl?: boolean
   webhookVerified?: boolean
@@ -599,8 +706,9 @@ export type IntegrationStatusSelect<ExtArgs extends runtime.Types.Extensions.Int
 export type IntegrationStatusSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
-  athAccountStatus?: boolean
-  athPublicToken?: boolean
+  processor?: boolean
+  accountStatus?: boolean
+  publicToken?: boolean
   environment?: boolean
   webhookUrl?: boolean
   webhookVerified?: boolean
@@ -615,8 +723,9 @@ export type IntegrationStatusSelectCreateManyAndReturn<ExtArgs extends runtime.T
 export type IntegrationStatusSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
-  athAccountStatus?: boolean
-  athPublicToken?: boolean
+  processor?: boolean
+  accountStatus?: boolean
+  publicToken?: boolean
   environment?: boolean
   webhookUrl?: boolean
   webhookVerified?: boolean
@@ -631,8 +740,9 @@ export type IntegrationStatusSelectUpdateManyAndReturn<ExtArgs extends runtime.T
 export type IntegrationStatusSelectScalar = {
   id?: boolean
   projectId?: boolean
-  athAccountStatus?: boolean
-  athPublicToken?: boolean
+  processor?: boolean
+  accountStatus?: boolean
+  publicToken?: boolean
   environment?: boolean
   webhookUrl?: boolean
   webhookVerified?: boolean
@@ -643,7 +753,7 @@ export type IntegrationStatusSelectScalar = {
   updatedAt?: boolean
 }
 
-export type IntegrationStatusOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "athAccountStatus" | "athPublicToken" | "environment" | "webhookUrl" | "webhookVerified" | "testTransactionAt" | "testTransactionOk" | "goLiveAt" | "notes" | "updatedAt", ExtArgs["result"]["integrationStatus"]>
+export type IntegrationStatusOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "processor" | "accountStatus" | "publicToken" | "environment" | "webhookUrl" | "webhookVerified" | "testTransactionAt" | "testTransactionOk" | "goLiveAt" | "notes" | "updatedAt", ExtArgs["result"]["integrationStatus"]>
 export type IntegrationStatusInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -662,8 +772,9 @@ export type $IntegrationStatusPayload<ExtArgs extends runtime.Types.Extensions.I
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     projectId: string
-    athAccountStatus: $Enums.ATHAccountStatus
-    athPublicToken: string | null
+    processor: string
+    accountStatus: $Enums.ATHAccountStatus
+    publicToken: string | null
     environment: string
     webhookUrl: string | null
     webhookVerified: boolean
@@ -1098,8 +1209,9 @@ export interface Prisma__IntegrationStatusClient<T, Null = never, ExtArgs extend
 export interface IntegrationStatusFieldRefs {
   readonly id: Prisma.FieldRef<"IntegrationStatus", 'String'>
   readonly projectId: Prisma.FieldRef<"IntegrationStatus", 'String'>
-  readonly athAccountStatus: Prisma.FieldRef<"IntegrationStatus", 'ATHAccountStatus'>
-  readonly athPublicToken: Prisma.FieldRef<"IntegrationStatus", 'String'>
+  readonly processor: Prisma.FieldRef<"IntegrationStatus", 'String'>
+  readonly accountStatus: Prisma.FieldRef<"IntegrationStatus", 'ATHAccountStatus'>
+  readonly publicToken: Prisma.FieldRef<"IntegrationStatus", 'String'>
   readonly environment: Prisma.FieldRef<"IntegrationStatus", 'String'>
   readonly webhookUrl: Prisma.FieldRef<"IntegrationStatus", 'String'>
   readonly webhookVerified: Prisma.FieldRef<"IntegrationStatus", 'Boolean'>

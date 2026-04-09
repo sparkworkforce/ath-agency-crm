@@ -3,9 +3,12 @@ import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 
+const PROCESSORS = ['ath_business', 'ath_movil', 'paypal', 'stripe_connect', 'square', 'mercado_pago'] as const
+
 const IntegrationUpdateSchema = z.object({
-  athAccountStatus: z.enum(['pending', 'submitted', 'approved', 'active', 'rejected']).optional(),
-  athPublicToken: z.string().optional(),
+  processor: z.enum(PROCESSORS).optional().default('ath_business'),
+  accountStatus: z.enum(['pending', 'submitted', 'approved', 'active', 'rejected']).optional(),
+  publicToken: z.string().optional(),
   environment: z.enum(['sandbox', 'production']).optional(),
   webhookUrl: z.string().url().optional().or(z.literal('')),
   webhookVerified: z.boolean().optional(),
@@ -22,8 +25,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const project = await prisma.project.findFirst({ where: { id, client: { agencyId: session.user.agencyId } } })
   if (!project) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
 
-  const status = await prisma.integrationStatus.findUnique({ where: { projectId: id } })
-  return NextResponse.json({ status })
+  const integrations = await prisma.integrationStatus.findMany({ where: { projectId: id }, orderBy: { updatedAt: 'desc' } })
+  return NextResponse.json({ integrations, processors: PROCESSORS })
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -38,14 +41,15 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const result = IntegrationUpdateSchema.safeParse(body)
   if (!result.success) return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
 
-  const data: any = { ...result.data }
-  if (data.goLiveAt) data.goLiveAt = new Date(data.goLiveAt)
-  if (data.testTransactionOk !== undefined) data.testTransactionAt = new Date()
+  const { processor, ...data } = result.data
+  const updateData: Record<string, unknown> = { ...data }
+  if (updateData.goLiveAt) updateData.goLiveAt = new Date(updateData.goLiveAt as string)
+  if (updateData.testTransactionOk !== undefined) updateData.testTransactionAt = new Date()
 
   const status = await prisma.integrationStatus.upsert({
-    where: { projectId: id },
-    create: { projectId: id, ...data },
-    update: data,
+    where: { projectId_processor: { projectId: id, processor } },
+    create: { projectId: id, processor, ...updateData },
+    update: updateData,
   })
 
   return NextResponse.json({ status })

@@ -239,7 +239,8 @@ export type ProjectWhereInput = {
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   tasks?: Prisma.TaskListRelationFilter
   files?: Prisma.ProjectFileListRelationFilter
-  integrationStatus?: Prisma.XOR<Prisma.IntegrationStatusNullableScalarRelationFilter, Prisma.IntegrationStatusWhereInput> | null
+  integrationStatus?: Prisma.IntegrationStatusListRelationFilter
+  feedback?: Prisma.XOR<Prisma.ProjectFeedbackNullableScalarRelationFilter, Prisma.ProjectFeedbackWhereInput> | null
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -254,7 +255,8 @@ export type ProjectOrderByWithRelationInput = {
   client?: Prisma.ClientOrderByWithRelationInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
   files?: Prisma.ProjectFileOrderByRelationAggregateInput
-  integrationStatus?: Prisma.IntegrationStatusOrderByWithRelationInput
+  integrationStatus?: Prisma.IntegrationStatusOrderByRelationAggregateInput
+  feedback?: Prisma.ProjectFeedbackOrderByWithRelationInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -272,7 +274,8 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
   tasks?: Prisma.TaskListRelationFilter
   files?: Prisma.ProjectFileListRelationFilter
-  integrationStatus?: Prisma.XOR<Prisma.IntegrationStatusNullableScalarRelationFilter, Prisma.IntegrationStatusWhereInput> | null
+  integrationStatus?: Prisma.IntegrationStatusListRelationFilter
+  feedback?: Prisma.XOR<Prisma.ProjectFeedbackNullableScalarRelationFilter, Prisma.ProjectFeedbackWhereInput> | null
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -316,7 +319,8 @@ export type ProjectCreateInput = {
   client: Prisma.ClientCreateNestedOneWithoutProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -330,7 +334,8 @@ export type ProjectUncheckedCreateInput = {
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -344,7 +349,8 @@ export type ProjectUpdateInput = {
   client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -358,7 +364,8 @@ export type ProjectUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -525,6 +532,20 @@ export type ProjectUpdateOneRequiredWithoutFilesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutFilesInput, Prisma.ProjectUpdateWithoutFilesInput>, Prisma.ProjectUncheckedUpdateWithoutFilesInput>
 }
 
+export type ProjectCreateNestedOneWithoutFeedbackInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutFeedbackInput, Prisma.ProjectUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutFeedbackInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutFeedbackNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutFeedbackInput, Prisma.ProjectUncheckedCreateWithoutFeedbackInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutFeedbackInput
+  upsert?: Prisma.ProjectUpsertWithoutFeedbackInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutFeedbackInput, Prisma.ProjectUpdateWithoutFeedbackInput>, Prisma.ProjectUncheckedUpdateWithoutFeedbackInput>
+}
+
 export type ProjectCreateNestedOneWithoutIntegrationStatusInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutIntegrationStatusInput, Prisma.ProjectUncheckedCreateWithoutIntegrationStatusInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutIntegrationStatusInput
@@ -549,7 +570,8 @@ export type ProjectCreateWithoutClientInput = {
   updatedAt?: Date | string
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutClientInput = {
@@ -562,7 +584,8 @@ export type ProjectUncheckedCreateWithoutClientInput = {
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutClientInput = {
@@ -615,7 +638,8 @@ export type ProjectCreateWithoutTasksInput = {
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProjectsInput
   files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -628,7 +652,8 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -657,7 +682,8 @@ export type ProjectUpdateWithoutTasksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
   files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -670,7 +696,8 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutFilesInput = {
@@ -683,7 +710,8 @@ export type ProjectCreateWithoutFilesInput = {
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutFilesInput = {
@@ -696,7 +724,8 @@ export type ProjectUncheckedCreateWithoutFilesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedOneWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutFilesInput = {
@@ -725,7 +754,8 @@ export type ProjectUpdateWithoutFilesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutFilesInput = {
@@ -738,7 +768,80 @@ export type ProjectUncheckedUpdateWithoutFilesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUncheckedUpdateOneWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutFeedbackInput = {
+  id?: string
+  name: string
+  completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  client: Prisma.ClientCreateNestedOneWithoutProjectsInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
+  files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutFeedbackInput = {
+  id?: string
+  name: string
+  clientId: string
+  completionPercentage?: number
+  estimatedCompletionDate?: Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
+  files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutFeedbackInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutFeedbackInput, Prisma.ProjectUncheckedCreateWithoutFeedbackInput>
+}
+
+export type ProjectUpsertWithoutFeedbackInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutFeedbackInput, Prisma.ProjectUncheckedUpdateWithoutFeedbackInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutFeedbackInput, Prisma.ProjectUncheckedCreateWithoutFeedbackInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutFeedbackInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutFeedbackInput, Prisma.ProjectUncheckedUpdateWithoutFeedbackInput>
+}
+
+export type ProjectUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
+  files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutFeedbackInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  completionPercentage?: Prisma.FloatFieldUpdateOperationsInput | number
+  estimatedCompletionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  milestonesSent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
+  files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutIntegrationStatusInput = {
@@ -752,6 +855,7 @@ export type ProjectCreateWithoutIntegrationStatusInput = {
   client: Prisma.ClientCreateNestedOneWithoutProjectsInput
   tasks?: Prisma.TaskCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutIntegrationStatusInput = {
@@ -765,6 +869,7 @@ export type ProjectUncheckedCreateWithoutIntegrationStatusInput = {
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
   files?: Prisma.ProjectFileUncheckedCreateNestedManyWithoutProjectInput
+  feedback?: Prisma.ProjectFeedbackUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutIntegrationStatusInput = {
@@ -794,6 +899,7 @@ export type ProjectUpdateWithoutIntegrationStatusInput = {
   client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutIntegrationStatusInput = {
@@ -807,6 +913,7 @@ export type ProjectUncheckedUpdateWithoutIntegrationStatusInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyClientInput = {
@@ -829,7 +936,8 @@ export type ProjectUpdateWithoutClientInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -842,7 +950,8 @@ export type ProjectUncheckedUpdateWithoutClientInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
   files?: Prisma.ProjectFileUncheckedUpdateManyWithoutProjectNestedInput
-  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateOneWithoutProjectNestedInput
+  integrationStatus?: Prisma.IntegrationStatusUncheckedUpdateManyWithoutProjectNestedInput
+  feedback?: Prisma.ProjectFeedbackUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -863,11 +972,13 @@ export type ProjectUncheckedUpdateManyWithoutClientInput = {
 export type ProjectCountOutputType = {
   tasks: number
   files: number
+  integrationStatus: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tasks?: boolean | ProjectCountOutputTypeCountTasksArgs
   files?: boolean | ProjectCountOutputTypeCountFilesArgs
+  integrationStatus?: boolean | ProjectCountOutputTypeCountIntegrationStatusArgs
 }
 
 /**
@@ -894,6 +1005,13 @@ export type ProjectCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.ProjectFileWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountIntegrationStatusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.IntegrationStatusWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -908,6 +1026,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   tasks?: boolean | Prisma.Project$tasksArgs<ExtArgs>
   files?: boolean | Prisma.Project$filesArgs<ExtArgs>
   integrationStatus?: boolean | Prisma.Project$integrationStatusArgs<ExtArgs>
+  feedback?: boolean | Prisma.Project$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -952,6 +1071,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   tasks?: boolean | Prisma.Project$tasksArgs<ExtArgs>
   files?: boolean | Prisma.Project$filesArgs<ExtArgs>
   integrationStatus?: boolean | Prisma.Project$integrationStatusArgs<ExtArgs>
+  feedback?: boolean | Prisma.Project$feedbackArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -967,7 +1087,8 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     client: Prisma.$ClientPayload<ExtArgs>
     tasks: Prisma.$TaskPayload<ExtArgs>[]
     files: Prisma.$ProjectFilePayload<ExtArgs>[]
-    integrationStatus: Prisma.$IntegrationStatusPayload<ExtArgs> | null
+    integrationStatus: Prisma.$IntegrationStatusPayload<ExtArgs>[]
+    feedback: Prisma.$ProjectFeedbackPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1375,7 +1496,8 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tasks<T extends Prisma.Project$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   files<T extends Prisma.Project$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  integrationStatus<T extends Prisma.Project$integrationStatusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$integrationStatusArgs<ExtArgs>>): Prisma.Prisma__IntegrationStatusClient<runtime.Types.Result.GetResult<Prisma.$IntegrationStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  integrationStatus<T extends Prisma.Project$integrationStatusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$integrationStatusArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IntegrationStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feedback<T extends Prisma.Project$feedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$feedbackArgs<ExtArgs>>): Prisma.Prisma__ProjectFeedbackClient<runtime.Types.Result.GetResult<Prisma.$ProjectFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1878,6 +2000,30 @@ export type Project$integrationStatusArgs<ExtArgs extends runtime.Types.Extensio
    */
   include?: Prisma.IntegrationStatusInclude<ExtArgs> | null
   where?: Prisma.IntegrationStatusWhereInput
+  orderBy?: Prisma.IntegrationStatusOrderByWithRelationInput | Prisma.IntegrationStatusOrderByWithRelationInput[]
+  cursor?: Prisma.IntegrationStatusWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.IntegrationStatusScalarFieldEnum | Prisma.IntegrationStatusScalarFieldEnum[]
+}
+
+/**
+ * Project.feedback
+ */
+export type Project$feedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectFeedback
+   */
+  select?: Prisma.ProjectFeedbackSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectFeedback
+   */
+  omit?: Prisma.ProjectFeedbackOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectFeedbackInclude<ExtArgs> | null
+  where?: Prisma.ProjectFeedbackWhereInput
 }
 
 /**

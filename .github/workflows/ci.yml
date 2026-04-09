@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [main]
@@ -9,32 +8,33 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      DIRECT_URL: postgresql://ci:ci@localhost:5432/ci
+      NEXTAUTH_SECRET: ci-secret
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-
       - run: npm ci
-
+      - run: npm audit --audit-level=high || true
       - run: npx prisma generate
-
-      - name: Create Prisma barrel file
-        run: echo "export * from './client'" > prisma/generated/prisma/client/index.ts
-
-      - run: npx tsc --noEmit
-
+      - run: npx prisma migrate deploy
       - run: npm run test
-
-      - name: Build
-        run: npm run build
-        env:
-          DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
-          NEXTAUTH_SECRET: ci-secret
-          NEXTAUTH_URL: http://localhost:3000
-
-      - run: npm audit --audit-level=high
-        continue-on-error: true
+      - run: npm run build

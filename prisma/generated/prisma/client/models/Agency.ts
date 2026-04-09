@@ -51,6 +51,9 @@ export type AgencyMinAggregateOutputType = {
   maxClients: number | null
   maxUsers: number | null
   currency: string | null
+  webhookUrl: string | null
+  apiKey: string | null
+  customDomain: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +73,9 @@ export type AgencyMaxAggregateOutputType = {
   maxClients: number | null
   maxUsers: number | null
   currency: string | null
+  webhookUrl: string | null
+  apiKey: string | null
+  customDomain: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -89,6 +95,9 @@ export type AgencyCountAggregateOutputType = {
   maxClients: number
   maxUsers: number
   currency: number
+  webhookUrl: number
+  apiKey: number
+  customDomain: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -120,6 +129,9 @@ export type AgencyMinAggregateInputType = {
   maxClients?: true
   maxUsers?: true
   currency?: true
+  webhookUrl?: true
+  apiKey?: true
+  customDomain?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -139,6 +151,9 @@ export type AgencyMaxAggregateInputType = {
   maxClients?: true
   maxUsers?: true
   currency?: true
+  webhookUrl?: true
+  apiKey?: true
+  customDomain?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -158,6 +173,9 @@ export type AgencyCountAggregateInputType = {
   maxClients?: true
   maxUsers?: true
   currency?: true
+  webhookUrl?: true
+  apiKey?: true
+  customDomain?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -264,6 +282,9 @@ export type AgencyGroupByOutputType = {
   maxClients: number
   maxUsers: number
   currency: string
+  webhookUrl: string | null
+  apiKey: string | null
+  customDomain: string | null
   createdAt: Date
   updatedAt: Date
   _count: AgencyCountAggregateOutputType | null
@@ -306,11 +327,17 @@ export type AgencyWhereInput = {
   maxClients?: Prisma.IntFilter<"Agency"> | number
   maxUsers?: Prisma.IntFilter<"Agency"> | number
   currency?: Prisma.StringFilter<"Agency"> | string
+  webhookUrl?: Prisma.StringNullableFilter<"Agency"> | string | null
+  apiKey?: Prisma.StringNullableFilter<"Agency"> | string | null
+  customDomain?: Prisma.StringNullableFilter<"Agency"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Agency"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Agency"> | Date | string
   users?: Prisma.UserListRelationFilter
   clients?: Prisma.ClientListRelationFilter
   snippets?: Prisma.CodeSnippetListRelationFilter
+  templates?: Prisma.ProjectTemplateListRelationFilter
+  referralsMade?: Prisma.ReferralListRelationFilter
+  referralsReceived?: Prisma.ReferralListRelationFilter
 }
 
 export type AgencyOrderByWithRelationInput = {
@@ -328,17 +355,25 @@ export type AgencyOrderByWithRelationInput = {
   maxClients?: Prisma.SortOrder
   maxUsers?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  webhookUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  apiKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  customDomain?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
   clients?: Prisma.ClientOrderByRelationAggregateInput
   snippets?: Prisma.CodeSnippetOrderByRelationAggregateInput
+  templates?: Prisma.ProjectTemplateOrderByRelationAggregateInput
+  referralsMade?: Prisma.ReferralOrderByRelationAggregateInput
+  referralsReceived?: Prisma.ReferralOrderByRelationAggregateInput
 }
 
 export type AgencyWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   slug?: string
   stripeCustomerId?: string
+  apiKey?: string
+  customDomain?: string
   AND?: Prisma.AgencyWhereInput | Prisma.AgencyWhereInput[]
   OR?: Prisma.AgencyWhereInput[]
   NOT?: Prisma.AgencyWhereInput | Prisma.AgencyWhereInput[]
@@ -353,12 +388,16 @@ export type AgencyWhereUniqueInput = Prisma.AtLeast<{
   maxClients?: Prisma.IntFilter<"Agency"> | number
   maxUsers?: Prisma.IntFilter<"Agency"> | number
   currency?: Prisma.StringFilter<"Agency"> | string
+  webhookUrl?: Prisma.StringNullableFilter<"Agency"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Agency"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Agency"> | Date | string
   users?: Prisma.UserListRelationFilter
   clients?: Prisma.ClientListRelationFilter
   snippets?: Prisma.CodeSnippetListRelationFilter
-}, "id" | "slug" | "stripeCustomerId">
+  templates?: Prisma.ProjectTemplateListRelationFilter
+  referralsMade?: Prisma.ReferralListRelationFilter
+  referralsReceived?: Prisma.ReferralListRelationFilter
+}, "id" | "slug" | "stripeCustomerId" | "apiKey" | "customDomain">
 
 export type AgencyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -375,6 +414,9 @@ export type AgencyOrderByWithAggregationInput = {
   maxClients?: Prisma.SortOrder
   maxUsers?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  webhookUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  apiKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  customDomain?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AgencyCountOrderByAggregateInput
@@ -402,6 +444,9 @@ export type AgencyScalarWhereWithAggregatesInput = {
   maxClients?: Prisma.IntWithAggregatesFilter<"Agency"> | number
   maxUsers?: Prisma.IntWithAggregatesFilter<"Agency"> | number
   currency?: Prisma.StringWithAggregatesFilter<"Agency"> | string
+  webhookUrl?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
+  apiKey?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
+  customDomain?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Agency"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Agency"> | Date | string
 }
@@ -421,11 +466,17 @@ export type AgencyCreateInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutAgencyInput
   clients?: Prisma.ClientCreateNestedManyWithoutAgencyInput
   snippets?: Prisma.CodeSnippetCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyUncheckedCreateInput = {
@@ -443,11 +494,17 @@ export type AgencyUncheckedCreateInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutAgencyInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutAgencyInput
   snippets?: Prisma.CodeSnippetUncheckedCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateUncheckedCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyUpdateInput = {
@@ -465,11 +522,17 @@ export type AgencyUpdateInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutAgencyNestedInput
   clients?: Prisma.ClientUpdateManyWithoutAgencyNestedInput
   snippets?: Prisma.CodeSnippetUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredAgencyNestedInput
 }
 
 export type AgencyUncheckedUpdateInput = {
@@ -487,11 +550,17 @@ export type AgencyUncheckedUpdateInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutAgencyNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutAgencyNestedInput
   snippets?: Prisma.CodeSnippetUncheckedUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUncheckedUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredAgencyNestedInput
 }
 
 export type AgencyCreateManyInput = {
@@ -509,6 +578,9 @@ export type AgencyCreateManyInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -528,6 +600,9 @@ export type AgencyUpdateManyMutationInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -547,6 +622,9 @@ export type AgencyUncheckedUpdateManyInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -566,6 +644,9 @@ export type AgencyCountOrderByAggregateInput = {
   maxClients?: Prisma.SortOrder
   maxUsers?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  webhookUrl?: Prisma.SortOrder
+  apiKey?: Prisma.SortOrder
+  customDomain?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -590,6 +671,9 @@ export type AgencyMaxOrderByAggregateInput = {
   maxClients?: Prisma.SortOrder
   maxUsers?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  webhookUrl?: Prisma.SortOrder
+  apiKey?: Prisma.SortOrder
+  customDomain?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -609,6 +693,9 @@ export type AgencyMinOrderByAggregateInput = {
   maxClients?: Prisma.SortOrder
   maxUsers?: Prisma.SortOrder
   currency?: Prisma.SortOrder
+  webhookUrl?: Prisma.SortOrder
+  apiKey?: Prisma.SortOrder
+  customDomain?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -700,6 +787,50 @@ export type AgencyUpdateOneRequiredWithoutSnippetsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AgencyUpdateToOneWithWhereWithoutSnippetsInput, Prisma.AgencyUpdateWithoutSnippetsInput>, Prisma.AgencyUncheckedUpdateWithoutSnippetsInput>
 }
 
+export type AgencyCreateNestedOneWithoutTemplatesInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutTemplatesInput, Prisma.AgencyUncheckedCreateWithoutTemplatesInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutTemplatesInput
+  connect?: Prisma.AgencyWhereUniqueInput
+}
+
+export type AgencyUpdateOneRequiredWithoutTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutTemplatesInput, Prisma.AgencyUncheckedCreateWithoutTemplatesInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutTemplatesInput
+  upsert?: Prisma.AgencyUpsertWithoutTemplatesInput
+  connect?: Prisma.AgencyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgencyUpdateToOneWithWhereWithoutTemplatesInput, Prisma.AgencyUpdateWithoutTemplatesInput>, Prisma.AgencyUncheckedUpdateWithoutTemplatesInput>
+}
+
+export type AgencyCreateNestedOneWithoutReferralsMadeInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsMadeInput, Prisma.AgencyUncheckedCreateWithoutReferralsMadeInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutReferralsMadeInput
+  connect?: Prisma.AgencyWhereUniqueInput
+}
+
+export type AgencyCreateNestedOneWithoutReferralsReceivedInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsReceivedInput, Prisma.AgencyUncheckedCreateWithoutReferralsReceivedInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutReferralsReceivedInput
+  connect?: Prisma.AgencyWhereUniqueInput
+}
+
+export type AgencyUpdateOneRequiredWithoutReferralsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsMadeInput, Prisma.AgencyUncheckedCreateWithoutReferralsMadeInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutReferralsMadeInput
+  upsert?: Prisma.AgencyUpsertWithoutReferralsMadeInput
+  connect?: Prisma.AgencyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgencyUpdateToOneWithWhereWithoutReferralsMadeInput, Prisma.AgencyUpdateWithoutReferralsMadeInput>, Prisma.AgencyUncheckedUpdateWithoutReferralsMadeInput>
+}
+
+export type AgencyUpdateOneWithoutReferralsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsReceivedInput, Prisma.AgencyUncheckedCreateWithoutReferralsReceivedInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutReferralsReceivedInput
+  upsert?: Prisma.AgencyUpsertWithoutReferralsReceivedInput
+  disconnect?: Prisma.AgencyWhereInput | boolean
+  delete?: Prisma.AgencyWhereInput | boolean
+  connect?: Prisma.AgencyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgencyUpdateToOneWithWhereWithoutReferralsReceivedInput, Prisma.AgencyUpdateWithoutReferralsReceivedInput>, Prisma.AgencyUncheckedUpdateWithoutReferralsReceivedInput>
+}
+
 export type AgencyCreateWithoutUsersInput = {
   id?: string
   name: string
@@ -715,10 +846,16 @@ export type AgencyCreateWithoutUsersInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   clients?: Prisma.ClientCreateNestedManyWithoutAgencyInput
   snippets?: Prisma.CodeSnippetCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyUncheckedCreateWithoutUsersInput = {
@@ -736,10 +873,16 @@ export type AgencyUncheckedCreateWithoutUsersInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutAgencyInput
   snippets?: Prisma.CodeSnippetUncheckedCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateUncheckedCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyCreateOrConnectWithoutUsersInput = {
@@ -773,10 +916,16 @@ export type AgencyUpdateWithoutUsersInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUpdateManyWithoutAgencyNestedInput
   snippets?: Prisma.CodeSnippetUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredAgencyNestedInput
 }
 
 export type AgencyUncheckedUpdateWithoutUsersInput = {
@@ -794,10 +943,16 @@ export type AgencyUncheckedUpdateWithoutUsersInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUncheckedUpdateManyWithoutAgencyNestedInput
   snippets?: Prisma.CodeSnippetUncheckedUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUncheckedUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredAgencyNestedInput
 }
 
 export type AgencyCreateWithoutClientsInput = {
@@ -815,10 +970,16 @@ export type AgencyCreateWithoutClientsInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutAgencyInput
   snippets?: Prisma.CodeSnippetCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyUncheckedCreateWithoutClientsInput = {
@@ -836,10 +997,16 @@ export type AgencyUncheckedCreateWithoutClientsInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutAgencyInput
   snippets?: Prisma.CodeSnippetUncheckedCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateUncheckedCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyCreateOrConnectWithoutClientsInput = {
@@ -873,10 +1040,16 @@ export type AgencyUpdateWithoutClientsInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutAgencyNestedInput
   snippets?: Prisma.CodeSnippetUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredAgencyNestedInput
 }
 
 export type AgencyUncheckedUpdateWithoutClientsInput = {
@@ -894,10 +1067,16 @@ export type AgencyUncheckedUpdateWithoutClientsInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutAgencyNestedInput
   snippets?: Prisma.CodeSnippetUncheckedUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUncheckedUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredAgencyNestedInput
 }
 
 export type AgencyCreateWithoutSnippetsInput = {
@@ -915,10 +1094,16 @@ export type AgencyCreateWithoutSnippetsInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutAgencyInput
   clients?: Prisma.ClientCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyUncheckedCreateWithoutSnippetsInput = {
@@ -936,10 +1121,16 @@ export type AgencyUncheckedCreateWithoutSnippetsInput = {
   maxClients?: number
   maxUsers?: number
   currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutAgencyInput
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateUncheckedCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredAgencyInput
 }
 
 export type AgencyCreateOrConnectWithoutSnippetsInput = {
@@ -973,10 +1164,16 @@ export type AgencyUpdateWithoutSnippetsInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutAgencyNestedInput
   clients?: Prisma.ClientUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredAgencyNestedInput
 }
 
 export type AgencyUncheckedUpdateWithoutSnippetsInput = {
@@ -994,10 +1191,388 @@ export type AgencyUncheckedUpdateWithoutSnippetsInput = {
   maxClients?: Prisma.IntFieldUpdateOperationsInput | number
   maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutAgencyNestedInput
   clients?: Prisma.ClientUncheckedUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUncheckedUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredAgencyNestedInput
+}
+
+export type AgencyCreateWithoutTemplatesInput = {
+  id?: string
+  name: string
+  slug: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  plan?: $Enums.AgencyPlan
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  stripePriceId?: string | null
+  subStatus?: string | null
+  subCurrentPeriodEnd?: Date | string | null
+  maxClients?: number
+  maxUsers?: number
+  currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutAgencyInput
+  clients?: Prisma.ClientCreateNestedManyWithoutAgencyInput
+  snippets?: Prisma.CodeSnippetCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredAgencyInput
+}
+
+export type AgencyUncheckedCreateWithoutTemplatesInput = {
+  id?: string
+  name: string
+  slug: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  plan?: $Enums.AgencyPlan
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  stripePriceId?: string | null
+  subStatus?: string | null
+  subCurrentPeriodEnd?: Date | string | null
+  maxClients?: number
+  maxUsers?: number
+  currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutAgencyInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutAgencyInput
+  snippets?: Prisma.CodeSnippetUncheckedCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerAgencyInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredAgencyInput
+}
+
+export type AgencyCreateOrConnectWithoutTemplatesInput = {
+  where: Prisma.AgencyWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutTemplatesInput, Prisma.AgencyUncheckedCreateWithoutTemplatesInput>
+}
+
+export type AgencyUpsertWithoutTemplatesInput = {
+  update: Prisma.XOR<Prisma.AgencyUpdateWithoutTemplatesInput, Prisma.AgencyUncheckedUpdateWithoutTemplatesInput>
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutTemplatesInput, Prisma.AgencyUncheckedCreateWithoutTemplatesInput>
+  where?: Prisma.AgencyWhereInput
+}
+
+export type AgencyUpdateToOneWithWhereWithoutTemplatesInput = {
+  where?: Prisma.AgencyWhereInput
+  data: Prisma.XOR<Prisma.AgencyUpdateWithoutTemplatesInput, Prisma.AgencyUncheckedUpdateWithoutTemplatesInput>
+}
+
+export type AgencyUpdateWithoutTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumAgencyPlanFieldUpdateOperationsInput | $Enums.AgencyPlan
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxClients?: Prisma.IntFieldUpdateOperationsInput | number
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutAgencyNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutAgencyNestedInput
+  snippets?: Prisma.CodeSnippetUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredAgencyNestedInput
+}
+
+export type AgencyUncheckedUpdateWithoutTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumAgencyPlanFieldUpdateOperationsInput | $Enums.AgencyPlan
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxClients?: Prisma.IntFieldUpdateOperationsInput | number
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutAgencyNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutAgencyNestedInput
+  snippets?: Prisma.CodeSnippetUncheckedUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredAgencyNestedInput
+}
+
+export type AgencyCreateWithoutReferralsMadeInput = {
+  id?: string
+  name: string
+  slug: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  plan?: $Enums.AgencyPlan
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  stripePriceId?: string | null
+  subStatus?: string | null
+  subCurrentPeriodEnd?: Date | string | null
+  maxClients?: number
+  maxUsers?: number
+  currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutAgencyInput
+  clients?: Prisma.ClientCreateNestedManyWithoutAgencyInput
+  snippets?: Prisma.CodeSnippetCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateCreateNestedManyWithoutAgencyInput
+  referralsReceived?: Prisma.ReferralCreateNestedManyWithoutReferredAgencyInput
+}
+
+export type AgencyUncheckedCreateWithoutReferralsMadeInput = {
+  id?: string
+  name: string
+  slug: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  plan?: $Enums.AgencyPlan
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  stripePriceId?: string | null
+  subStatus?: string | null
+  subCurrentPeriodEnd?: Date | string | null
+  maxClients?: number
+  maxUsers?: number
+  currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutAgencyInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutAgencyInput
+  snippets?: Prisma.CodeSnippetUncheckedCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateUncheckedCreateNestedManyWithoutAgencyInput
+  referralsReceived?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferredAgencyInput
+}
+
+export type AgencyCreateOrConnectWithoutReferralsMadeInput = {
+  where: Prisma.AgencyWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsMadeInput, Prisma.AgencyUncheckedCreateWithoutReferralsMadeInput>
+}
+
+export type AgencyCreateWithoutReferralsReceivedInput = {
+  id?: string
+  name: string
+  slug: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  plan?: $Enums.AgencyPlan
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  stripePriceId?: string | null
+  subStatus?: string | null
+  subCurrentPeriodEnd?: Date | string | null
+  maxClients?: number
+  maxUsers?: number
+  currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutAgencyInput
+  clients?: Prisma.ClientCreateNestedManyWithoutAgencyInput
+  snippets?: Prisma.CodeSnippetCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralCreateNestedManyWithoutReferrerAgencyInput
+}
+
+export type AgencyUncheckedCreateWithoutReferralsReceivedInput = {
+  id?: string
+  name: string
+  slug: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  plan?: $Enums.AgencyPlan
+  stripeCustomerId?: string | null
+  stripeSubId?: string | null
+  stripePriceId?: string | null
+  subStatus?: string | null
+  subCurrentPeriodEnd?: Date | string | null
+  maxClients?: number
+  maxUsers?: number
+  currency?: string
+  webhookUrl?: string | null
+  apiKey?: string | null
+  customDomain?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutAgencyInput
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutAgencyInput
+  snippets?: Prisma.CodeSnippetUncheckedCreateNestedManyWithoutAgencyInput
+  templates?: Prisma.ProjectTemplateUncheckedCreateNestedManyWithoutAgencyInput
+  referralsMade?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerAgencyInput
+}
+
+export type AgencyCreateOrConnectWithoutReferralsReceivedInput = {
+  where: Prisma.AgencyWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsReceivedInput, Prisma.AgencyUncheckedCreateWithoutReferralsReceivedInput>
+}
+
+export type AgencyUpsertWithoutReferralsMadeInput = {
+  update: Prisma.XOR<Prisma.AgencyUpdateWithoutReferralsMadeInput, Prisma.AgencyUncheckedUpdateWithoutReferralsMadeInput>
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsMadeInput, Prisma.AgencyUncheckedCreateWithoutReferralsMadeInput>
+  where?: Prisma.AgencyWhereInput
+}
+
+export type AgencyUpdateToOneWithWhereWithoutReferralsMadeInput = {
+  where?: Prisma.AgencyWhereInput
+  data: Prisma.XOR<Prisma.AgencyUpdateWithoutReferralsMadeInput, Prisma.AgencyUncheckedUpdateWithoutReferralsMadeInput>
+}
+
+export type AgencyUpdateWithoutReferralsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumAgencyPlanFieldUpdateOperationsInput | $Enums.AgencyPlan
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxClients?: Prisma.IntFieldUpdateOperationsInput | number
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutAgencyNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutAgencyNestedInput
+  snippets?: Prisma.CodeSnippetUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUpdateManyWithoutAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUpdateManyWithoutReferredAgencyNestedInput
+}
+
+export type AgencyUncheckedUpdateWithoutReferralsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumAgencyPlanFieldUpdateOperationsInput | $Enums.AgencyPlan
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxClients?: Prisma.IntFieldUpdateOperationsInput | number
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutAgencyNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutAgencyNestedInput
+  snippets?: Prisma.CodeSnippetUncheckedUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUncheckedUpdateManyWithoutAgencyNestedInput
+  referralsReceived?: Prisma.ReferralUncheckedUpdateManyWithoutReferredAgencyNestedInput
+}
+
+export type AgencyUpsertWithoutReferralsReceivedInput = {
+  update: Prisma.XOR<Prisma.AgencyUpdateWithoutReferralsReceivedInput, Prisma.AgencyUncheckedUpdateWithoutReferralsReceivedInput>
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutReferralsReceivedInput, Prisma.AgencyUncheckedCreateWithoutReferralsReceivedInput>
+  where?: Prisma.AgencyWhereInput
+}
+
+export type AgencyUpdateToOneWithWhereWithoutReferralsReceivedInput = {
+  where?: Prisma.AgencyWhereInput
+  data: Prisma.XOR<Prisma.AgencyUpdateWithoutReferralsReceivedInput, Prisma.AgencyUncheckedUpdateWithoutReferralsReceivedInput>
+}
+
+export type AgencyUpdateWithoutReferralsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumAgencyPlanFieldUpdateOperationsInput | $Enums.AgencyPlan
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxClients?: Prisma.IntFieldUpdateOperationsInput | number
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutAgencyNestedInput
+  clients?: Prisma.ClientUpdateManyWithoutAgencyNestedInput
+  snippets?: Prisma.CodeSnippetUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUpdateManyWithoutReferrerAgencyNestedInput
+}
+
+export type AgencyUncheckedUpdateWithoutReferralsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumAgencyPlanFieldUpdateOperationsInput | $Enums.AgencyPlan
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSubId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePriceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subCurrentPeriodEnd?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxClients?: Prisma.IntFieldUpdateOperationsInput | number
+  maxUsers?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutAgencyNestedInput
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutAgencyNestedInput
+  snippets?: Prisma.CodeSnippetUncheckedUpdateManyWithoutAgencyNestedInput
+  templates?: Prisma.ProjectTemplateUncheckedUpdateManyWithoutAgencyNestedInput
+  referralsMade?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerAgencyNestedInput
 }
 
 
@@ -1009,12 +1584,18 @@ export type AgencyCountOutputType = {
   users: number
   clients: number
   snippets: number
+  templates: number
+  referralsMade: number
+  referralsReceived: number
 }
 
 export type AgencyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | AgencyCountOutputTypeCountUsersArgs
   clients?: boolean | AgencyCountOutputTypeCountClientsArgs
   snippets?: boolean | AgencyCountOutputTypeCountSnippetsArgs
+  templates?: boolean | AgencyCountOutputTypeCountTemplatesArgs
+  referralsMade?: boolean | AgencyCountOutputTypeCountReferralsMadeArgs
+  referralsReceived?: boolean | AgencyCountOutputTypeCountReferralsReceivedArgs
 }
 
 /**
@@ -1048,6 +1629,27 @@ export type AgencyCountOutputTypeCountSnippetsArgs<ExtArgs extends runtime.Types
   where?: Prisma.CodeSnippetWhereInput
 }
 
+/**
+ * AgencyCountOutputType without action
+ */
+export type AgencyCountOutputTypeCountTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectTemplateWhereInput
+}
+
+/**
+ * AgencyCountOutputType without action
+ */
+export type AgencyCountOutputTypeCountReferralsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReferralWhereInput
+}
+
+/**
+ * AgencyCountOutputType without action
+ */
+export type AgencyCountOutputTypeCountReferralsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReferralWhereInput
+}
+
 
 export type AgencySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1064,11 +1666,17 @@ export type AgencySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   maxClients?: boolean
   maxUsers?: boolean
   currency?: boolean
+  webhookUrl?: boolean
+  apiKey?: boolean
+  customDomain?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   users?: boolean | Prisma.Agency$usersArgs<ExtArgs>
   clients?: boolean | Prisma.Agency$clientsArgs<ExtArgs>
   snippets?: boolean | Prisma.Agency$snippetsArgs<ExtArgs>
+  templates?: boolean | Prisma.Agency$templatesArgs<ExtArgs>
+  referralsMade?: boolean | Prisma.Agency$referralsMadeArgs<ExtArgs>
+  referralsReceived?: boolean | Prisma.Agency$referralsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.AgencyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agency"]>
 
@@ -1087,6 +1695,9 @@ export type AgencySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   maxClients?: boolean
   maxUsers?: boolean
   currency?: boolean
+  webhookUrl?: boolean
+  apiKey?: boolean
+  customDomain?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["agency"]>
@@ -1106,6 +1717,9 @@ export type AgencySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   maxClients?: boolean
   maxUsers?: boolean
   currency?: boolean
+  webhookUrl?: boolean
+  apiKey?: boolean
+  customDomain?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["agency"]>
@@ -1125,15 +1739,21 @@ export type AgencySelectScalar = {
   maxClients?: boolean
   maxUsers?: boolean
   currency?: boolean
+  webhookUrl?: boolean
+  apiKey?: boolean
+  customDomain?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AgencyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "logoUrl" | "primaryColor" | "plan" | "stripeCustomerId" | "stripeSubId" | "stripePriceId" | "subStatus" | "subCurrentPeriodEnd" | "maxClients" | "maxUsers" | "currency" | "createdAt" | "updatedAt", ExtArgs["result"]["agency"]>
+export type AgencyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "logoUrl" | "primaryColor" | "plan" | "stripeCustomerId" | "stripeSubId" | "stripePriceId" | "subStatus" | "subCurrentPeriodEnd" | "maxClients" | "maxUsers" | "currency" | "webhookUrl" | "apiKey" | "customDomain" | "createdAt" | "updatedAt", ExtArgs["result"]["agency"]>
 export type AgencyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Agency$usersArgs<ExtArgs>
   clients?: boolean | Prisma.Agency$clientsArgs<ExtArgs>
   snippets?: boolean | Prisma.Agency$snippetsArgs<ExtArgs>
+  templates?: boolean | Prisma.Agency$templatesArgs<ExtArgs>
+  referralsMade?: boolean | Prisma.Agency$referralsMadeArgs<ExtArgs>
+  referralsReceived?: boolean | Prisma.Agency$referralsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.AgencyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AgencyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1145,6 +1765,9 @@ export type $AgencyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     users: Prisma.$UserPayload<ExtArgs>[]
     clients: Prisma.$ClientPayload<ExtArgs>[]
     snippets: Prisma.$CodeSnippetPayload<ExtArgs>[]
+    templates: Prisma.$ProjectTemplatePayload<ExtArgs>[]
+    referralsMade: Prisma.$ReferralPayload<ExtArgs>[]
+    referralsReceived: Prisma.$ReferralPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1161,6 +1784,9 @@ export type $AgencyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     maxClients: number
     maxUsers: number
     currency: string
+    webhookUrl: string | null
+    apiKey: string | null
+    customDomain: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["agency"]>
@@ -1560,6 +2186,9 @@ export interface Prisma__AgencyClient<T, Null = never, ExtArgs extends runtime.T
   users<T extends Prisma.Agency$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   clients<T extends Prisma.Agency$clientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$clientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   snippets<T extends Prisma.Agency$snippetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$snippetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CodeSnippetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  templates<T extends Prisma.Agency$templatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$templatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  referralsMade<T extends Prisma.Agency$referralsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$referralsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  referralsReceived<T extends Prisma.Agency$referralsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$referralsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1603,6 +2232,9 @@ export interface AgencyFieldRefs {
   readonly maxClients: Prisma.FieldRef<"Agency", 'Int'>
   readonly maxUsers: Prisma.FieldRef<"Agency", 'Int'>
   readonly currency: Prisma.FieldRef<"Agency", 'String'>
+  readonly webhookUrl: Prisma.FieldRef<"Agency", 'String'>
+  readonly apiKey: Prisma.FieldRef<"Agency", 'String'>
+  readonly customDomain: Prisma.FieldRef<"Agency", 'String'>
   readonly createdAt: Prisma.FieldRef<"Agency", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Agency", 'DateTime'>
 }
@@ -2067,6 +2699,78 @@ export type Agency$snippetsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.CodeSnippetScalarFieldEnum | Prisma.CodeSnippetScalarFieldEnum[]
+}
+
+/**
+ * Agency.templates
+ */
+export type Agency$templatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectTemplate
+   */
+  select?: Prisma.ProjectTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectTemplate
+   */
+  omit?: Prisma.ProjectTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectTemplateInclude<ExtArgs> | null
+  where?: Prisma.ProjectTemplateWhereInput
+  orderBy?: Prisma.ProjectTemplateOrderByWithRelationInput | Prisma.ProjectTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectTemplateScalarFieldEnum | Prisma.ProjectTemplateScalarFieldEnum[]
+}
+
+/**
+ * Agency.referralsMade
+ */
+export type Agency$referralsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Referral
+   */
+  select?: Prisma.ReferralSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Referral
+   */
+  omit?: Prisma.ReferralOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReferralInclude<ExtArgs> | null
+  where?: Prisma.ReferralWhereInput
+  orderBy?: Prisma.ReferralOrderByWithRelationInput | Prisma.ReferralOrderByWithRelationInput[]
+  cursor?: Prisma.ReferralWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReferralScalarFieldEnum | Prisma.ReferralScalarFieldEnum[]
+}
+
+/**
+ * Agency.referralsReceived
+ */
+export type Agency$referralsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Referral
+   */
+  select?: Prisma.ReferralSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Referral
+   */
+  omit?: Prisma.ReferralOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReferralInclude<ExtArgs> | null
+  where?: Prisma.ReferralWhereInput
+  orderBy?: Prisma.ReferralOrderByWithRelationInput | Prisma.ReferralOrderByWithRelationInput[]
+  cursor?: Prisma.ReferralWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReferralScalarFieldEnum | Prisma.ReferralScalarFieldEnum[]
 }
 
 /**

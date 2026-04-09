@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import StatusBadge from '@/components/StatusBadge'
+import { whatsappLink } from '@/lib/whatsapp'
 import ConfirmDialog from '@/components/ConfirmDialog'
 import { toast } from 'sonner'
 
@@ -420,9 +421,21 @@ export default function ClientDetail({ client: initial, communications: initialC
                 {inviteMsg.text}
               </p>
             )}
-            <button type="submit" disabled={inviteSaving} className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700 disabled:opacity-50">
-              {inviteSaving ? 'Enviando...' : 'Enviar invitación'}
-            </button>
+            <div className="flex items-center gap-3">
+              <button type="submit" disabled={inviteSaving} className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700 disabled:opacity-50">
+                {inviteSaving ? 'Enviando...' : 'Enviar invitación'}
+              </button>
+              {client.contactPhone && (
+                <a
+                  href={whatsappLink(client.contactPhone, `Hola ${client.contactName}, te comparto acceso a tu portal de seguimiento de integración. Revisa tu email para el enlace de acceso.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 bg-green-500 text-white text-sm rounded-md hover:bg-green-600"
+                >
+                  📱 Enviar por WhatsApp
+                </a>
+              )}
+            </div>
           </form>
         </div>
       )}

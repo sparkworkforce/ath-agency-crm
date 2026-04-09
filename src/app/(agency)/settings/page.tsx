@@ -22,6 +22,8 @@ export default async function SettingsPage() {
         subStatus: agency.subStatus,
         maxClients: agency.maxClients,
         maxUsers: agency.maxUsers,
+        webhookUrl: agency.webhookUrl,
+        apiKey: agency.apiKey,
       }} />
     </div>
   )

@@ -175,7 +175,7 @@ export function assertClientOwnership(sessionClientId: string, resourceClientId:
 export async function getClientActiveProject(clientId: string) {
   return prisma.project.findFirst({
     where: { clientId, client: { deletedAt: null } },
-    include: { tasks: { orderBy: { order: 'asc' } } },
+    include: { tasks: { orderBy: { order: 'asc' } }, feedback: { select: { id: true } }, integrationStatus: { take: 1 } },
     orderBy: { createdAt: 'desc' },
   })
 }
@@ -245,4 +245,35 @@ async function sendMilestoneEmail(email: string, name: string, projectName: stri
   await sendEmail(email, `${projectName} — ${percentage}% completado`,
     `<p>Hola ${esc(name)},</p><p>${messages[percentage]}</p><p><strong>Proyecto:</strong> ${esc(projectName)}</p><p>${emailButton(portalUrl, 'Ver progreso en el portal')}</p><p style="color:#6b7280">— ${esc(agencyName)}</p>`
   )
+}
+
+export async function getClientActivityFeed(clientId: string) {
+  const [tasks, files, invoices] = await Promise.all([
+    prisma.task.findMany({
+      where: { project: { clientId }, status: 'completado' },
+      select: { id: true, title: true, updatedAt: true },
+      orderBy: { updatedAt: 'desc' },
+      take: 10,
+    }),
+    prisma.projectFile.findMany({
+      where: { project: { clientId } },
+      select: { id: true, fileName: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    }),
+    prisma.invoice.findMany({
+      where: { clientId },
+      select: { id: true, totalAmount: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    }),
+  ])
+
+  const items = [
+    ...tasks.map(t => ({ id: `task-${t.id}`, type: 'task_completed' as const, description: `Tarea completada: ${t.title}`, date: t.updatedAt })),
+    ...files.map(f => ({ id: `file-${f.id}`, type: 'file_uploaded' as const, description: `Archivo subido: ${f.fileName}`, date: f.createdAt })),
+    ...invoices.map(i => ({ id: `inv-${i.id}`, type: 'invoice_created' as const, description: `Factura creada por $${i.totalAmount}`, date: i.createdAt })),
+  ]
+
+  return items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10)
 }

@@ -7,7 +7,7 @@ const prisma = new PrismaClient({ adapter })
 
 async function main() {
   // 1. Create or find default agency
-  const agencyName = process.env.NEXT_PUBLIC_AGENCY_NAME ?? 'Mi Agencia'
+  const agencyName = 'CobraHub'
   const agencySlug = agencyName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'default'
 
   let agency = await prisma.agency.findUnique({ where: { slug: agencySlug } })

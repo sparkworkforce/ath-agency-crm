@@ -13,6 +13,8 @@ interface Agency {
   subStatus?: string | null
   maxClients: number
   maxUsers: number
+  webhookUrl: string | null
+  apiKey: string | null
 }
 
 interface Props {
@@ -30,6 +32,7 @@ export default function AgencySettings({ agency: initial }: Props) {
   const [name, setName] = useState(agency.name)
   const [primaryColor, setPrimaryColor] = useState(agency.primaryColor)
   const [logoUrl, setLogoUrl] = useState(agency.logoUrl ?? '')
+  const [webhookUrl, setWebhookUrl] = useState(agency.webhookUrl ?? '')
   const [saving, setSaving] = useState(false)
 
   async function handleUpgrade(plan: string) {
@@ -56,7 +59,7 @@ export default function AgencySettings({ agency: initial }: Props) {
     const res = await fetch('/api/agency/settings', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, primaryColor, logoUrl: logoUrl || null }),
+      body: JSON.stringify({ name, primaryColor, logoUrl: logoUrl || null, webhookUrl: webhookUrl || null }),
     })
     setSaving(false)
     if (res.ok) {
@@ -118,6 +121,11 @@ export default function AgencySettings({ agency: initial }: Props) {
               <span className="text-sm text-gray-500 font-mono">{primaryColor}</span>
               <div className="h-8 w-8 rounded-full" style={{ backgroundColor: primaryColor }} />
             </div>
+          </div>
+          <div>
+            <label htmlFor="webhookUrl" className="block text-sm font-medium text-gray-700 mb-1">Webhook URL (opcional)</label>
+            <input id="webhookUrl" type="url" value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://hooks.slack.com/services/..." className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            <p className="text-xs text-gray-400 mt-1">Recibe notificaciones JSON en Slack, Discord o Zapier cuando se completan tareas, se reciben pagos, etc.</p>
           </div>
           <button
             type="submit"

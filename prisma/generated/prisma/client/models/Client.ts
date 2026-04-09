@@ -245,6 +245,7 @@ export type ClientWhereInput = {
   tickets?: Prisma.SupportTicketListRelationFilter
   communications?: Prisma.CommunicationListRelationFilter
   statusHistory?: Prisma.ClientStatusHistoryListRelationFilter
+  quotes?: Prisma.QuoteListRelationFilter
 }
 
 export type ClientOrderByWithRelationInput = {
@@ -267,6 +268,7 @@ export type ClientOrderByWithRelationInput = {
   tickets?: Prisma.SupportTicketOrderByRelationAggregateInput
   communications?: Prisma.CommunicationOrderByRelationAggregateInput
   statusHistory?: Prisma.ClientStatusHistoryOrderByRelationAggregateInput
+  quotes?: Prisma.QuoteOrderByRelationAggregateInput
 }
 
 export type ClientWhereUniqueInput = Prisma.AtLeast<{
@@ -292,6 +294,7 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   tickets?: Prisma.SupportTicketListRelationFilter
   communications?: Prisma.CommunicationListRelationFilter
   statusHistory?: Prisma.ClientStatusHistoryListRelationFilter
+  quotes?: Prisma.QuoteListRelationFilter
 }, "id">
 
 export type ClientOrderByWithAggregationInput = {
@@ -349,6 +352,7 @@ export type ClientCreateInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateInput = {
@@ -370,6 +374,7 @@ export type ClientUncheckedCreateInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientUpdateInput = {
@@ -391,6 +396,7 @@ export type ClientUpdateInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateInput = {
@@ -412,6 +418,7 @@ export type ClientUncheckedUpdateInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateManyInput = {
@@ -659,6 +666,20 @@ export type ClientUpdateOneRequiredWithoutTicketsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutTicketsInput, Prisma.ClientUpdateWithoutTicketsInput>, Prisma.ClientUncheckedUpdateWithoutTicketsInput>
 }
 
+export type ClientCreateNestedOneWithoutQuotesInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutQuotesInput, Prisma.ClientUncheckedCreateWithoutQuotesInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutQuotesInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneRequiredWithoutQuotesNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutQuotesInput, Prisma.ClientUncheckedCreateWithoutQuotesInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutQuotesInput
+  upsert?: Prisma.ClientUpsertWithoutQuotesInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutQuotesInput, Prisma.ClientUpdateWithoutQuotesInput>, Prisma.ClientUncheckedUpdateWithoutQuotesInput>
+}
+
 export type ClientCreateWithoutAgencyInput = {
   id?: string
   businessName: string
@@ -677,6 +698,7 @@ export type ClientCreateWithoutAgencyInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutAgencyInput = {
@@ -697,6 +719,7 @@ export type ClientUncheckedCreateWithoutAgencyInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutAgencyInput = {
@@ -761,6 +784,7 @@ export type ClientCreateWithoutUsersInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutUsersInput = {
@@ -781,6 +805,7 @@ export type ClientUncheckedCreateWithoutUsersInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutUsersInput = {
@@ -817,6 +842,7 @@ export type ClientUpdateWithoutUsersInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutUsersInput = {
@@ -837,6 +863,7 @@ export type ClientUncheckedUpdateWithoutUsersInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutStatusHistoryInput = {
@@ -857,6 +884,7 @@ export type ClientCreateWithoutStatusHistoryInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutStatusHistoryInput = {
@@ -877,6 +905,7 @@ export type ClientUncheckedCreateWithoutStatusHistoryInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutStatusHistoryInput = {
@@ -913,6 +942,7 @@ export type ClientUpdateWithoutStatusHistoryInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutStatusHistoryInput = {
@@ -933,6 +963,7 @@ export type ClientUncheckedUpdateWithoutStatusHistoryInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutCommunicationsInput = {
@@ -953,6 +984,7 @@ export type ClientCreateWithoutCommunicationsInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutCommunicationsInput = {
@@ -973,6 +1005,7 @@ export type ClientUncheckedCreateWithoutCommunicationsInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutCommunicationsInput = {
@@ -1009,6 +1042,7 @@ export type ClientUpdateWithoutCommunicationsInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutCommunicationsInput = {
@@ -1029,6 +1063,7 @@ export type ClientUncheckedUpdateWithoutCommunicationsInput = {
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutProjectsInput = {
@@ -1049,6 +1084,7 @@ export type ClientCreateWithoutProjectsInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutProjectsInput = {
@@ -1069,6 +1105,7 @@ export type ClientUncheckedCreateWithoutProjectsInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutProjectsInput = {
@@ -1105,6 +1142,7 @@ export type ClientUpdateWithoutProjectsInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutProjectsInput = {
@@ -1125,6 +1163,7 @@ export type ClientUncheckedUpdateWithoutProjectsInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutInvoicesInput = {
@@ -1145,6 +1184,7 @@ export type ClientCreateWithoutInvoicesInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutInvoicesInput = {
@@ -1165,6 +1205,7 @@ export type ClientUncheckedCreateWithoutInvoicesInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutInvoicesInput = {
@@ -1201,6 +1242,7 @@ export type ClientUpdateWithoutInvoicesInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutInvoicesInput = {
@@ -1221,6 +1263,7 @@ export type ClientUncheckedUpdateWithoutInvoicesInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutTicketsInput = {
@@ -1241,6 +1284,7 @@ export type ClientCreateWithoutTicketsInput = {
   invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutTicketsInput = {
@@ -1261,6 +1305,7 @@ export type ClientUncheckedCreateWithoutTicketsInput = {
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutTicketsInput = {
@@ -1297,6 +1342,7 @@ export type ClientUpdateWithoutTicketsInput = {
   invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutTicketsInput = {
@@ -1315,6 +1361,107 @@ export type ClientUncheckedUpdateWithoutTicketsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
+  communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
+  statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutQuotesInput = {
+  id?: string
+  businessName: string
+  contactName: string
+  contactEmail: string
+  contactPhone?: string | null
+  industry?: string | null
+  platform: $Enums.ClientPlatform
+  status?: $Enums.ClientStatus
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  agency: Prisma.AgencyCreateNestedOneWithoutClientsInput
+  users?: Prisma.UserCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
+  tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
+  communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
+  statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutQuotesInput = {
+  id?: string
+  agencyId: string
+  businessName: string
+  contactName: string
+  contactEmail: string
+  contactPhone?: string | null
+  industry?: string | null
+  platform: $Enums.ClientPlatform
+  status?: $Enums.ClientStatus
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
+  tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
+  communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
+  statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutQuotesInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutQuotesInput, Prisma.ClientUncheckedCreateWithoutQuotesInput>
+}
+
+export type ClientUpsertWithoutQuotesInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutQuotesInput, Prisma.ClientUncheckedUpdateWithoutQuotesInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutQuotesInput, Prisma.ClientUncheckedCreateWithoutQuotesInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutQuotesInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutQuotesInput, Prisma.ClientUncheckedUpdateWithoutQuotesInput>
+}
+
+export type ClientUpdateWithoutQuotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agency?: Prisma.AgencyUpdateOneRequiredWithoutClientsNestedInput
+  users?: Prisma.UserUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
+  tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
+  communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
+  statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutQuotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
+  tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
 }
@@ -1351,6 +1498,7 @@ export type ClientUpdateWithoutAgencyInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutAgencyInput = {
@@ -1371,6 +1519,7 @@ export type ClientUncheckedUpdateWithoutAgencyInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateManyWithoutAgencyInput = {
@@ -1399,6 +1548,7 @@ export type ClientCountOutputType = {
   tickets: number
   communications: number
   statusHistory: number
+  quotes: number
 }
 
 export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1408,6 +1558,7 @@ export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   tickets?: boolean | ClientCountOutputTypeCountTicketsArgs
   communications?: boolean | ClientCountOutputTypeCountCommunicationsArgs
   statusHistory?: boolean | ClientCountOutputTypeCountStatusHistoryArgs
+  quotes?: boolean | ClientCountOutputTypeCountQuotesArgs
 }
 
 /**
@@ -1462,6 +1613,13 @@ export type ClientCountOutputTypeCountStatusHistoryArgs<ExtArgs extends runtime.
   where?: Prisma.ClientStatusHistoryWhereInput
 }
 
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountQuotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuoteWhereInput
+}
+
 
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1483,6 +1641,7 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   tickets?: boolean | Prisma.Client$ticketsArgs<ExtArgs>
   communications?: boolean | Prisma.Client$communicationsArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Client$statusHistoryArgs<ExtArgs>
+  quotes?: boolean | Prisma.Client$quotesArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
@@ -1542,6 +1701,7 @@ export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   tickets?: boolean | Prisma.Client$ticketsArgs<ExtArgs>
   communications?: boolean | Prisma.Client$communicationsArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Client$statusHistoryArgs<ExtArgs>
+  quotes?: boolean | Prisma.Client$quotesArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1561,6 +1721,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     tickets: Prisma.$SupportTicketPayload<ExtArgs>[]
     communications: Prisma.$CommunicationPayload<ExtArgs>[]
     statusHistory: Prisma.$ClientStatusHistoryPayload<ExtArgs>[]
+    quotes: Prisma.$QuotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1976,6 +2137,7 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
   tickets<T extends Prisma.Client$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   communications<T extends Prisma.Client$communicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$communicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   statusHistory<T extends Prisma.Client$statusHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$statusHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  quotes<T extends Prisma.Client$quotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$quotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2559,6 +2721,30 @@ export type Client$statusHistoryArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.ClientStatusHistoryScalarFieldEnum | Prisma.ClientStatusHistoryScalarFieldEnum[]
+}
+
+/**
+ * Client.quotes
+ */
+export type Client$quotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Quote
+   */
+  select?: Prisma.QuoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Quote
+   */
+  omit?: Prisma.QuoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuoteInclude<ExtArgs> | null
+  where?: Prisma.QuoteWhereInput
+  orderBy?: Prisma.QuoteOrderByWithRelationInput | Prisma.QuoteOrderByWithRelationInput[]
+  cursor?: Prisma.QuoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuoteScalarFieldEnum | Prisma.QuoteScalarFieldEnum[]
 }
 
 /**

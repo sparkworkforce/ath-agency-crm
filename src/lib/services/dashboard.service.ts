@@ -90,3 +90,48 @@ export async function getOnboardingStatus(agencyId: string) {
     { key: 'plan', label: 'Configura tu plan', done: agency?.plan !== 'FREE', href: '/settings' },
   ]
 }
+
+export async function getRevenueForecast(agencyId: string) {
+  const now = new Date()
+  const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1)
+
+  const [pipelineCounts, avgInvoice, recentRevenue] = await Promise.all([
+    // Clients by status
+    prisma.client.groupBy({
+      by: ['status'],
+      where: { agencyId, deletedAt: null },
+      _count: true,
+    }),
+    // Average invoice amount
+    prisma.invoice.aggregate({
+      where: { client: { agencyId }, status: 'pagado' },
+      _avg: { totalAmount: true },
+    }),
+    // Last 3 months revenue
+    prisma.invoice.findMany({
+      where: { client: { agencyId }, status: 'pagado', createdAt: { gte: threeMonthsAgo } },
+      select: { totalAmount: true, createdAt: true },
+    }),
+  ])
+
+  const avgDeal = Number(avgInvoice._avg?.totalAmount ?? 0)
+  const conversionRates: Record<string, number> = { prospecto: 0.3, en_progreso: 0.7, completado: 0.9, soporte_mensual: 1.0 }
+
+  const pipeline = pipelineCounts.map(p => ({
+    status: p.status,
+    count: p._count,
+    rate: conversionRates[p.status] ?? 0,
+    projected: Math.round(p._count * (conversionRates[p.status] ?? 0) * avgDeal),
+  }))
+
+  const totalProjected = pipeline.reduce((sum, p) => sum + p.projected, 0)
+
+  // Monthly trend from last 3 months
+  const monthlyTotals: number[] = [0, 0, 0]
+  for (const inv of recentRevenue) {
+    const monthsAgo = (now.getFullYear() - inv.createdAt.getFullYear()) * 12 + now.getMonth() - inv.createdAt.getMonth()
+    if (monthsAgo >= 0 && monthsAgo < 3) monthlyTotals[2 - monthsAgo] += Number(inv.totalAmount)
+  }
+
+  return { pipeline, totalProjected, avgDeal: Math.round(avgDeal), monthlyTrend: monthlyTotals }
+}

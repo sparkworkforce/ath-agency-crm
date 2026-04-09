@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, emailButton } from '@/lib/email'
+import { invalidateUserSessions } from '@/lib/session-rotation'
 
 export async function POST(request: NextRequest) {
   const blocked = await rateLimit(request.headers.get('x-forwarded-for') ?? 'unknown')
@@ -44,8 +45,12 @@ export async function POST(request: NextRequest) {
 
     const email = record.identifier.replace('reset:', '')
     const hashed = await bcrypt.hash(password, 12)
-    await prisma.user.updateMany({ where: { email }, data: { password: hashed } })
+    const updated = await prisma.user.updateMany({ where: { email }, data: { password: hashed } })
     await prisma.verificationToken.delete({ where: { token } })
+
+    // Invalidate all sessions for this user
+    const user = await prisma.user.findUnique({ where: { email }, select: { id: true } })
+    if (user) await invalidateUserSessions(user.id)
 
     return NextResponse.json({ ok: true })
   }

@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/projects', label: 'Proyectos' },
   { href: '/invoices', label: 'Facturas' },
   { href: '/snippets', label: 'Snippets' },
+  { href: '/timesheet', label: 'Tiempo' },
   { href: '/users', label: 'Usuarios' },
   { href: '/settings', label: 'Configuración' },
 ]

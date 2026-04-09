@@ -44,7 +44,7 @@ export async function getInvoiceById(invoiceId: string, agencyId: string) {
     include: {
       payments: { orderBy: { receivedAt: 'desc' } },
       lineItems: { orderBy: { order: 'asc' } },
-      client: { select: { id: true, businessName: true, contactEmail: true } },
+      client: { select: { id: true, businessName: true, contactEmail: true, contactName: true, contactPhone: true } },
       auditLog: { orderBy: { createdAt: 'desc' } },
     },
   })

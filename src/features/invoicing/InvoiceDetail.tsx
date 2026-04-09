@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { whatsappLink } from '@/lib/whatsapp'
 import StatusBadge from '@/components/StatusBadge'
 import { toast } from 'sonner'
 
@@ -29,7 +30,7 @@ interface Invoice {
   dueDate: string | Date
   isRetainer: boolean
   createdAt: string | Date
-  client: { id: string; businessName: string; contactEmail: string }
+  client: { id: string; businessName: string; contactEmail: string; contactName: string; contactPhone: string | null }
   payments: Payment[]
   auditLog: AuditEntry[]
 }
@@ -118,8 +119,8 @@ export default function InvoiceDetail({ invoice: initial }: Props) {
         </div>
       </div>
 
-      {/* PDF Download */}
-      <div className="mb-6">
+      {/* Actions */}
+      <div className="mb-6 flex flex-wrap gap-3">
         <a
           href={`/api/invoices/${invoice.id}/pdf`}
           className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm rounded-md hover:bg-gray-800"
@@ -127,6 +128,16 @@ export default function InvoiceDetail({ invoice: initial }: Props) {
         >
           Descargar PDF
         </a>
+        {invoice.client.contactPhone && invoice.status !== 'pagado' && (
+          <a
+            href={whatsappLink(invoice.client.contactPhone, `Hola ${invoice.client.contactName}, te envío un recordatorio de tu factura por $${Number(invoice.totalAmount).toFixed(2)}. Fecha límite: ${new Date(invoice.dueDate).toLocaleDateString('es-PR')}. ¡Gracias!`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-green-500 text-white text-sm rounded-md hover:bg-green-600"
+          >
+            📱 Recordatorio WhatsApp
+          </a>
+        )}
       </div>
 
       {/* Record Payment */}

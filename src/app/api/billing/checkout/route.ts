@@ -7,6 +7,10 @@ export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
+  // Block demo accounts from billing
+  const ag = await prisma.agency.findUnique({ where: { id: session.user.agencyId }, select: { slug: true } })
+  if (ag?.slug.startsWith('demo-')) return NextResponse.json({ error: 'Demo accounts cannot access billing' }, { status: 403 })
+
   const { plan } = await request.json()
   if (plan !== 'PROFESSIONAL' && plan !== 'BUSINESS') return NextResponse.json({ error: 'Plan inválido' }, { status: 400 })
   const planConfig = PLANS[plan as keyof typeof PLANS]

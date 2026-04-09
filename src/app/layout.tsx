@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { Toaster } from 'sonner'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
+import Script from 'next/script'
 import './globals.css'
 
 const siteName = 'CobraHub'
@@ -22,12 +25,22 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="es">
+    <html lang={locale}>
+      <head>
+        {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
+          <Script defer data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.js" strategy="beforeInteractive" />
+        )}
+      </head>
       <body>
-        {children}
-        <Toaster position="top-right" richColors closeButton />
+        <NextIntlClientProvider messages={messages}>
+          {children}
+          <Toaster position="top-right" richColors closeButton />
+        </NextIntlClientProvider>
       </body>
     </html>
   )

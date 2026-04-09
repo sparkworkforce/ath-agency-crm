@@ -69,8 +69,14 @@ export const ModelName = {
   Payment: 'Payment',
   InvoiceAuditLog: 'InvoiceAuditLog',
   SupportTicket: 'SupportTicket',
+  ProjectFeedback: 'ProjectFeedback',
   CodeSnippet: 'CodeSnippet',
-  IntegrationStatus: 'IntegrationStatus'
+  IntegrationStatus: 'IntegrationStatus',
+  ProjectTemplate: 'ProjectTemplate',
+  Quote: 'Quote',
+  QuoteLine: 'QuoteLine',
+  TimeEntry: 'TimeEntry',
+  Referral: 'Referral'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -104,6 +110,9 @@ export const AgencyScalarFieldEnum = {
   maxClients: 'maxClients',
   maxUsers: 'maxUsers',
   currency: 'currency',
+  webhookUrl: 'webhookUrl',
+  apiKey: 'apiKey',
+  customDomain: 'customDomain',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -340,6 +349,17 @@ export const SupportTicketScalarFieldEnum = {
 export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
 
 
+export const ProjectFeedbackScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectFeedbackScalarFieldEnum = (typeof ProjectFeedbackScalarFieldEnum)[keyof typeof ProjectFeedbackScalarFieldEnum]
+
+
 export const CodeSnippetScalarFieldEnum = {
   id: 'id',
   agencyId: 'agencyId',
@@ -360,8 +380,9 @@ export type CodeSnippetScalarFieldEnum = (typeof CodeSnippetScalarFieldEnum)[key
 export const IntegrationStatusScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
-  athAccountStatus: 'athAccountStatus',
-  athPublicToken: 'athPublicToken',
+  processor: 'processor',
+  accountStatus: 'accountStatus',
+  publicToken: 'publicToken',
   environment: 'environment',
   webhookUrl: 'webhookUrl',
   webhookVerified: 'webhookVerified',
@@ -373,6 +394,75 @@ export const IntegrationStatusScalarFieldEnum = {
 } as const
 
 export type IntegrationStatusScalarFieldEnum = (typeof IntegrationStatusScalarFieldEnum)[keyof typeof IntegrationStatusScalarFieldEnum]
+
+
+export const ProjectTemplateScalarFieldEnum = {
+  id: 'id',
+  agencyId: 'agencyId',
+  name: 'name',
+  description: 'description',
+  platform: 'platform',
+  tasks: 'tasks',
+  isPublic: 'isPublic',
+  downloads: 'downloads',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectTemplateScalarFieldEnum = (typeof ProjectTemplateScalarFieldEnum)[keyof typeof ProjectTemplateScalarFieldEnum]
+
+
+export const QuoteScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  title: 'title',
+  description: 'description',
+  totalAmount: 'totalAmount',
+  status: 'status',
+  validUntil: 'validUntil',
+  approvedAt: 'approvedAt',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuoteScalarFieldEnum = (typeof QuoteScalarFieldEnum)[keyof typeof QuoteScalarFieldEnum]
+
+
+export const QuoteLineScalarFieldEnum = {
+  id: 'id',
+  quoteId: 'quoteId',
+  description: 'description',
+  amount: 'amount',
+  order: 'order'
+} as const
+
+export type QuoteLineScalarFieldEnum = (typeof QuoteLineScalarFieldEnum)[keyof typeof QuoteLineScalarFieldEnum]
+
+
+export const TimeEntryScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  userId: 'userId',
+  startedAt: 'startedAt',
+  stoppedAt: 'stoppedAt',
+  minutes: 'minutes',
+  note: 'note'
+} as const
+
+export type TimeEntryScalarFieldEnum = (typeof TimeEntryScalarFieldEnum)[keyof typeof TimeEntryScalarFieldEnum]
+
+
+export const ReferralScalarFieldEnum = {
+  id: 'id',
+  referrerAgencyId: 'referrerAgencyId',
+  referredAgencyId: 'referredAgencyId',
+  code: 'code',
+  redeemedAt: 'redeemedAt',
+  rewardApplied: 'rewardApplied',
+  createdAt: 'createdAt'
+} as const
+
+export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
 
 
 export const SortOrder = {

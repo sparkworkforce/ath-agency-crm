@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe, PLANS } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { invalidateAgencySessions } from '@/lib/session-rotation'
 type AgencyPlan = 'FREE' | 'PROFESSIONAL' | 'BUSINESS'
 
 export async function POST(request: NextRequest) {
@@ -37,6 +38,7 @@ export async function POST(request: NextRequest) {
         maxUsers: planConfig.maxUsers,
       },
     })
+    await invalidateAgencySessions(agencyId)
   }
 
   if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
@@ -55,6 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     await prisma.agency.update({ where: { id: agency.id }, data })
+    await invalidateAgencySessions(agency.id)
   }
 
   return NextResponse.json({ ok: true })

@@ -13,6 +13,14 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
   }
 
+  // Custom domain requires Business plan
+  if (result.data.customDomain !== undefined) {
+    const agency = await prisma.agency.findUnique({ where: { id: session.user.agencyId }, select: { plan: true } })
+    if (agency?.plan !== 'BUSINESS') {
+      return NextResponse.json({ error: 'Custom domain requires Business plan' }, { status: 403 })
+    }
+  }
+
   try {
     const agency = await prisma.agency.update({
       where: { id: session.user.agencyId },

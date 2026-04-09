@@ -11,6 +11,8 @@ export const UpdateAgencySchema = z.object({
   name: z.string().min(2).max(100).optional(),
   logoUrl: z.string().url().nullable().optional(),
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+  webhookUrl: z.string().url().nullable().optional(),
+  customDomain: z.string().min(4).max(253).regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/).nullable().optional(),
 })
 
 export type RegisterAgencyInput = z.infer<typeof RegisterAgencySchema>

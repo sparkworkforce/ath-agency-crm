@@ -132,6 +132,11 @@ export type InvoiceAuditLog = Prisma.InvoiceAuditLogModel
  */
 export type SupportTicket = Prisma.SupportTicketModel
 /**
+ * Model ProjectFeedback
+ * 
+ */
+export type ProjectFeedback = Prisma.ProjectFeedbackModel
+/**
  * Model CodeSnippet
  * 
  */
@@ -141,3 +146,28 @@ export type CodeSnippet = Prisma.CodeSnippetModel
  * 
  */
 export type IntegrationStatus = Prisma.IntegrationStatusModel
+/**
+ * Model ProjectTemplate
+ * 
+ */
+export type ProjectTemplate = Prisma.ProjectTemplateModel
+/**
+ * Model Quote
+ * 
+ */
+export type Quote = Prisma.QuoteModel
+/**
+ * Model QuoteLine
+ * 
+ */
+export type QuoteLine = Prisma.QuoteLineModel
+/**
+ * Model TimeEntry
+ * 
+ */
+export type TimeEntry = Prisma.TimeEntryModel
+/**
+ * Model Referral
+ * 
+ */
+export type Referral = Prisma.ReferralModel
