@@ -1,5 +1,5 @@
 import { prisma } from '../prisma'
-import { sendEmail, emailButton, esc } from '../email'
+import { sendEmail, emailButton, esc, type AgencyBranding } from '../email'
 import { generateMagicLinkToken } from './auth.service'
 import { uploadFile, BUCKETS } from '../storage'
 import type { CreateProjectInput, UpdateTaskStatusInput, AssignTaskInput } from '../validations/projects'
@@ -36,7 +36,7 @@ export async function getProjectById(projectId: string, agencyId: string) {
   return prisma.project.findFirst({
     where: { id: projectId, client: { agencyId } },
     include: {
-      tasks: { orderBy: { order: 'asc' } },
+      tasks: { orderBy: { order: 'asc' }, include: { timeEntries: { select: { minutes: true } } } },
       files: { orderBy: { createdAt: 'desc' } },
       client: { select: { id: true, businessName: true, deletedAt: true } },
       integrationStatus: true,
@@ -102,7 +102,7 @@ export async function recalculateCompletionPercentage(projectId: string): Promis
   const project = await prisma.project.update({
     where: { id: projectId },
     data: { completionPercentage: percentage },
-    select: { id: true, milestonesSent: true, completionPercentage: true, name: true, client: { select: { contactName: true, contactEmail: true, users: { select: { id: true }, take: 1 }, agency: { select: { name: true } } } } },
+    select: { id: true, milestonesSent: true, completionPercentage: true, name: true, client: { select: { contactName: true, contactEmail: true, users: { select: { id: true }, take: 1 }, agency: { select: { name: true, logoUrl: true, primaryColor: true, notifyMilestones: true } } } } },
   })
 
   // Send milestone email at 25/50/75/100% (only once per milestone)
@@ -110,9 +110,9 @@ export async function recalculateCompletionPercentage(projectId: string): Promis
   const sent = (project.milestonesSent as number[]) ?? []
   if (milestones.includes(percentage) && !sent.includes(percentage)) {
     const clientUser = project.client.users[0]
-    if (clientUser) {
+    if (clientUser && project.client.agency.notifyMilestones !== false) {
       await prisma.project.update({ where: { id: projectId }, data: { milestonesSent: [...sent, percentage] } })
-      sendMilestoneEmail(project.client.contactEmail, project.client.contactName, project.name, percentage, clientUser.id, project.client.agency.name).catch(() => {})
+      sendMilestoneEmail(project.client.contactEmail, project.client.contactName, project.name, percentage, clientUser.id, project.client.agency).catch(() => {})
     }
   }
 
@@ -230,7 +230,7 @@ export async function listSupportTickets(clientId: string) {
   })
 }
 
-async function sendMilestoneEmail(email: string, name: string, projectName: string, percentage: number, userId: string, agencyName: string) {
+async function sendMilestoneEmail(email: string, name: string, projectName: string, percentage: number, userId: string, agency: AgencyBranding) {
   const token = await generateMagicLinkToken(userId)
   const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
   const portalUrl = `${baseUrl}/api/auth/magic-link?token=${token}`
@@ -243,7 +243,8 @@ async function sendMilestoneEmail(email: string, name: string, projectName: stri
   }
 
   await sendEmail(email, `${projectName} — ${percentage}% completado`,
-    `<p>Hola ${esc(name)},</p><p>${messages[percentage]}</p><p><strong>Proyecto:</strong> ${esc(projectName)}</p><p>${emailButton(portalUrl, 'Ver progreso en el portal')}</p><p style="color:#6b7280">— ${esc(agencyName)}</p>`
+    `<p>Hola ${esc(name)},</p><p>${messages[percentage]}</p><p><strong>Proyecto:</strong> ${esc(projectName)}</p><p>${emailButton(portalUrl, 'Ver progreso en el portal')}</p><p style="color:#6b7280">— ${esc(agency.name || 'CobraHub')}</p>`,
+    agency
   )
 }
 

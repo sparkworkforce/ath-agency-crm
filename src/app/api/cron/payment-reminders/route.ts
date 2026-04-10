@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, esc } from '@/lib/email'
+import { getEffectivePlan } from '@/lib/plan-gating'
 
 export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
@@ -24,11 +25,16 @@ export async function GET(request: NextRequest) {
         { dueDate: { gte: sevenDaysAgo, lt: oneDayAgo } },
       ],
     },
-    include: { client: { include: { agency: true } } },
+    include: { client: { include: { agency: { select: { name: true, logoUrl: true, primaryColor: true, plan: true, trialEndsAt: true, stripeSubId: true, notifyOverdue: true } } } } },
   })
 
   let sent = 0
   for (const inv of invoices) {
+    // Only send reminders for Professional+ plans
+    const effectivePlan = getEffectivePlan(inv.client.agency)
+    if (effectivePlan === 'FREE') continue
+    if (inv.client.agency.notifyOverdue === false) continue
+
     const daysUntilDue = Math.ceil((inv.dueDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
     let subject: string
     let message: string
@@ -48,8 +54,10 @@ export async function GET(request: NextRequest) {
     }
 
     try {
+      const agencyBranding = { name: inv.client.agency.name, logoUrl: inv.client.agency.logoUrl, primaryColor: inv.client.agency.primaryColor }
       await sendEmail(inv.client.contactEmail, subject,
-        `<p>Hola ${esc(inv.client.contactName)},</p><p>${message}</p><p style="color:#6b7280">— ${esc(inv.client.agency.name)}</p>`
+        `<p>Hola ${esc(inv.client.contactName)},</p><p>${message}</p><p style="color:#6b7280">— ${esc(inv.client.agency.name)}</p>`,
+        agencyBranding
       )
       sent++
     } catch { /* continue on email failure */ }

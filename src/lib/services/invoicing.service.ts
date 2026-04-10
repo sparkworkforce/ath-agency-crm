@@ -93,6 +93,7 @@ export async function recordPayment(
         invoiceId,
         amount: data.amount,
         receivedAt: new Date(data.receivedAt),
+        method: data.method,
         recordedBy,
       },
     })

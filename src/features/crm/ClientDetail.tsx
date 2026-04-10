@@ -16,6 +16,12 @@ interface StatusHistory {
   changedBy: string
 }
 
+interface Tag {
+  id: string
+  name: string
+  color: string
+}
+
 interface Client {
   id: string
   businessName: string
@@ -27,6 +33,7 @@ interface Client {
   status: string
   createdAt: string | Date
   statusHistory: StatusHistory[]
+  tags?: Tag[]
 }
 
 interface Communication {
@@ -72,6 +79,10 @@ export default function ClientDetail({ client: initial, communications: initialC
     platform: client.platform,
   })
 
+  // Tag state
+  const [newTag, setNewTag] = useState('')
+  const [tagSaving, setTagSaving] = useState(false)
+
   // Communication form state
   const [commForm, setCommForm] = useState({ date: '', channel: '', summary: '' })
   const [commSaving, setCommSaving] = useState(false)
@@ -103,6 +114,39 @@ export default function ClientDetail({ client: initial, communications: initialC
       toast.success('Cliente actualizado')
     } else {
       setError('Error al guardar los cambios.')
+    }
+  }
+
+  async function handleAddTag() {
+    const name = newTag.trim()
+    if (!name) return
+    setTagSaving(true)
+    const currentTags = (client.tags ?? []).map((t) => t.name)
+    const res = await fetch(`/api/clients/${client.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tags: [...currentTags, name] }),
+    })
+    setTagSaving(false)
+    if (res.ok) {
+      const { client: updated } = await res.json()
+      setClient((prev) => ({ ...prev, tags: updated.tags }))
+      setNewTag('')
+      toast.success('Tag agregado')
+    }
+  }
+
+  async function handleRemoveTag(tagName: string) {
+    const currentTags = (client.tags ?? []).filter((t) => t.name !== tagName).map((t) => t.name)
+    const res = await fetch(`/api/clients/${client.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tags: currentTags }),
+    })
+    if (res.ok) {
+      const { client: updated } = await res.json()
+      setClient((prev) => ({ ...prev, tags: updated.tags }))
+      toast.success('Tag eliminado')
     }
   }
 
@@ -242,6 +286,32 @@ export default function ClientDetail({ client: initial, communications: initialC
                 </div>
               </div>
 
+              {/* Tags */}
+              <div className="mt-4">
+                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Tags</p>
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {(client.tags ?? []).map((tag) => (
+                    <span key={tag.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium text-white" style={{ backgroundColor: tag.color }}>
+                      {tag.name}
+                      <button onClick={() => handleRemoveTag(tag.name)} className="hover:opacity-70" aria-label={`Eliminar tag ${tag.name}`}>&times;</button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
+                    placeholder="Nuevo tag..."
+                    className="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                  <button onClick={handleAddTag} disabled={tagSaving} className="px-3 py-1 bg-gray-100 text-sm rounded-md hover:bg-gray-200 disabled:opacity-50">
+                    {tagSaving ? '...' : '+'}
+                  </button>
+                </div>
+              </div>
+
               {client.statusHistory && client.statusHistory.length > 0 && (
                 <div className="mt-6">
                   <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Historial de estados</p>
@@ -335,15 +405,20 @@ export default function ClientDetail({ client: initial, communications: initialC
                 </div>
                 <div>
                   <label htmlFor="comm-channel" className="block text-sm font-medium text-gray-700 mb-1">Canal <span className="text-red-500">*</span></label>
-                  <input
+                  <select
                     id="comm-channel"
-                    type="text"
                     required
-                    placeholder="Email, Llamada, WhatsApp..."
                     value={commForm.channel}
                     onChange={(e) => setCommForm((p) => ({ ...p, channel: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
+                  >
+                    <option value="">Seleccionar...</option>
+                    <option value="Email">Email</option>
+                    <option value="Llamada">Llamada</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="Reunión">Reunión</option>
+                    <option value="Otro">Otro</option>
+                  </select>
                 </div>
               </div>
               <div>

@@ -33,7 +33,15 @@ export default function AgencySettings({ agency: initial }: Props) {
   const [primaryColor, setPrimaryColor] = useState(agency.primaryColor)
   const [logoUrl, setLogoUrl] = useState(agency.logoUrl ?? '')
   const [webhookUrl, setWebhookUrl] = useState(agency.webhookUrl ?? '')
+  const [timezone, setTimezone] = useState((agency as any).timezone ?? 'America/Puerto_Rico')
+  const [notifyMilestones, setNotifyMilestones] = useState((agency as any).notifyMilestones ?? true)
+  const [notifyPayments, setNotifyPayments] = useState((agency as any).notifyPayments ?? true)
+  const [notifyOverdue, setNotifyOverdue] = useState((agency as any).notifyOverdue ?? true)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [apiKeyMasked, setApiKeyMasked] = useState(agency.apiKey ? `****${agency.apiKey.slice(-4)}` : '—')
+  const [referralCode, setReferralCode] = useState('')
+  const [customDomain, setCustomDomain] = useState('')
 
   async function handleUpgrade(plan: string) {
     const res = await fetch('/api/billing/checkout', {
@@ -59,7 +67,7 @@ export default function AgencySettings({ agency: initial }: Props) {
     const res = await fetch('/api/agency/settings', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, primaryColor, logoUrl: logoUrl || null, webhookUrl: webhookUrl || null }),
+      body: JSON.stringify({ name, primaryColor, logoUrl: logoUrl || null, webhookUrl: webhookUrl || null, timezone }),
     })
     setSaving(false)
     if (res.ok) {
@@ -95,16 +103,30 @@ export default function AgencySettings({ agency: initial }: Props) {
           </div>
           <div>
             <label htmlFor="agency-logo" className="block text-sm font-medium text-gray-700 mb-1">
-              URL del logo
+              Logo
             </label>
             <input
               id="agency-logo"
-              type="url"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              type="file"
+              accept="image/*"
+              disabled={uploading}
+              onChange={async (e) => {
+                const file = e.target.files?.[0]
+                if (!file) return
+                setUploading(true)
+                const fd = new FormData()
+                fd.append('file', file)
+                const res = await fetch('/api/agency/logo', { method: 'POST', body: fd })
+                setUploading(false)
+                if (res.ok) {
+                  const { logoUrl: url } = await res.json()
+                  setLogoUrl(url)
+                  toast.success('Logo subido')
+                } else toast.error('Error al subir logo')
+              }}
+              className="w-full text-sm"
             />
+            {logoUrl && <img src={logoUrl} alt="Logo" className="mt-2 h-10 rounded" />}
           </div>
           <div>
             <label htmlFor="agency-color" className="block text-sm font-medium text-gray-700 mb-1">
@@ -127,6 +149,14 @@ export default function AgencySettings({ agency: initial }: Props) {
             <input id="webhookUrl" type="url" value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} placeholder="https://hooks.slack.com/services/..." className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
             <p className="text-xs text-gray-400 mt-1">Recibe notificaciones JSON en Slack, Discord o Zapier cuando se completan tareas, se reciben pagos, etc.</p>
           </div>
+          <div>
+            <label htmlFor="timezone" className="block text-sm font-medium text-gray-700 mb-1">Zona horaria</label>
+            <select id="timezone" value={timezone} onChange={(e) => setTimezone(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              {['America/Puerto_Rico','America/New_York','America/Chicago','America/Denver','America/Los_Angeles','America/Bogota','America/Mexico_City','Europe/Madrid','UTC'].map(tz => (
+                <option key={tz} value={tz}>{tz}</option>
+              ))}
+            </select>
+          </div>
           <button
             type="submit"
             disabled={saving}
@@ -135,6 +165,26 @@ export default function AgencySettings({ agency: initial }: Props) {
             {saving ? 'Guardando...' : 'Guardar cambios'}
           </button>
         </form>
+      </div>
+
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-sm font-semibold text-gray-900 mb-4">Notificaciones</h2>
+        <div className="space-y-3">
+          {([
+            { key: 'notifyMilestones', label: 'Hitos de proyecto', value: notifyMilestones, set: setNotifyMilestones },
+            { key: 'notifyPayments', label: 'Pagos recibidos', value: notifyPayments, set: setNotifyPayments },
+            { key: 'notifyOverdue', label: 'Facturas vencidas', value: notifyOverdue, set: setNotifyOverdue },
+          ] as const).map(({ key, label, value, set }) => (
+            <label key={key} className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={value} onChange={async (e) => {
+                const v = e.target.checked; set(v)
+                const res = await fetch('/api/agency/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ [key]: v }) })
+                if (res.ok) toast.success('Preferencia guardada'); else { set(!v); toast.error('Error al guardar') }
+              }} className="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
+              <span className="text-sm text-gray-700">{label}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -168,6 +218,51 @@ export default function AgencySettings({ agency: initial }: Props) {
           )}
         </div>
       </div>
+
+      {/* API Key */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-sm font-semibold text-gray-900 mb-4">API Key</h2>
+        <div className="flex items-center gap-3">
+          <code className="text-sm bg-gray-50 px-3 py-2 rounded-md flex-1">{apiKeyMasked}</code>
+          <button onClick={() => { navigator.clipboard.writeText(agency.apiKey ?? ''); toast.success('Copiado') }} className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Copy</button>
+          <button onClick={async () => {
+            const res = await fetch('/api/agency/api-key', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirm: true }) })
+            if (res.ok) { const { apiKey } = await res.json(); setApiKeyMasked(`****${apiKey.slice(-4)}`); toast.success('API key rotada') }
+            else toast.error('Error')
+          }} className="px-3 py-2 text-sm border border-red-300 text-red-600 rounded-md hover:bg-red-50">Rotate</button>
+        </div>
+      </div>
+
+      {/* Referral */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-sm font-semibold text-gray-900 mb-4">Referidos</h2>
+        {referralCode ? (
+          <div className="flex items-center gap-3">
+            <code className="text-sm bg-gray-50 px-3 py-2 rounded-md flex-1">{referralCode}</code>
+            <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/register?ref=${referralCode}`); toast.success('Link copiado') }} className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Copy link</button>
+          </div>
+        ) : (
+          <button onClick={async () => {
+            const res = await fetch('/api/agency/referrals')
+            if (res.ok) { const data = await res.json(); setReferralCode(data.code ?? data.referrals?.[0]?.code ?? '') }
+          }} className="px-3 py-2 text-sm bg-emerald-600 text-white rounded-md hover:bg-emerald-700">Cargar código</button>
+        )}
+      </div>
+
+      {/* Custom Domain */}
+      {agency.plan === 'BUSINESS' && (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 className="text-sm font-semibold text-gray-900 mb-4">Dominio personalizado</h2>
+          <div className="flex items-center gap-3">
+            <input type="text" value={customDomain} onChange={e => setCustomDomain(e.target.value)} placeholder="portal.tuagencia.com" className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" />
+            <button onClick={async () => {
+              const res = await fetch('/api/agency/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ customDomain: customDomain || null }) })
+              if (res.ok) toast.success('Dominio guardado')
+              else toast.error('Error al guardar')
+            }} className="px-3 py-2 text-sm bg-emerald-600 text-white rounded-md hover:bg-emerald-700">Guardar</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

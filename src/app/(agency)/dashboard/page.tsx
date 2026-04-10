@@ -10,6 +10,7 @@ import OnboardingChecklist from '@/features/dashboard/OnboardingChecklist'
 import OnboardingWizard from '@/features/dashboard/OnboardingWizard'
 import RevenueForecast from '@/features/dashboard/RevenueForecast'
 import { prisma } from '@/lib/prisma'
+import { getTranslations } from 'next-intl/server'
 
 export default async function DashboardPage() {
   const session = await requireAgencySession().catch(() => redirect('/login'))
@@ -19,16 +20,28 @@ export default async function DashboardPage() {
     getDashboardMetrics(agencyId),
     getRecentActivity(agencyId),
     getOnboardingStatus(agencyId),
-    prisma.agency.findUnique({ where: { id: agencyId }, select: { logoUrl: true } }),
+    prisma.agency.findUnique({ where: { id: agencyId }, select: { logoUrl: true, slug: true } }),
     getRevenueForecast(agencyId),
   ])
 
   const hasClients = onboarding.find(i => i.key === 'client')?.done ?? false
   const hasProjects = onboarding.find(i => i.key === 'project')?.done ?? false
+  const t = await getTranslations('agency')
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
+      <h1 className="text-xl font-semibold text-gray-900">{t('dashboardTitle')}</h1>
+      {agency?.slug?.startsWith('demo-') && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+          <h2 className="font-semibold text-amber-900 mb-2">{t('demoBanner')}</h2>
+          <ul className="text-sm text-amber-800 space-y-1">
+            <li>👥 Explora 3 clientes en diferentes etapas del pipeline</li>
+            <li>📋 Revisa el proyecto con Go-Live Score activo</li>
+            <li>💰 Ve facturas pendientes y pagadas</li>
+            <li>🔗 Prueba los snippets de código ATH Business</li>
+          </ul>
+        </div>
+      )}
       <OnboardingWizard hasClients={hasClients} hasProjects={hasProjects} hasLogo={!!agency?.logoUrl} />
       <OnboardingChecklist items={onboarding} />
       <DashboardMetrics
@@ -39,6 +52,11 @@ export default async function DashboardPage() {
         revenuePerClient={metrics.revenuePerClient}
         avgIntegrationDays={metrics.avgIntegrationDays}
         pipelineClients={metrics.pipelineClients}
+        invoiceAging={metrics.invoiceAging}
+        collectionRate={metrics.collectionRate}
+        mrr={metrics.mrr}
+        satisfaction={metrics.satisfaction}
+        utilization={metrics.utilization}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RevenueChart data={metrics.revenueChart} />

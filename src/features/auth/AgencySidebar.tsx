@@ -3,17 +3,18 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/clients', label: 'Clientes' },
-  { href: '/projects', label: 'Proyectos' },
-  { href: '/invoices', label: 'Facturas' },
-  { href: '/snippets', label: 'Snippets' },
-  { href: '/timesheet', label: 'Tiempo' },
-  { href: '/users', label: 'Usuarios' },
-  { href: '/settings', label: 'Configuración' },
-]
+  { href: '/dashboard', key: 'dashboard' },
+  { href: '/clients', key: 'clients' },
+  { href: '/projects', key: 'projects' },
+  { href: '/invoices', key: 'invoices' },
+  { href: '/snippets', key: 'snippets' },
+  { href: '/timesheet', key: 'timesheet' },
+  { href: '/users', key: 'users' },
+  { href: '/settings', key: 'settings' },
+] as const
 
 interface AgencySidebarProps {
   userName: string
@@ -21,6 +22,7 @@ interface AgencySidebarProps {
 
 export default function AgencySidebar({ userName }: AgencySidebarProps) {
   const pathname = usePathname()
+  const t = useTranslations('agency.sidebar')
 
   return (
     <aside className="w-56 bg-white border-r border-gray-200 flex flex-col" data-testid="agency-sidebar">
@@ -40,7 +42,7 @@ export default function AgencySidebar({ userName }: AgencySidebarProps) {
             }`}
             data-testid={`nav-${item.href.replace('/', '')}`}
           >
-            {item.label}
+            {t(item.key)}
           </Link>
         ))}
       </nav>
@@ -52,7 +54,7 @@ export default function AgencySidebar({ userName }: AgencySidebarProps) {
           className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
           data-testid="logout-button"
         >
-          Cerrar sesión
+          {t('logout')}
         </button>
       </div>
     </aside>

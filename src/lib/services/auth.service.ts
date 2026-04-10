@@ -1,5 +1,5 @@
 import { prisma } from '../prisma'
-import { sendEmail, emailButton, esc } from '../email'
+import { sendEmail, emailButton, esc, type AgencyBranding } from '../email'
 
 const MAGIC_LINK_EXPIRY_MS = 48 * 60 * 60 * 1000 // 48 hours
 const MAX_LOGIN_ATTEMPTS = 5
@@ -49,14 +49,16 @@ export async function consumeMagicLinkToken(
 export async function sendMagicLinkEmail(
   email: string,
   token: string,
-  clientName: string
+  clientName: string,
+  agency?: AgencyBranding
 ): Promise<void> {
-  const agencyName = 'CobraHub'
+  const agencyName = agency?.name || 'CobraHub'
   const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
   const magicLinkUrl = `${baseUrl}/api/auth/magic-link?token=${token}`
 
   await sendEmail(email, `Acceso a tu Portal — ${agencyName}`,
-    `<p>Hola ${esc(clientName)},</p><p>Tu agente ha creado tu acceso al portal de seguimiento de integración ATH Business.</p><p>Haz clic para acceder:</p><p>${emailButton(magicLinkUrl, 'Acceder a mi Portal')}</p><p style="font-size:12px;color:#6b7280">Este enlace expira en 48 horas.</p>`
+    `<p>Hola ${esc(clientName)},</p><p>Tu agente ha creado tu acceso al portal de seguimiento de integración ATH Business.</p><p>Haz clic para acceder:</p><p>${emailButton(magicLinkUrl, 'Acceder a mi Portal')}</p><p style="font-size:12px;color:#6b7280">Este enlace expira en 48 horas.</p>`,
+    agency
   )
 }
 

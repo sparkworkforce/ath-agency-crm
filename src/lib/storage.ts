@@ -14,11 +14,12 @@ export async function uploadFile(
   bucket: string,
   path: string,
   file: Buffer,
-  contentType: string
+  contentType: string,
+  upsert = false
 ): Promise<string> {
   const { error } = await storage.storage
     .from(bucket)
-    .upload(path, file, { contentType, upsert: false })
+    .upload(path, file, { contentType, upsert })
 
   if (error) throw new Error(`Storage upload failed: ${error.message}`)
   return path

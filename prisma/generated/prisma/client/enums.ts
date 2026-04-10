@@ -56,6 +56,7 @@ export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
 
 
 export const InvoiceStatus = {
+  borrador: 'borrador',
   pendiente: 'pendiente',
   pagado: 'pagado',
   vencido: 'vencido'

@@ -69,6 +69,7 @@ export const ModelName = {
   Payment: 'Payment',
   InvoiceAuditLog: 'InvoiceAuditLog',
   SupportTicket: 'SupportTicket',
+  TicketMessage: 'TicketMessage',
   ProjectFeedback: 'ProjectFeedback',
   CodeSnippet: 'CodeSnippet',
   IntegrationStatus: 'IntegrationStatus',
@@ -76,7 +77,10 @@ export const ModelName = {
   Quote: 'Quote',
   QuoteLine: 'QuoteLine',
   TimeEntry: 'TimeEntry',
-  Referral: 'Referral'
+  Referral: 'Referral',
+  Tag: 'Tag',
+  Expense: 'Expense',
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -109,10 +113,15 @@ export const AgencyScalarFieldEnum = {
   subCurrentPeriodEnd: 'subCurrentPeriodEnd',
   maxClients: 'maxClients',
   maxUsers: 'maxUsers',
+  trialEndsAt: 'trialEndsAt',
   currency: 'currency',
+  timezone: 'timezone',
   webhookUrl: 'webhookUrl',
   apiKey: 'apiKey',
   customDomain: 'customDomain',
+  notifyMilestones: 'notifyMilestones',
+  notifyPayments: 'notifyPayments',
+  notifyOverdue: 'notifyOverdue',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -263,6 +272,8 @@ export const TaskScalarFieldEnum = {
   status: 'status',
   order: 'order',
   estimatedDays: 'estimatedDays',
+  approvedByClient: 'approvedByClient',
+  approvedAt: 'approvedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -315,6 +326,7 @@ export const PaymentScalarFieldEnum = {
   invoiceId: 'invoiceId',
   amount: 'amount',
   receivedAt: 'receivedAt',
+  method: 'method',
   recordedBy: 'recordedBy',
   createdAt: 'createdAt'
 } as const
@@ -347,6 +359,18 @@ export const SupportTicketScalarFieldEnum = {
 } as const
 
 export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
+export const TicketMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  senderId: 'senderId',
+  role: 'role',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type TicketMessageScalarFieldEnum = (typeof TicketMessageScalarFieldEnum)[keyof typeof TicketMessageScalarFieldEnum]
 
 
 export const ProjectFeedbackScalarFieldEnum = {
@@ -463,6 +487,43 @@ export const ReferralScalarFieldEnum = {
 } as const
 
 export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
+
+
+export const TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  color: 'color',
+  agencyId: 'agencyId'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+export const ExpenseScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  description: 'description',
+  amount: 'amount',
+  date: 'date',
+  category: 'category',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt'
+} as const
+
+export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  body: 'body',
+  read: 'read',
+  link: 'link',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SortOrder = {

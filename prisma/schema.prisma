@@ -41,6 +41,7 @@ enum TaskStatus {
 }
 
 enum InvoiceStatus {
+  borrador
   pendiente
   pagado
   vencido
@@ -81,10 +82,15 @@ model Agency {
   subCurrentPeriodEnd DateTime?
   maxClients       Int        @default(3)
   maxUsers         Int        @default(1)
+  trialEndsAt      DateTime?
   currency         String     @default("USD")
+  timezone         String     @default("America/Puerto_Rico")
   webhookUrl       String?
   apiKey           String?    @unique
   customDomain     String?    @unique
+  notifyMilestones Boolean    @default(true)
+  notifyPayments   Boolean    @default(true)
+  notifyOverdue    Boolean    @default(true)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
@@ -92,6 +98,7 @@ model Agency {
   clients  Client[]
   snippets CodeSnippet[]
   templates ProjectTemplate[]
+  tags     Tag[]
   referralsMade     Referral[] @relation("ReferralsMade")
   referralsReceived Referral[] @relation("ReferralsReceived")
 
@@ -163,6 +170,8 @@ model User {
   snippets      CodeSnippet[]
   magicLinks    MagicLink[]
   timeEntries   TimeEntry[]   @relation("TimeEntries")
+  notifications Notification[]
+  ticketMessages TicketMessage[]
 
   @@index([email])
   @@index([role])
@@ -216,6 +225,7 @@ model Client {
   communications Communication[]
   statusHistory  ClientStatusHistory[]
   quotes         Quote[]
+  tags           Tag[]
 
   @@index([agencyId])
   @@index([status])
@@ -262,6 +272,7 @@ model Project {
   client Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
   tasks  Task[]
   files  ProjectFile[]
+  expenses Expense[]
   integrationStatus IntegrationStatus[]
   feedback ProjectFeedback?
 
@@ -277,6 +288,8 @@ model Task {
   status       TaskStatus @default(pendiente)
   order        Int        @default(0)
   estimatedDays Int?
+  approvedByClient Boolean @default(false)
+  approvedAt   DateTime?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
@@ -343,6 +356,7 @@ model Payment {
   invoiceId  String
   amount     Decimal  @db.Decimal(10, 2)
   receivedAt DateTime
+  method     String?
   recordedBy String
   createdAt  DateTime @default(now())
 
@@ -378,10 +392,25 @@ model SupportTicket {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  client   Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  messages TicketMessage[]
 
   @@index([clientId])
   @@index([status])
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  senderId  String
+  role      String   // CLIENT or AGENCY
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender User          @relation(fields: [senderId], references: [id])
+
+  @@index([ticketId])
 }
 
 model ProjectFeedback {
@@ -522,4 +551,41 @@ model Referral {
   referredAgency Agency? @relation("ReferralsReceived", fields: [referredAgencyId], references: [id], onDelete: SetNull)
 
   @@index([referrerAgencyId])
+}
+
+model Tag {
+  id       String   @id @default(cuid())
+  name     String
+  color    String   @default("#6b7280")
+  agencyId String
+  agency   Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  clients  Client[]
+
+  @@unique([agencyId, name])
+  @@index([agencyId])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  projectId   String
+  description String
+  amount      Float
+  date        DateTime
+  category    String   @default("general")
+  createdBy   String
+  createdAt   DateTime @default(now())
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  @@index([projectId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, read])
 }

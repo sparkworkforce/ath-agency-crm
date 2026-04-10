@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const hashed = await bcrypt.hash(password, 12)
 
     const agency = await prisma.$transaction(async (tx) => {
-      const ag = await tx.agency.create({ data: { name: agencyName, slug, plan: 'FREE' } })
+      const ag = await tx.agency.create({ data: { name: agencyName, slug, plan: 'PROFESSIONAL', trialEndsAt: new Date(Date.now() + 14 * 86400000) } })
       const user = await tx.user.create({ data: { name, email, password: hashed, role: 'AGENCY', agencyId: ag.id, active: true } })
 
       // Seed demo data
@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
           businessName: 'Tienda Demo',
           contactName: 'María García',
           contactEmail: 'demo@ejemplo.com',
+          contactPhone: '787-555-0100',
           platform: 'WOOCOMMERCE',
           status: 'en_progreso',
           agencyId: ag.id,
@@ -76,6 +77,21 @@ export async function POST(request: NextRequest) {
           lineItems: { create: [{ description: 'Integración ATH Business — Setup', amount: 1500 }] },
         },
       })
+
+      // Integration status so Go-Live Score is visible
+      await tx.integrationStatus.create({ data: { projectId: demoProject.id, accountStatus: 'approved', environment: 'sandbox', webhookUrl: 'https://tienda-demo.com/webhook/ath', webhookVerified: true, testTransactionOk: false } })
+
+      // Sample communications
+      await tx.communication.createMany({ data: [
+        { clientId: demoClient.id, channel: 'Email', summary: 'Enviado credenciales de sandbox ATH Business', date: new Date(), createdBy: user.id },
+        { clientId: demoClient.id, channel: 'WhatsApp', summary: 'Cliente confirmó recepción de API keys', date: new Date(), createdBy: user.id },
+      ] })
+
+      // Sample code snippets
+      await tx.codeSnippet.createMany({ data: [
+        { agencyId: ag.id, authorId: user.id, title: 'ATH Business — Botón de pago', language: 'html', platform: 'WOOCOMMERCE', category: 'wrapper', description: 'Botón básico de pago', code: '<form action="/api/ath/checkout" method="POST">\n  <input type="hidden" name="amount" value="25.00" />\n  <button type="submit">Pagar con ATH</button>\n</form>' },
+        { agencyId: ag.id, authorId: user.id, title: 'Webhook verification', language: 'javascript', platform: 'GENERAL', category: 'webhook', description: 'Verificar firma HMAC', code: 'const crypto = require("crypto");\nfunction verifyWebhook(body, sig, secret) {\n  return crypto.createHmac("sha256", secret).update(body).digest("hex") === sig;\n}' },
+      ] })
 
       return ag
     })

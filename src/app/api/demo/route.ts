@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     await prisma.$transaction(async (tx) => {
       const agency = await tx.agency.create({
-        data: { name: `Demo Agency ${demoId}`, slug: `demo-${demoId}`, plan: 'FREE' },
+        data: { name: `Demo Agency ${demoId}`, slug: `demo-${demoId}`, plan: 'PROFESSIONAL' },
       })
 
       await tx.user.create({
@@ -50,6 +50,27 @@ export async function POST(request: NextRequest) {
       // Invoices
       await tx.invoice.create({ data: { clientId: clients[0].id, totalAmount: 2500, status: 'pendiente', dueDate: new Date(Date.now() + 7 * 86400000), createdBy: 'demo', lineItems: { create: [{ description: 'Integración ATH Business — WooCommerce', amount: 2500 }] } } })
       await tx.invoice.create({ data: { clientId: clients[1].id, totalAmount: 1800, status: 'pagado', dueDate: new Date(), createdBy: 'demo', lineItems: { create: [{ description: 'Integración ATH Business — Shopify', amount: 1800 }] }, payments: { create: [{ amount: 1800, receivedAt: new Date(), recordedBy: 'demo' }] } } })
+
+      // Integration status (Go-Live Score visible)
+      await tx.integrationStatus.create({ data: { projectId: proj1.id, accountStatus: 'approved', environment: 'sandbox', webhookUrl: 'https://cafe-boricua.com/webhook/ath', webhookVerified: true, testTransactionOk: false } })
+      await tx.integrationStatus.create({ data: { projectId: proj2.id, accountStatus: 'active', environment: 'production', webhookUrl: 'https://islasurfshop.com/webhook/ath', webhookVerified: true, testTransactionOk: true, goLiveAt: new Date(Date.now() - 14 * 86400000) } })
+
+      // Communications
+      const now = Date.now()
+      await tx.communication.createMany({ data: [
+        { clientId: clients[0].id, channel: 'Email', summary: 'Enviado credenciales de sandbox ATH Business', date: new Date(now - 5 * 86400000), createdBy: 'demo' },
+        { clientId: clients[0].id, channel: 'WhatsApp', summary: 'Cliente confirmó recepción de API keys', date: new Date(now - 3 * 86400000), createdBy: 'demo' },
+        { clientId: clients[1].id, channel: 'Reunión', summary: 'Kickoff meeting — definimos alcance del proyecto', date: new Date(now - 30 * 86400000), createdBy: 'demo' },
+        { clientId: clients[1].id, channel: 'Email', summary: 'Integración completada, enviado guía de producción', date: new Date(now - 14 * 86400000), createdBy: 'demo' },
+      ] })
+
+      // Code snippets
+      const demoUser = (await tx.user.findFirst({ where: { agencyId: agency.id } }))!
+      await tx.codeSnippet.createMany({ data: [
+        { agencyId: agency.id, authorId: demoUser.id, title: 'ATH Business — Botón de pago HTML', language: 'html', platform: 'WOOCOMMERCE', category: 'wrapper', description: 'Botón básico de pago ATH Business', code: '<form action="/api/ath/checkout" method="POST">\n  <input type="hidden" name="amount" value="25.00" />\n  <button type="submit">Pagar con ATH</button>\n</form>' },
+        { agencyId: agency.id, authorId: demoUser.id, title: 'Webhook verification — Node.js', language: 'javascript', platform: 'GENERAL', category: 'webhook', description: 'Verificar firma HMAC de webhooks ATH Business', code: 'const crypto = require("crypto");\nfunction verifyWebhook(body, signature, secret) {\n  const hash = crypto.createHmac("sha256", secret).update(body).digest("hex");\n  return hash === signature;\n}' },
+        { agencyId: agency.id, authorId: demoUser.id, title: 'ATH Business API — Crear transacción', language: 'javascript', platform: 'GENERAL', category: 'utility', description: 'Crear transacción via API REST', code: 'const res = await fetch("https://api.athbusiness.com/v1/transactions", {\n  method: "POST",\n  headers: { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" },\n  body: JSON.stringify({ amount: 25.00, currency: "USD", description: "Orden #123" })\n});' },
+      ] })
     })
 
     return NextResponse.json({ email, password })

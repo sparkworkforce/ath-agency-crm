@@ -1,6 +1,7 @@
 import StatusBadge from '@/components/StatusBadge'
 import { computeGoLiveScore, scoreColor } from '@/lib/go-live-score'
 import { getTranslations } from 'next-intl/server'
+import ApproveButton from './ApproveButton'
 
 interface Task {
   id: string
@@ -8,6 +9,7 @@ interface Task {
   status: string
   order: number
   estimatedDays?: number | null
+  approvedByClient?: boolean
 }
 
 interface Project {
@@ -87,6 +89,11 @@ export default async function ProjectProgress({ project }: ProjectProgressProps)
               {task.title}
             </span>
             <StatusBadge status={task.status} variant="task" />
+            {task.status === 'completado' && (
+              task.approvedByClient
+                ? <span className="ml-auto text-xs text-green-600">✅ Aprobado</span>
+                : <ApproveButton taskId={task.id} />
+            )}
           </li>
         ))}
       </ol>

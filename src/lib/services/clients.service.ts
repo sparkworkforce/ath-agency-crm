@@ -7,6 +7,7 @@ import {
 import type { CreateClientInput, UpdateClientStatusInput, CreateCommunicationInput } from '../validations/clients'
 import { paginationArgs, paginated, type PaginationInput, type PaginatedResult } from '../pagination'
 import type { ClientStatus } from '../../../prisma/generated/prisma/client'
+import type { AgencyBranding } from '../email'
 
 export async function createClient(data: CreateClientInput, createdBy: string, agencyId: string) {
   return prisma.$transaction(async (tx) => {
@@ -79,7 +80,7 @@ export async function searchClients(agencyId: string, query?: string, pagination
 export async function getClientById(clientId: string, agencyId: string) {
   return prisma.client.findFirst({
     where: { id: clientId, agencyId, deletedAt: null },
-    include: { statusHistory: { orderBy: { changedAt: 'desc' } } },
+    include: { statusHistory: { orderBy: { changedAt: 'desc' } }, tags: true },
   })
 }
 
@@ -115,7 +116,8 @@ export async function inviteClientUser(
   clientId: string,
   email: string,
   name: string,
-  agencyId: string
+  agencyId: string,
+  agency?: AgencyBranding
 ) {
   const client = await prisma.client.findFirst({
     where: { id: clientId, agencyId, deletedAt: null },
@@ -130,7 +132,7 @@ export async function inviteClientUser(
   })
 
   const token = await generateMagicLinkToken(user.id)
-  await sendMagicLinkEmail(email, token, name)
+  await sendMagicLinkEmail(email, token, name, agency)
 
   return user
 }

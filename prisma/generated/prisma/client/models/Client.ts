@@ -246,6 +246,7 @@ export type ClientWhereInput = {
   communications?: Prisma.CommunicationListRelationFilter
   statusHistory?: Prisma.ClientStatusHistoryListRelationFilter
   quotes?: Prisma.QuoteListRelationFilter
+  tags?: Prisma.TagListRelationFilter
 }
 
 export type ClientOrderByWithRelationInput = {
@@ -269,6 +270,7 @@ export type ClientOrderByWithRelationInput = {
   communications?: Prisma.CommunicationOrderByRelationAggregateInput
   statusHistory?: Prisma.ClientStatusHistoryOrderByRelationAggregateInput
   quotes?: Prisma.QuoteOrderByRelationAggregateInput
+  tags?: Prisma.TagOrderByRelationAggregateInput
 }
 
 export type ClientWhereUniqueInput = Prisma.AtLeast<{
@@ -295,6 +297,7 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   communications?: Prisma.CommunicationListRelationFilter
   statusHistory?: Prisma.ClientStatusHistoryListRelationFilter
   quotes?: Prisma.QuoteListRelationFilter
+  tags?: Prisma.TagListRelationFilter
 }, "id">
 
 export type ClientOrderByWithAggregationInput = {
@@ -353,6 +356,7 @@ export type ClientCreateInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateInput = {
@@ -375,6 +379,7 @@ export type ClientUncheckedCreateInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUpdateInput = {
@@ -397,6 +402,7 @@ export type ClientUpdateInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateInput = {
@@ -419,6 +425,7 @@ export type ClientUncheckedUpdateInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientCreateManyInput = {
@@ -680,6 +687,44 @@ export type ClientUpdateOneRequiredWithoutQuotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutQuotesInput, Prisma.ClientUpdateWithoutQuotesInput>, Prisma.ClientUncheckedUpdateWithoutQuotesInput>
 }
 
+export type ClientCreateNestedManyWithoutTagsInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutTagsInput, Prisma.ClientUncheckedCreateWithoutTagsInput> | Prisma.ClientCreateWithoutTagsInput[] | Prisma.ClientUncheckedCreateWithoutTagsInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutTagsInput | Prisma.ClientCreateOrConnectWithoutTagsInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+}
+
+export type ClientUncheckedCreateNestedManyWithoutTagsInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutTagsInput, Prisma.ClientUncheckedCreateWithoutTagsInput> | Prisma.ClientCreateWithoutTagsInput[] | Prisma.ClientUncheckedCreateWithoutTagsInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutTagsInput | Prisma.ClientCreateOrConnectWithoutTagsInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+}
+
+export type ClientUpdateManyWithoutTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutTagsInput, Prisma.ClientUncheckedCreateWithoutTagsInput> | Prisma.ClientCreateWithoutTagsInput[] | Prisma.ClientUncheckedCreateWithoutTagsInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutTagsInput | Prisma.ClientCreateOrConnectWithoutTagsInput[]
+  upsert?: Prisma.ClientUpsertWithWhereUniqueWithoutTagsInput | Prisma.ClientUpsertWithWhereUniqueWithoutTagsInput[]
+  set?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  disconnect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  delete?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  update?: Prisma.ClientUpdateWithWhereUniqueWithoutTagsInput | Prisma.ClientUpdateWithWhereUniqueWithoutTagsInput[]
+  updateMany?: Prisma.ClientUpdateManyWithWhereWithoutTagsInput | Prisma.ClientUpdateManyWithWhereWithoutTagsInput[]
+  deleteMany?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+}
+
+export type ClientUncheckedUpdateManyWithoutTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutTagsInput, Prisma.ClientUncheckedCreateWithoutTagsInput> | Prisma.ClientCreateWithoutTagsInput[] | Prisma.ClientUncheckedCreateWithoutTagsInput[]
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutTagsInput | Prisma.ClientCreateOrConnectWithoutTagsInput[]
+  upsert?: Prisma.ClientUpsertWithWhereUniqueWithoutTagsInput | Prisma.ClientUpsertWithWhereUniqueWithoutTagsInput[]
+  set?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  disconnect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  delete?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  connect?: Prisma.ClientWhereUniqueInput | Prisma.ClientWhereUniqueInput[]
+  update?: Prisma.ClientUpdateWithWhereUniqueWithoutTagsInput | Prisma.ClientUpdateWithWhereUniqueWithoutTagsInput[]
+  updateMany?: Prisma.ClientUpdateManyWithWhereWithoutTagsInput | Prisma.ClientUpdateManyWithWhereWithoutTagsInput[]
+  deleteMany?: Prisma.ClientScalarWhereInput | Prisma.ClientScalarWhereInput[]
+}
+
 export type ClientCreateWithoutAgencyInput = {
   id?: string
   businessName: string
@@ -699,6 +744,7 @@ export type ClientCreateWithoutAgencyInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutAgencyInput = {
@@ -720,6 +766,7 @@ export type ClientUncheckedCreateWithoutAgencyInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutAgencyInput = {
@@ -785,6 +832,7 @@ export type ClientCreateWithoutUsersInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutUsersInput = {
@@ -806,6 +854,7 @@ export type ClientUncheckedCreateWithoutUsersInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutUsersInput = {
@@ -843,6 +892,7 @@ export type ClientUpdateWithoutUsersInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutUsersInput = {
@@ -864,6 +914,7 @@ export type ClientUncheckedUpdateWithoutUsersInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientCreateWithoutStatusHistoryInput = {
@@ -885,6 +936,7 @@ export type ClientCreateWithoutStatusHistoryInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutStatusHistoryInput = {
@@ -906,6 +958,7 @@ export type ClientUncheckedCreateWithoutStatusHistoryInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutStatusHistoryInput = {
@@ -943,6 +996,7 @@ export type ClientUpdateWithoutStatusHistoryInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutStatusHistoryInput = {
@@ -964,6 +1018,7 @@ export type ClientUncheckedUpdateWithoutStatusHistoryInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientCreateWithoutCommunicationsInput = {
@@ -985,6 +1040,7 @@ export type ClientCreateWithoutCommunicationsInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutCommunicationsInput = {
@@ -1006,6 +1062,7 @@ export type ClientUncheckedCreateWithoutCommunicationsInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutCommunicationsInput = {
@@ -1043,6 +1100,7 @@ export type ClientUpdateWithoutCommunicationsInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutCommunicationsInput = {
@@ -1064,6 +1122,7 @@ export type ClientUncheckedUpdateWithoutCommunicationsInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientCreateWithoutProjectsInput = {
@@ -1085,6 +1144,7 @@ export type ClientCreateWithoutProjectsInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutProjectsInput = {
@@ -1106,6 +1166,7 @@ export type ClientUncheckedCreateWithoutProjectsInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutProjectsInput = {
@@ -1143,6 +1204,7 @@ export type ClientUpdateWithoutProjectsInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutProjectsInput = {
@@ -1164,6 +1226,7 @@ export type ClientUncheckedUpdateWithoutProjectsInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientCreateWithoutInvoicesInput = {
@@ -1185,6 +1248,7 @@ export type ClientCreateWithoutInvoicesInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutInvoicesInput = {
@@ -1206,6 +1270,7 @@ export type ClientUncheckedCreateWithoutInvoicesInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutInvoicesInput = {
@@ -1243,6 +1308,7 @@ export type ClientUpdateWithoutInvoicesInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutInvoicesInput = {
@@ -1264,6 +1330,7 @@ export type ClientUncheckedUpdateWithoutInvoicesInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientCreateWithoutTicketsInput = {
@@ -1285,6 +1352,7 @@ export type ClientCreateWithoutTicketsInput = {
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutTicketsInput = {
@@ -1306,6 +1374,7 @@ export type ClientUncheckedCreateWithoutTicketsInput = {
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
   quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutTicketsInput = {
@@ -1343,6 +1412,7 @@ export type ClientUpdateWithoutTicketsInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutTicketsInput = {
@@ -1364,6 +1434,7 @@ export type ClientUncheckedUpdateWithoutTicketsInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientCreateWithoutQuotesInput = {
@@ -1385,6 +1456,7 @@ export type ClientCreateWithoutQuotesInput = {
   tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagCreateNestedManyWithoutClientsInput
 }
 
 export type ClientUncheckedCreateWithoutQuotesInput = {
@@ -1406,6 +1478,7 @@ export type ClientUncheckedCreateWithoutQuotesInput = {
   tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
   communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutClientsInput
 }
 
 export type ClientCreateOrConnectWithoutQuotesInput = {
@@ -1443,6 +1516,7 @@ export type ClientUpdateWithoutQuotesInput = {
   tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutQuotesInput = {
@@ -1464,6 +1538,72 @@ export type ClientUncheckedUpdateWithoutQuotesInput = {
   tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
+}
+
+export type ClientCreateWithoutTagsInput = {
+  id?: string
+  businessName: string
+  contactName: string
+  contactEmail: string
+  contactPhone?: string | null
+  industry?: string | null
+  platform: $Enums.ClientPlatform
+  status?: $Enums.ClientStatus
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  agency: Prisma.AgencyCreateNestedOneWithoutClientsInput
+  users?: Prisma.UserCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutClientInput
+  tickets?: Prisma.SupportTicketCreateNestedManyWithoutClientInput
+  communications?: Prisma.CommunicationCreateNestedManyWithoutClientInput
+  statusHistory?: Prisma.ClientStatusHistoryCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutTagsInput = {
+  id?: string
+  agencyId: string
+  businessName: string
+  contactName: string
+  contactEmail: string
+  contactPhone?: string | null
+  industry?: string | null
+  platform: $Enums.ClientPlatform
+  status?: $Enums.ClientStatus
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutClientInput
+  tickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutClientInput
+  communications?: Prisma.CommunicationUncheckedCreateNestedManyWithoutClientInput
+  statusHistory?: Prisma.ClientStatusHistoryUncheckedCreateNestedManyWithoutClientInput
+  quotes?: Prisma.QuoteUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutTagsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutTagsInput, Prisma.ClientUncheckedCreateWithoutTagsInput>
+}
+
+export type ClientUpsertWithWhereUniqueWithoutTagsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutTagsInput, Prisma.ClientUncheckedUpdateWithoutTagsInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutTagsInput, Prisma.ClientUncheckedCreateWithoutTagsInput>
+}
+
+export type ClientUpdateWithWhereUniqueWithoutTagsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutTagsInput, Prisma.ClientUncheckedUpdateWithoutTagsInput>
+}
+
+export type ClientUpdateManyWithWhereWithoutTagsInput = {
+  where: Prisma.ClientScalarWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateManyMutationInput, Prisma.ClientUncheckedUpdateManyWithoutTagsInput>
 }
 
 export type ClientCreateManyAgencyInput = {
@@ -1499,6 +1639,7 @@ export type ClientUpdateWithoutAgencyInput = {
   communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutAgencyInput = {
@@ -1520,10 +1661,70 @@ export type ClientUncheckedUpdateWithoutAgencyInput = {
   communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
   statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
   quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutClientsNestedInput
 }
 
 export type ClientUncheckedUpdateManyWithoutAgencyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ClientUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agency?: Prisma.AgencyUpdateOneRequiredWithoutClientsNestedInput
+  users?: Prisma.UserUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutClientNestedInput
+  tickets?: Prisma.SupportTicketUpdateManyWithoutClientNestedInput
+  communications?: Prisma.CommunicationUpdateManyWithoutClientNestedInput
+  statusHistory?: Prisma.ClientStatusHistoryUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutClientNestedInput
+  tickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutClientNestedInput
+  communications?: Prisma.CommunicationUncheckedUpdateManyWithoutClientNestedInput
+  statusHistory?: Prisma.ClientStatusHistoryUncheckedUpdateManyWithoutClientNestedInput
+  quotes?: Prisma.QuoteUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateManyWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.StringFieldUpdateOperationsInput | string
   contactName?: Prisma.StringFieldUpdateOperationsInput | string
   contactEmail?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1549,6 +1750,7 @@ export type ClientCountOutputType = {
   communications: number
   statusHistory: number
   quotes: number
+  tags: number
 }
 
 export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1559,6 +1761,7 @@ export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   communications?: boolean | ClientCountOutputTypeCountCommunicationsArgs
   statusHistory?: boolean | ClientCountOutputTypeCountStatusHistoryArgs
   quotes?: boolean | ClientCountOutputTypeCountQuotesArgs
+  tags?: boolean | ClientCountOutputTypeCountTagsArgs
 }
 
 /**
@@ -1620,6 +1823,13 @@ export type ClientCountOutputTypeCountQuotesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.QuoteWhereInput
 }
 
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountTagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TagWhereInput
+}
+
 
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1642,6 +1852,7 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   communications?: boolean | Prisma.Client$communicationsArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Client$statusHistoryArgs<ExtArgs>
   quotes?: boolean | Prisma.Client$quotesArgs<ExtArgs>
+  tags?: boolean | Prisma.Client$tagsArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
@@ -1702,6 +1913,7 @@ export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   communications?: boolean | Prisma.Client$communicationsArgs<ExtArgs>
   statusHistory?: boolean | Prisma.Client$statusHistoryArgs<ExtArgs>
   quotes?: boolean | Prisma.Client$quotesArgs<ExtArgs>
+  tags?: boolean | Prisma.Client$tagsArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1722,6 +1934,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     communications: Prisma.$CommunicationPayload<ExtArgs>[]
     statusHistory: Prisma.$ClientStatusHistoryPayload<ExtArgs>[]
     quotes: Prisma.$QuotePayload<ExtArgs>[]
+    tags: Prisma.$TagPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2138,6 +2351,7 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
   communications<T extends Prisma.Client$communicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$communicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommunicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   statusHistory<T extends Prisma.Client$statusHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$statusHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   quotes<T extends Prisma.Client$quotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$quotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tags<T extends Prisma.Client$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2745,6 +2959,30 @@ export type Client$quotesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.QuoteScalarFieldEnum | Prisma.QuoteScalarFieldEnum[]
+}
+
+/**
+ * Client.tags
+ */
+export type Client$tagsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Tag
+   */
+  select?: Prisma.TagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Tag
+   */
+  omit?: Prisma.TagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TagInclude<ExtArgs> | null
+  where?: Prisma.TagWhereInput
+  orderBy?: Prisma.TagOrderByWithRelationInput | Prisma.TagOrderByWithRelationInput[]
+  cursor?: Prisma.TagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TagScalarFieldEnum | Prisma.TagScalarFieldEnum[]
 }
 
 /**

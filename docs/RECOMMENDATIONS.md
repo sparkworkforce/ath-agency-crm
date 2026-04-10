@@ -1,221 +1,260 @@
-# 🐍 CobraHub — Product Recommendations & Roadmap
+# CobraHub v2.1 — Recommendations & Roadmap
 
-## Executive Summary
-
-CobraHub sits in a $7.2B agency management software market growing 10%+ annually. Your niche — ATH Business integration tracking for PR agencies — has **zero direct competitors**. The general competitors (Ravetree $49-149/mo, Productive $11-28/user/mo, Teamwork $10-25/user/mo) are bloated, expensive, and have no understanding of the PR payment ecosystem.
-
-Your moat: **vertical specialization + expansion potential**. No one else combines CRM + project management + invoicing + client portal specifically for payment integration agencies. The recommendations below are prioritized by **signup impact** (your #1 goal) and organized into waves you can ship solo.
+> Pre-launch playbook for cold outreach conversion. Prioritized by impact on
+> "Would a cold prospect sign up after seeing this?"
 
 ---
 
-## 🔴 CRITICAL ISSUES TO FIX BEFORE LAUNCH
+## 🔴 CRITICAL — Fix Before Cold Outreach
 
-### 1. Seed script still references `NEXT_PUBLIC_AGENCY_NAME`
-`prisma/seed.ts` line 12 used `process.env.NEXT_PUBLIC_AGENCY_NAME ?? 'Mi Agencia'` — **FIXED** (now defaults to `'CobraHub'`).
+### 1. Landing Page Doesn't Sell
+**Problem:** No product screenshots, no social proof, no "how it works" section.
+A cold prospect sees text and pricing but never sees what the product looks like.
+HoneyBook, Dubsado, and Monday.com all show product UI above the fold.
 
-### 2. ~~No rate limiting on registration endpoint~~
-Already implemented — `rateLimit()` is called at the top of the register route. ✅
+**Fix:**
+- Add hero screenshot/mockup of the dashboard between hero CTA and features
+- Add "How it works" 3-step section: Add Client → Track Integration → Get Paid
+- Add social proof: "Beta — join 10+ agencies already onboard" (even aspirational)
+- Move Go-Live Checklist to feature #1 (it's your differentiator, currently buried as #6)
+- Add FAQ accordion behavior (currently a wall of text on mobile)
 
-### 3. ~~No input validation on registration~~
-Already implemented — `RegisterAgencySchema` validates email, password (min 8), agency name (min 2, max 100). ✅
+### 2. Demo Doesn't Show Your Best Feature
+**Problem:** Demo seeds clients/projects/invoices but NO `IntegrationStatus` data.
+The Go-Live Score — your most unique feature vs every competitor — shows as empty/0.
+Also missing: communication history, code snippets, guided tour.
 
-### 4. No CSRF protection on mutation endpoints
-Next.js App Router doesn't include CSRF tokens by default. Consider adding `SameSite=Strict` cookies and origin checking in middleware.
+**Fix:**
+- Seed IntegrationStatus with realistic data (account approved, webhook verified, test transaction done)
+- Seed 2-3 communication records per client
+- Seed 5-10 code snippets (ATH Business API examples)
+- Add welcome banner: "Welcome to your demo! Here's what to explore..."
 
-### 5. Package name is still `ath-business-agency`
-`package.json` name should be `cobrahub` for consistency.
+### 3. Registration → Login Redirect Friction
+**Problem:** After registering, user is sent to `/login?registered=true` instead of
+being auto-logged in. Extra step = drop-off.
 
-### 6. No loading states on landing page CTA
-The "Comenzar gratis" button on the landing page links to `/register` but there's no visual feedback during navigation. Consider prefetching.
+**Fix:** Call `signIn('credentials')` after successful registration (same pattern as demo route).
 
----
+### 4. App Interior is Spanish-Only
+**Problem:** Landing page and portal have i18n (es/en), but the entire agency app
+(dashboard, CRM, projects, invoicing, settings) is hardcoded Spanish. An English-speaking
+prospect from cold outreach hits a Spanish app after the translated landing page.
 
-## 🟢 WAVE 1 — Ship in 1-2 Weeks (Signup Drivers)
-
-These are the highest-impact features for getting agencies to sign up.
-
-### 1. Interactive Demo Mode (No Registration Required)
-**Why:** The #1 barrier to signup is "I don't know what this looks like inside." Every competitor requires registration to see the product.
-**What:** Add a "Ver demo" button on the landing page that creates a temporary session with pre-populated demo data (3 clients, 2 projects, sample invoices). Auto-expires after 30 minutes. No email required.
-**Impact:** 3-5x increase in signup conversion based on SaaS benchmarks.
-
-### 2. Social Proof Section on Landing Page
-**Why:** Zero trust signals currently. Agencies won't pay for software from an unknown brand.
-**What:** Add a section between features and pricing with:
-- "Trusted by X agencies in Puerto Rico" counter (even if it starts at 1)
-- 2-3 testimonial cards (get quotes from beta users or create placeholder "Coming soon" with agency type descriptions)
-- "Integra con" logos: WooCommerce, Shopify, ATH Business, Stripe
-**Impact:** 20-40% increase in landing page → register conversion.
-
-### 3. Onboarding Wizard (Post-Registration)
-**Why:** The current post-registration experience drops users into an empty dashboard. High churn risk.
-**What:** 4-step wizard after first login:
-1. "Agrega tu primer cliente" (pre-filled form)
-2. "Crea tu primer proyecto" (auto-selects platform template)
-3. "Personaliza tu portal" (upload logo, pick color)
-4. "Invita a tu cliente" (sends magic link)
-**Impact:** 50%+ improvement in activation rate (user reaches "aha moment" faster).
-
-### 4. WhatsApp Integration for Client Communication
-**Why:** In Puerto Rico, WhatsApp is the primary business communication channel. No competitor offers this.
-**What:** Add a "Enviar por WhatsApp" button next to every "Enviar por email" action. Uses `https://wa.me/{phone}?text={encoded_message}` — zero API cost, just opens WhatsApp with pre-filled message containing portal link.
-**Impact:** Massive differentiation in PR market. Agencies will talk about this.
+**Fix:** This is a large effort. Prioritize in this order:
+1. Dashboard (first thing they see)
+2. Sidebar navigation
+3. CRM (clients table + detail)
+4. Projects (list + detail)
+5. Invoicing (list + detail)
+6. Settings
+7. Registration + Login pages
 
 ---
 
-## 🟡 WAVE 2 — Ship in 3-4 Weeks (Retention & Portal Value)
+## 🟠 HIGH IMPACT — Build Before Launch
 
-These make the client portal the "major selling point" you want it to be.
+### 5. CRM Needs Pipeline View
+**Problem:** CRM is table-only. Every competitor has a Kanban board.
+A drag-and-drop pipeline (prospecto → en_progreso → completado → soporte_mensual)
+is visually impressive in demos and expected by agencies.
 
-### 5. Real-Time Project Timeline (Gantt-lite)
-**Why:** The current portal shows a task list with checkmarks. Clients want to see WHEN things will be done, not just what's done.
-**What:** Simple horizontal timeline showing tasks as bars with estimated dates. Use the `estimatedDays` data already in the schema. No drag-and-drop needed — just a visual read-only timeline.
-**Impact:** Transforms portal from "status checker" to "project visibility tool."
+**Fix:** Add Kanban view toggle alongside table view. Use `@dnd-kit/core` for drag-and-drop.
 
-### 6. Client Activity Feed
-**Why:** Clients currently see a static snapshot. They want to know what happened since their last visit.
-**What:** Add an activity feed to the portal: "Tarea X completada", "Archivo subido", "Factura creada", "Milestone: 50% completado". Pull from existing data (task status changes, file uploads, invoice creation).
-**Impact:** Gives clients a reason to return to the portal regularly.
+### 6. Invoice Creation is a Hack
+**Problem:** User enters total amount, code back-calculates a single line item by
+dividing by 1.115 for IVU. Can't add multiple line items, can't edit after creation.
 
-### 7. Branded PDF Proposals/Quotes
-**Why:** Agencies need to send quotes BEFORE creating invoices. Currently there's no quote/proposal flow.
-**What:** Add a "Cotización" (quote) model that converts to Invoice on approval. Uses the same PDF generator. Client can approve via portal magic link.
-**Impact:** Covers the full sales cycle. Agencies currently use separate tools for this.
+**Fix:**
+- Multi-line-item editor with description, quantity, rate
+- Auto-calculate subtotal + IVU (11.5%)
+- Allow editing invoices in draft/pending status
+- Add payment method field (ATH, transferencia, cheque, efectivo)
 
-### 8. Client Satisfaction Survey (Auto-Send at 100%)
-**Why:** When a project hits 100%, the milestone email fires but there's no feedback loop.
-**What:** Include a 1-5 star rating + optional comment in the 100% milestone email. Store in a `ProjectFeedback` model. Show aggregate NPS on dashboard.
-**Impact:** Agencies get testimonials automatically. You get social proof for the landing page.
+### 7. No Email Sending for Invoices
+**Problem:** Can download PDF and WhatsApp it, but can't email invoices directly.
+Not professional enough for agency-to-client billing.
 
-### 9. Webhook Notifications (Slack/Discord)
-**Why:** Agencies live in Slack/Discord. Email notifications get buried.
-**What:** Add a webhook URL field in agency settings. Fire JSON payloads on key events (new client, task completed, payment received, file uploaded). Works with Slack incoming webhooks, Discord webhooks, Zapier, Make.
-**Impact:** Low-effort integration that makes CobraHub feel connected to their workflow.
+**Fix:** "Send Invoice" button that emails the PDF to the client's contactEmail
+using the existing Resend integration. Include payment link if applicable.
 
----
+### 8. Client Portal Missing Invoice Visibility
+**Problem:** Clients can see project progress but not their invoices or payment status.
+This is the #1 client request in agency tools.
 
-## 🔵 WAVE 3 — Ship in 5-8 Weeks (Growth & Expansion)
+**Fix:** Add `/api/portal/invoices` endpoint + invoice list in portal UI.
 
-### 10. Multi-Payment Processor Support
-**Why:** You're planning to expand beyond ATH Business. This is the architecture for it.
-**What:** Abstract the `IntegrationStatus` model to support multiple processors. Add templates for:
-- ATH Móvil (huge in PR)
-- PayPal Commerce Platform
-- Stripe Connect
-- Square
-- Mercado Pago (LATAM expansion)
-**Impact:** Expands TAM from "ATH Business agencies in PR" to "payment integration agencies everywhere."
+### 9. Settings Page Missing Key Features
+**Problem:** Custom domain, API key, referral program, and notification preferences
+all exist in the backend but have no UI in settings.
 
-### 11. Public API (v1)
-**Why:** Business plan differentiator. Agencies with developers want to automate.
-**What:** REST API with API key auth for: clients CRUD, projects read, invoices CRUD, webhooks management. Rate limited per plan.
-**Impact:** Justifies the $79/mo Business plan. Enables integrations you can't predict.
+**Fix:** Add sections for:
+- Custom domain (Business plan)
+- API key management (generate/rotate/copy)
+- Referral code (view/share)
+- Logo file upload (use Supabase Storage instead of URL input)
 
-### 12. Agency Referral Program
-**Why:** Your best growth channel is agency-to-agency word of mouth.
-**What:** Each agency gets a referral link. Referred agency gets 1 month Professional free. Referring agency gets 1 month credit. Track in a `Referral` model.
-**Impact:** Viral growth loop. Agencies in PR know each other.
+### 10. Support Tickets Have No Replies
+**Problem:** `SupportTicket` model is flat — title + description + status.
+Client opens a ticket, but there's no way for the agency to respond.
+This makes the portal feel like a dead end.
 
-### 13. Template Marketplace
-**Why:** Agencies want to share and reuse project templates, code snippets, and integration checklists.
-**What:** Allow agencies to publish their project templates and code snippets to a shared marketplace. Other agencies can import them. Start curated (you approve submissions).
-**Impact:** Network effect — more agencies = more templates = more value = more agencies.
-
-### 14. Time Tracking
-**Why:** Every competitor has it. Agencies need to track billable hours per client/project.
-**What:** Simple start/stop timer per task. Daily/weekly timesheet view. Integrates with invoicing (auto-generate invoice from tracked hours).
-**Impact:** Eliminates the need for a separate time tracking tool (Harvest, Toggl).
-
-### 15. Multi-Language Support (English)
-**Why:** Expansion beyond PR requires English. Many PR agencies also serve US mainland clients.
-**What:** Add `next-intl` with `es` and `en` locales. Start with the landing page and client portal (highest visibility). Dashboard can follow later.
-**Impact:** Opens the US mainland market and makes the product accessible to English-speaking agencies in PR.
+**Fix:** Add `TicketMessage` model with sender role (CLIENT/AGENCY) for threaded conversation.
 
 ---
 
-## 🛠 TOOLS & BEST PRACTICES TO ADOPT
+## 🟡 MEDIUM IMPACT — Build After Launch
 
-### Development
-| Tool | Why | Priority |
-|------|-----|----------|
-| **Playwright** | E2E tests for critical flows (register → create client → create project → portal view). You have 43 unit tests but zero E2E. | High |
-| **GitHub Actions CI** | Run `npm test && npm run build` on every push. Catch breaks before deploy. | High |
-| **Prisma Pulse** or **Supabase Realtime** | Real-time updates in portal (client sees task complete without refreshing). | Medium |
-| **next-intl** | i18n framework for multi-language support. | Medium |
-| **Posthog** or **Plausible** | Privacy-friendly analytics. Know which features agencies actually use. | High |
-| **Upstash QStash** | Background job queue for email sends (don't block API responses). | Medium |
+### 11. Empty State Dashboard
+New agencies see 7 KPI cards all showing 0/$0. Revenue chart is empty.
+Activity feed is empty. Terrible first impression.
 
-### Operations
-| Practice | Why | Priority |
-|----------|-----|----------|
-| **Feature flags** (Vercel Edge Config or LaunchDarkly) | Ship features to beta agencies first. Roll back without deploys. | Medium |
-| **Database backups** | Supabase has daily backups on Pro plan. Verify they're enabled. | Critical |
-| **Error alerting** | Sentry is configured but verify Slack/email alerts are set up for production errors. | High |
-| **Uptime monitoring** | Use BetterStack or similar. Landing page downtime = lost signups. | High |
-| **Changelog page** | Public `/changelog` page showing what's new. Agencies want to see active development. | Medium |
+**Fix:** Show contextual empty states: "Add your first client to see metrics here"
+with a CTA button linking to /clients/new.
 
-### Security
-| Practice | Why | Priority |
-|----------|-----|----------|
-| **Rate limit registration** | Prevent spam account creation. 5/hour per IP. | Critical |
-| **CSP headers** | Already in next.config.js but verify they're strict enough for production. | High |
-| **Dependency audit** | Run `npm audit` weekly. Automate with Dependabot. | Medium |
-| **Session rotation** | Rotate session tokens on privilege changes (plan upgrade, password change). | Medium |
+### 12. Missing KPIs
+Current: 7 KPIs. Missing high-value ones:
+- Invoice aging (avg days to payment)
+- Collection rate (% collected vs invoiced)
+- Client satisfaction (avg ProjectFeedback rating)
+- Team utilization (hours logged vs available)
+- MRR from retainers
 
----
+### 13. No Date Range Filtering on Exports
+Exports dump everything. Add `?from=&to=` params. Also missing: project export, time entries export.
 
-## 💡 INNOVATIONS THAT SET YOU APART
+### 14. Communication Channel Should Be an Enum
+Currently free-text input. Should be dropdown: Email, Llamada, WhatsApp, Reunión, Otro.
+Enables filtering and reporting by channel.
 
-### 1. "Go-Live Score" — Unique to CobraHub
-No competitor has this. Create a 0-100 score for each ATH Business integration that combines: account status, API key configuration, webhook verification, sandbox testing, and production readiness. Show it as a prominent badge on the project detail and portal. Agencies can tell clients "you're at 73% ready to go live" — much more compelling than a task checklist.
+### 15. No Client Tags/Labels
+Can't categorize clients beyond status and platform. Add a `Tag` model for
+custom labels (VIP, Urgente, Referido, etc.).
 
-### 2. "Integration Health Monitor" (Post-Launch)
-After a client goes live with ATH Business, monitor the integration health: are webhooks responding? Are test transactions succeeding? Is the SSL certificate valid? Show a green/yellow/red status on the dashboard. This turns CobraHub from a "project management tool" into an "ongoing operations tool" — justifying the monthly subscription after project completion.
+### 16. Project Creation Missing Platform Selection
+README says tasks are "auto-generated by platform" but the create form doesn't
+capture platform. Templates exist in the API but aren't offered during creation.
 
-### 3. "Client Success Playbook" — AI-Powered
-Use the project completion data, task durations, and client feedback to generate a "playbook" for each platform type. "WooCommerce integrations typically take 14 days. The most common blocker is webhook configuration (avg 3 days). Recommended: send client the webhook guide on day 1." This institutional knowledge becomes more valuable as more agencies use CobraHub.
+### 17. No Trial Period
+No `trialing` state despite schema support. Add 14-day free trial of Professional
+features to reduce signup friction for cold outreach.
 
-### 4. "Revenue Forecasting" Dashboard Widget
-Use the pipeline data (clients in each status) + average project value + historical conversion rates to show a 3-month revenue forecast. "Based on your pipeline, you're projected to invoice $12,400 next month." No competitor in this price range offers this.
-
-### 5. "White-Label Portal" (Business Plan)
-Let Business plan agencies completely remove CobraHub branding from the client portal. Custom domain support (portal.theiragency.com). This is a premium feature that justifies the $79/mo price and creates lock-in.
+### 18. Plan Feature Gating Incomplete
+Landing page says Professional gets "Branding del portal", "Recordatorios de pago",
+"Snippets ilimitados" — but code doesn't enforce these limits. Only CSV export is gated.
 
 ---
 
-## 📊 COMPETITIVE POSITIONING
+## 🟢 NICE TO HAVE — Post-Launch Polish
 
-| Feature | CobraHub (Free) | Ravetree ($49/mo) | Productive ($11/user) | Teamwork ($10/user) |
-|---------|----------------|-------------------|----------------------|---------------------|
-| CRM + Pipeline | ✓ | ✓ | ✓ | ✓ |
-| Project Management | ✓ | ✓ | ✓ | ✓ |
-| Invoicing + IVU Tax | ✓ | ✓ | ✓ | Via integration |
-| Client Portal | ✓ | ✓ | ✗ | ✓ ($25/user) |
-| Magic Link Access | ✓ | ✗ | ✗ | ✗ |
-| ATH Business Tracking | ✓ | ✗ | ✗ | ✗ |
-| Go-Live Checklist | ✓ | ✗ | ✗ | ✗ |
-| Milestone Emails | ✓ | ✗ | ✗ | ✗ |
-| Code Snippets Library | ✓ | ✗ | ✗ | ✗ |
-| WhatsApp Integration | Planned | ✗ | ✗ | ✗ |
-| Spanish-First UI | ✓ | ✗ | ✗ | ✗ |
-| PR Tax (IVU) Support | ✓ | ✗ | ✗ | ✗ |
-| Free Tier | 3 clients | ✗ | ✗ | ✗ (limited) |
-| Price (5 users) | $29/mo | $49/mo | $55/mo | $50-125/mo |
+### 19. Annual Pricing Toggle
+Every SaaS competitor offers 15-20% annual discount. Add toggle to pricing section.
 
-**Your pitch:** "CobraHub is the only platform built specifically for agencies that integrate payment systems. We speak your language, understand your workflow, and cost less than the generic alternatives."
+### 20. OAuth Login (Google/GitHub)
+NextAuth supports it. Reduces registration friction.
+
+### 21. Rich Text for Communications
+Plain text only. Add `tiptap` or markdown editor for communication summaries.
+
+### 22. Real-Time Portal Updates
+Portal is server-rendered. Add polling or WebSocket for live task updates.
+
+### 23. Expense Tracking
+Can track revenue but not costs. Add `Expense` model for project profitability.
+
+### 24. In-App Notifications
+Everything is email-only. Add `Notification` model + bell icon with unread count.
+
+### 25. Webhook Delivery Logs
+Agency sets webhook URL but can't see delivery history or failures.
 
 ---
 
-## 🗓 RECOMMENDED TIMELINE
+## 🐛 ERRORS & ISSUES FOUND
 
-| Week | Focus | Ship |
-|------|-------|------|
-| 1 | Fix critical issues + deploy | Registration rate limiting, seed fix, package rename |
-| 2 | Wave 1a | Interactive demo mode, social proof section |
-| 3 | Wave 1b | Onboarding wizard, WhatsApp integration |
-| 4-5 | Wave 2a | Project timeline, activity feed, satisfaction survey |
-| 6-7 | Wave 2b | Branded proposals, webhook notifications |
-| 8-10 | Wave 3a | Multi-processor support, public API v1 |
-| 11-12 | Wave 3b | Referral program, time tracking, English support |
+| # | Severity | Issue |
+|---|----------|-------|
+| 1 | 🔴 | Pricing plan features (plan names, feature lists) hardcoded in Spanish on landing page despite i18n |
+| 2 | 🔴 | Registration, demo, login pages have zero i18n |
+| 3 | 🟠 | Demo doesn't seed IntegrationStatus — Go-Live Score invisible |
+| 4 | 🟠 | Registration redirects to /login instead of auto-login |
+| 5 | 🟠 | Invoice creation back-calculates single line item instead of multi-item editor |
+| 6 | 🟠 | SupportTicket has no reply mechanism |
+| 7 | 🟡 | ClientsTable has no pagination — breaks at 25+ clients |
+| 8 | 🟡 | Project files have no download links (storageKey unused) |
+| 9 | 🟡 | Settings missing custom domain, API key, referral UI |
+| 10 | 🟡 | Logo is URL input, not file upload |
+| 11 | 🟡 | No unsubscribe link in emails (CAN-SPAM/GDPR) |
+| 12 | 🟡 | Dashboard labels mix English/Spanish ("Revenue mensual") |
+| 13 | 🟢 | Webhook "Verificar" button toggles boolean, doesn't actually verify |
+| 14 | 🟢 | No password strength indicator on registration |
+| 15 | 🟢 | No terms/privacy acceptance checkbox on registration |
 
-**Key principle:** Ship Wave 1 before spending money on marketing. The demo mode and onboarding wizard will dramatically improve your conversion funnel, making every marketing dollar more effective.
+---
+
+## 🛠 TOOLS & BEST PRACTICES
+
+### Recommended Additions
+| Tool | Purpose | Why |
+|------|---------|-----|
+| `@dnd-kit/core` | Drag-and-drop | Kanban board, task reordering |
+| `date-fns` | Date formatting | Relative times ("hace 2 días"), timezone support, locale-aware formatting |
+| `react-hook-form` | Form management | Reduce boilerplate in 15+ forms, better validation UX |
+| Plausible Cloud ($9/mo) | Analytics | Already integrated but needs activation. Track feature adoption, conversion funnels |
+| `sharp` | Image processing | Resize/optimize agency logos on upload |
+
+### Best Practices to Adopt
+1. **Feature flags per plan** — Enforce all plan limits from the pricing table, not just CSV export
+2. **Structured logging** — Current `console.log(JSON.stringify(...))` is good but add request ID for tracing
+3. **Rate limiting on all auth routes** — Login and reset-password have it, but register and verify-email don't
+4. **Input sanitization** — `esc()` exists in email.ts but isn't used consistently across user-facing outputs
+5. **Automated DB backups** — Supabase has this but verify it's enabled and tested
+6. **Staging environment** — Deploy a staging branch to Vercel for pre-release testing
+7. **Error tracking activation** — Sentry is configured but verify it's capturing errors in production
+
+---
+
+## 📊 CHURN RISK ANALYSIS
+
+Based on the codebase, here's why agencies would stop using CobraHub:
+
+| Risk | Likelihood | Mitigation |
+|------|-----------|------------|
+| "I only have 1-2 clients, not worth it" | HIGH | Free plan already covers 3 clients. Add value beyond client count: templates, snippets, Go-Live Score |
+| "My clients don't use the portal" | HIGH | Portal needs invoice visibility + ticket replies to be useful. Currently too limited. |
+| "I outgrew it — need contracts, proposals, expenses" | MEDIUM | Add Quote→Contract signing flow. Add expense tracking. |
+| "The CRM is too basic vs HubSpot/Monday" | MEDIUM | Kanban view + tags + bulk actions close the gap for small agencies |
+| "I can't customize it enough" | LOW | Custom domain + branding + webhook integrations cover most needs |
+| "It's too Spanish-only for my team" | HIGH for cold outreach | Full i18n is critical if targeting English-speaking agencies |
+
+**Biggest churn risk:** Portal is too limited. If clients don't use the portal,
+agencies lose the "wow factor" that justifies CobraHub over a spreadsheet.
+Fix: invoice visibility + ticket replies + real-time updates.
+
+---
+
+## 🚀 RECOMMENDED IMPLEMENTATION ORDER
+
+### Week 1 — Cold Outreach Ready
+1. Seed IntegrationStatus in demo + registration (2h)
+2. Auto-login after registration (30min)
+3. Landing page: product screenshot + "How it works" + social proof (3h)
+4. Demo welcome banner with exploration guide (1h)
+
+### Week 2 — Core UX Fixes
+5. Multi-line-item invoice editor with IVU auto-calc (4h)
+6. Invoice email sending via Resend (2h)
+7. Settings: API key + referral + custom domain UI (3h)
+8. Dashboard empty states (1h)
+
+### Week 3 — Competitive Features
+9. CRM Kanban pipeline view (6h)
+10. Portal invoice visibility (3h)
+11. Support ticket replies (3h)
+12. Client pagination + status filter (2h)
+
+### Week 4 — i18n + Polish
+13. Full agency-side i18n (dashboard, sidebar, CRM, projects, invoicing, settings) (8h)
+14. Registration + login + demo i18n (2h)
+15. Trial period implementation (2h)
+16. Plan feature gating enforcement (2h)

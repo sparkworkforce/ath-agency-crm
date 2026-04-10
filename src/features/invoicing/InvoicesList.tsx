@@ -38,7 +38,12 @@ export default function InvoicesList({ initialInvoices, clients }: Props) {
   const [statusFilter, setStatusFilter] = useState('')
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [form, setForm] = useState({ clientId: '', totalAmount: '', dueDate: '', isRetainer: false })
+  const [form, setForm] = useState({ clientId: '', dueDate: '', isRetainer: false })
+  const [lineItems, setLineItems] = useState([{ description: '', quantity: 1, rate: 0 }])
+
+  const subtotal = lineItems.reduce((s, li) => s + li.quantity * li.rate, 0)
+  const ivu = subtotal * 0.115
+  const total = subtotal + ivu
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
@@ -49,10 +54,10 @@ export default function InvoicesList({ initialInvoices, clients }: Props) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         clientId: form.clientId,
-        totalAmount: parseFloat(form.totalAmount),
+        totalAmount: Math.round(total * 100) / 100,
         dueDate: new Date(form.dueDate).toISOString(),
         isRetainer: form.isRetainer,
-        lineItems: [{ description: 'Servicios de integración ATH Business', amount: parseFloat(form.totalAmount) / 1.115 }],
+        lineItems: lineItems.map(li => ({ description: li.description, amount: Math.round(li.quantity * li.rate * 100) / 100 })),
       }),
     })
     setCreating(false)
@@ -99,19 +104,6 @@ export default function InvoicesList({ initialInvoices, clients }: Props) {
               </select>
             </div>
             <div>
-              <label htmlFor="inv-amount" className="block text-sm font-medium text-gray-700 mb-1">Monto total ($)</label>
-              <input
-                id="inv-amount"
-                type="number"
-                step="0.01"
-                min="0.01"
-                required
-                value={form.totalAmount}
-                onChange={(e) => setForm((p) => ({ ...p, totalAmount: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-            <div>
               <label htmlFor="inv-due" className="block text-sm font-medium text-gray-700 mb-1">Fecha límite</label>
               <input
                 id="inv-due"
@@ -122,17 +114,29 @@ export default function InvoicesList({ initialInvoices, clients }: Props) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
-            <div className="flex items-end pb-2">
-              <label className="flex items-center gap-2 text-sm text-gray-700">
-                <input
-                  type="checkbox"
-                  checked={form.isRetainer}
-                  onChange={(e) => setForm((p) => ({ ...p, isRetainer: e.target.checked }))}
-                  className="rounded border-gray-300"
-                />
-                Es retainer mensual
-              </label>
-            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Líneas</label>
+            {lineItems.map((li, i) => (
+              <div key={i} className="flex gap-2 mb-2">
+                <input placeholder="Descripción" required value={li.description} onChange={e => { const n = [...lineItems]; n[i] = { ...n[i], description: e.target.value }; setLineItems(n) }} className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm" />
+                <input type="number" min="1" placeholder="Cant." value={li.quantity} onChange={e => { const n = [...lineItems]; n[i] = { ...n[i], quantity: Number(e.target.value) }; setLineItems(n) }} className="w-20 px-3 py-2 border border-gray-300 rounded-md text-sm" />
+                <input type="number" step="0.01" min="0" placeholder="Tarifa" value={li.rate || ''} onChange={e => { const n = [...lineItems]; n[i] = { ...n[i], rate: Number(e.target.value) }; setLineItems(n) }} className="w-28 px-3 py-2 border border-gray-300 rounded-md text-sm" />
+                {lineItems.length > 1 && <button type="button" onClick={() => setLineItems(lineItems.filter((_, j) => j !== i))} className="text-red-500 text-sm px-2">✕</button>}
+              </div>
+            ))}
+            <button type="button" onClick={() => setLineItems([...lineItems, { description: '', quantity: 1, rate: 0 }])} className="text-sm text-emerald-600 hover:underline">+ Agregar línea</button>
+          </div>
+          <div className="text-sm text-right space-y-1">
+            <p>Subtotal: <span className="font-medium">${subtotal.toFixed(2)}</span></p>
+            <p>IVU (11.5%): <span className="font-medium">${ivu.toFixed(2)}</span></p>
+            <p className="text-base font-semibold">Total: ${total.toFixed(2)}</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={form.isRetainer} onChange={(e) => setForm((p) => ({ ...p, isRetainer: e.target.checked }))} className="rounded border-gray-300" />
+              Es retainer mensual
+            </label>
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex gap-3">
@@ -171,7 +175,7 @@ export default function InvoicesList({ initialInvoices, clients }: Props) {
             {filtered.map((inv) => {
               const paid = inv.payments.reduce((sum, p) => sum + Number(p.amount), 0)
               return (
-                <tr key={inv.id} className="hover:bg-gray-50">
+                <tr key={inv.id} className={`hover:bg-gray-50 ${inv.status !== 'pagado' && new Date(inv.dueDate) < new Date() ? 'bg-red-50' : ''}`}>
                   <td className="px-4 py-3">
                     <Link href={`/invoices/${inv.id}`} className="font-medium text-emerald-600 hover:underline">
                       #{inv.id.slice(-8).toUpperCase()}
@@ -182,7 +186,12 @@ export default function InvoicesList({ initialInvoices, clients }: Props) {
                   </td>
                   <td className="px-4 py-3 text-gray-600">{inv.client.businessName}</td>
                   <td className="px-4 py-3 font-medium">${Number(inv.totalAmount).toFixed(2)}</td>
-                  <td className="px-4 py-3 text-gray-600">${paid.toFixed(2)}</td>
+                  <td className="px-4 py-3 text-gray-600">
+                    <span>${paid.toFixed(2)}</span>
+                    <div className="mt-1 h-1.5 w-full rounded-full bg-gray-200">
+                      <div className={`h-1.5 rounded-full ${paid >= Number(inv.totalAmount) ? 'bg-green-500' : paid > 0 ? 'bg-blue-500' : 'bg-gray-200'}`} style={{ width: `${Math.min(100, Number(inv.totalAmount) > 0 ? (paid / Number(inv.totalAmount)) * 100 : 0)}%` }} />
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{new Date(inv.dueDate).toLocaleDateString('es-PR')}</td>
                   <td className="px-4 py-3"><StatusBadge status={inv.status} variant="invoice" /></td>
                 </tr>

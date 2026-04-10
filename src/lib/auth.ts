@@ -1,22 +1,14 @@
 import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import Credentials from 'next-auth/providers/credentials'
+import Google from 'next-auth/providers/google'
 import bcrypt from 'bcryptjs'
 import { prisma } from './prisma'
 import { LoginSchema } from './validations/auth'
 import { checkIfLocked, checkAndIncrementLoginAttempts, resetLoginAttempts } from './services/auth.service'
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  // AGENCY sessions: 24h. CLIENT sessions: 1h (set directly in magic-link route).
-  // Default maxAge covers AGENCY Credentials logins.
-  session: { strategy: 'database', maxAge: 24 * 60 * 60 },
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
-  providers: [
-    Credentials({
+const providers: any[] = [
+  Credentials({
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
@@ -47,7 +39,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return user
       },
     }),
-  ],
+  ]
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(Google({ clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET }))
+}
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: 'database', maxAge: 24 * 60 * 60 },
+  pages: {
+    signIn: '/login',
+    error: '/login',
+  },
+  providers,
   callbacks: {
     async session({ session, user }) {
       if (session.user) {

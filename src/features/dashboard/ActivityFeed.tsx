@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 interface ActivityItem {
   id: string
   type: string
@@ -14,12 +16,14 @@ const TYPE_ICONS: Record<string, string> = {
   invoice_created: '📄',
 }
 
-export default function ActivityFeed({ items }: { items: ActivityItem[] }) {
+export default async function ActivityFeed({ items }: { items: ActivityItem[] }) {
+  const t = await getTranslations('agency')
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-5" data-testid="activity-feed">
-      <h2 className="text-sm font-medium text-gray-700 mb-4">Actividad reciente</h2>
+      <h2 className="text-sm font-medium text-gray-700 mb-4">{t('activityTitle')}</h2>
       {items.length === 0 ? (
-        <p className="text-sm text-gray-400">Sin actividad reciente.</p>
+        <p className="text-sm text-gray-400">{t('activityEmpty')}</p>
       ) : (
         <ul className="space-y-3">
           {items.map((item) => (

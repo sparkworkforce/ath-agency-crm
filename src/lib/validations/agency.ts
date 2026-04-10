@@ -13,6 +13,10 @@ export const UpdateAgencySchema = z.object({
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
   webhookUrl: z.string().url().nullable().optional(),
   customDomain: z.string().min(4).max(253).regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/).nullable().optional(),
+  timezone: z.string().optional(),
+  notifyMilestones: z.boolean().optional(),
+  notifyPayments: z.boolean().optional(),
+  notifyOverdue: z.boolean().optional(),
 })
 
 export type RegisterAgencyInput = z.infer<typeof RegisterAgencySchema>

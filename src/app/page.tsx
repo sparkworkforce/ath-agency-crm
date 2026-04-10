@@ -3,14 +3,11 @@ import { auth } from '@/lib/auth'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
-const FEATURE_KEYS = ['crm', 'projects', 'invoicing', 'portal', 'dashboard', 'golive'] as const
+const FEATURE_KEYS = ['golive', 'crm', 'projects', 'invoicing', 'portal', 'dashboard'] as const
 const FEATURE_ICONS = { crm: '👥', projects: '📋', invoicing: '💰', portal: '🔗', dashboard: '📊', golive: '🚀' }
 
-const plans = [
-  { name: 'Gratis', price: '$0', period: '/mes', clients: '3 clientes', users: '1 usuario', featureKeys: ['CRM básico', 'Gestión de proyectos', 'Facturación', 'Portal de cliente', 'Dashboard'], highlight: false },
-  { name: 'Profesional', price: '$29', period: '/mes', clients: '25 clientes', users: '5 usuarios', featureKeys: ['Todo en Gratis', 'Exportar CSV', 'Branding del portal', 'Snippets de código (∞)', 'Recordatorios de pago', 'Soporte prioritario'], highlight: true },
-  { name: 'Business', price: '$79', period: '/mes', clients: '∞ clientes', users: '∞ usuarios', featureKeys: ['Todo en Profesional', 'API access', 'Integraciones avanzadas', 'Onboarding dedicado', 'Soporte dedicado'], highlight: false },
-]
+const PLAN_KEYS = ['free', 'pro', 'business'] as const
+const PLAN_FEATURES: Record<string, number> = { free: 5, pro: 6, business: 5 }
 
 export default async function RootPage() {
   const session = await auth()
@@ -52,11 +49,25 @@ export default async function RootPage() {
           <Link href="/demo" className="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 px-6 py-3 rounded-md">{t('demo')}</Link>
         </div>
         <p className="text-xs text-gray-400 mt-4">{t('heroNote')}</p>
+        <div className="mt-12 mx-auto max-w-3xl rounded-lg border border-gray-200 bg-gray-100 aspect-video relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-200/50 to-transparent" />
+          <div className="absolute top-0 inset-x-0 h-8 bg-gray-200 flex items-center gap-1.5 px-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+            <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+          </div>
+          <p className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium">{t('dashboardPreview')}</p>
+        </div>
       </section>
 
       {/* Social Proof */}
       <section className="py-12 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4">
+          <div className="grid grid-cols-3 gap-6 text-center mb-10">
+            <div><p className="text-2xl font-bold text-gray-900">{t('metricsAgencies')}</p></div>
+            <div><p className="text-2xl font-bold text-gray-900">{t('metricsProcessed')}</p></div>
+            <div><p className="text-2xl font-bold text-gray-900">{t('metricsUptime')}</p></div>
+          </div>
           <p className="text-xs text-gray-400 text-center mb-6 uppercase tracking-wider">{t('integrations')}</p>
           <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-gray-400 font-medium">
             <span>🛒 WooCommerce</span>
@@ -64,6 +75,27 @@ export default async function RootPage() {
             <span>🏦 ATH Business</span>
             <span>💳 Stripe</span>
             <span>📧 Resend</span>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('howItWorksTitle')}</h2>
+          <p className="text-sm text-gray-500 mb-12">{t('howItWorksSub')}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: '1️⃣', title: t('step1Title'), desc: t('step1Desc') },
+              { icon: '2️⃣', title: t('step2Title'), desc: t('step2Desc') },
+              { icon: '3️⃣', title: t('step3Title'), desc: t('step3Desc') },
+            ].map((s) => (
+              <div key={s.title}>
+                <span className="text-3xl">{s.icon}</span>
+                <h3 className="text-sm font-semibold text-gray-900 mt-3 mb-1">{s.title}</h3>
+                <p className="text-sm text-gray-500">{s.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -91,28 +123,30 @@ export default async function RootPage() {
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">{t('pricingTitle')}</h2>
           <p className="text-sm text-gray-500 text-center mb-12">{t('pricingSub')}</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {plans.map((plan) => (
-              <div key={plan.name} className={`rounded-lg border p-6 ${plan.highlight ? 'border-emerald-600 ring-2 ring-emerald-100' : 'border-gray-200'}`}>
-                {plan.highlight && <span className="text-xs font-medium text-emerald-600 mb-2 block">{t('popular')}</span>}
-                <h3 className="text-sm font-semibold text-gray-900">{plan.name}</h3>
+            {PLAN_KEYS.map((key) => {
+              const highlight = key === 'pro'
+              return (
+              <div key={key} className={`rounded-lg border p-6 ${highlight ? 'border-emerald-600 ring-2 ring-emerald-100' : 'border-gray-200'}`}>
+                {highlight && <span className="text-xs font-medium text-emerald-600 mb-2 block">{t('popular')}</span>}
+                <h3 className="text-sm font-semibold text-gray-900">{t(`plans.${key}.name`)}</h3>
                 <div className="mt-2 mb-4">
-                  <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                  <span className="text-sm text-gray-500">{plan.period}</span>
+                  <span className="text-3xl font-bold text-gray-900">{t(`plans.${key}.price`)}</span>
+                  <span className="text-sm text-gray-500">{t(`plans.${key}.period`)}</span>
                 </div>
-                <p className="text-sm text-gray-600 mb-1">{plan.clients}</p>
-                <p className="text-sm text-gray-600 mb-4">{plan.users}</p>
+                <p className="text-sm text-gray-600 mb-1">{t(`plans.${key}.clients`)}</p>
+                <p className="text-sm text-gray-600 mb-4">{t(`plans.${key}.users`)}</p>
                 <ul className="space-y-2 mb-6">
-                  {plan.featureKeys.map((f) => (
-                    <li key={f} className="text-sm text-gray-600 flex items-center gap-2">
-                      <span className="text-emerald-500">✓</span> {f}
+                  {Array.from({ length: PLAN_FEATURES[key] }, (_, i) => (
+                    <li key={i} className="text-sm text-gray-600 flex items-center gap-2">
+                      <span className="text-emerald-500">✓</span> {t(`plans.${key}.f${i + 1}`)}
                     </li>
                   ))}
                 </ul>
-                <Link href="/register" className={`block text-center py-2 px-4 rounded-md text-sm font-medium ${plan.highlight ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
-                  {t('cta')}
+                <Link href="/register" className={`block text-center py-2 px-4 rounded-md text-sm font-medium ${highlight ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+                  {t(`plans.${key}.cta`)}
                 </Link>
               </div>
-            ))}
+            )})}
           </div>
         </div>
       </section>
@@ -125,28 +159,19 @@ export default async function RootPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="text-left px-4 py-3 font-medium text-gray-600">{t('nav.features')}</th>
-                  <th className="text-center px-4 py-3 font-medium text-gray-600">Gratis</th>
-                  <th className="text-center px-4 py-3 font-medium text-emerald-600">Pro</th>
-                  <th className="text-center px-4 py-3 font-medium text-gray-600">Business</th>
+                  <th className="text-left px-4 py-3 font-medium text-gray-600">{t('compare.feature')}</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">{t('plans.free.name')}</th>
+                  <th className="text-center px-4 py-3 font-medium text-emerald-600">{t('plans.pro.name')}</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-600">{t('plans.business.name')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {[
-                  ['CRM & Pipeline', '✓', '✓', '✓'],
-                  ['Invoicing & PDF', '✓', '✓', '✓'],
-                  ['Client Portal', '✓', '✓', '✓'],
-                  ['Dashboard & KPIs', '✓', '✓', '✓'],
-                  ['CSV Export', '—', '✓', '✓'],
-                  ['Portal Branding', '—', '✓', '✓'],
-                  ['Payment Reminders', '—', '✓', '✓'],
-                  ['API Access', '—', '—', '✓'],
-                ].map(([feature, free, pro, biz]) => (
-                  <tr key={feature}>
-                    <td className="px-4 py-2.5 text-gray-700">{feature}</td>
-                    <td className="px-4 py-2.5 text-center text-gray-500">{free}</td>
-                    <td className="px-4 py-2.5 text-center text-gray-700 font-medium">{pro}</td>
-                    <td className="px-4 py-2.5 text-center text-gray-500">{biz}</td>
+                {(['crm', 'invoicing', 'portal', 'dashboard', 'csv', 'branding', 'reminders', 'api'] as const).map((key) => (
+                  <tr key={key}>
+                    <td className="px-4 py-2.5 text-gray-700">{t(`compare.${key}`)}</td>
+                    <td className="px-4 py-2.5 text-center text-gray-500">{t(`compare.${key}_free`)}</td>
+                    <td className="px-4 py-2.5 text-center text-gray-700 font-medium">{t(`compare.${key}_pro`)}</td>
+                    <td className="px-4 py-2.5 text-center text-gray-500">{t(`compare.${key}_biz`)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -177,7 +202,7 @@ export default async function RootPage() {
           <div className="flex gap-4">
             <Link href="/terms" className="hover:text-gray-600">{t('terms')}</Link>
             <Link href="/privacy" className="hover:text-gray-600">{t('privacy')}</Link>
-            <Link href="/changelog" className="hover:text-gray-600">Changelog</Link>
+            <Link href="/changelog" className="hover:text-gray-600">{t('changelog')}</Link>
           </div>
         </div>
       </footer>

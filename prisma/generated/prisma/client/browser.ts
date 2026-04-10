@@ -108,6 +108,11 @@ export type InvoiceAuditLog = Prisma.InvoiceAuditLogModel
  */
 export type SupportTicket = Prisma.SupportTicketModel
 /**
+ * Model TicketMessage
+ * 
+ */
+export type TicketMessage = Prisma.TicketMessageModel
+/**
  * Model ProjectFeedback
  * 
  */
@@ -147,3 +152,18 @@ export type TimeEntry = Prisma.TimeEntryModel
  * 
  */
 export type Referral = Prisma.ReferralModel
+/**
+ * Model Tag
+ * 
+ */
+export type Tag = Prisma.TagModel
+/**
+ * Model Expense
+ * 
+ */
+export type Expense = Prisma.ExpenseModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel

@@ -14,6 +14,7 @@ export const CreateInvoiceSchema = z.object({
 export const RecordPaymentSchema = z.object({
   amount: z.number().positive({ error: 'El monto debe ser mayor a 0' }),
   receivedAt: z.string().datetime(),
+  method: z.string().optional(),
 })
 
 export type CreateInvoiceInput = z.infer<typeof CreateInvoiceSchema>

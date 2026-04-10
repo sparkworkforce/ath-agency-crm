@@ -192,3 +192,89 @@ ALTER TABLE "Referral" ADD CONSTRAINT "Referral_referredAgencyId_fkey" FOREIGN K
 -- White-Label Portal: custom domain
 ALTER TABLE "Agency" ADD COLUMN "customDomain" TEXT;
 CREATE UNIQUE INDEX "Agency_customDomain_key" ON "Agency"("customDomain");
+
+-- CreateTable: TicketMessage
+CREATE TABLE "TicketMessage" (
+    "id" TEXT NOT NULL,
+    "ticketId" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "role" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "TicketMessage_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX "TicketMessage_ticketId_idx" ON "TicketMessage"("ticketId");
+ALTER TABLE "TicketMessage" ADD CONSTRAINT "TicketMessage_ticketId_fkey" FOREIGN KEY ("ticketId") REFERENCES "SupportTicket"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "TicketMessage" ADD CONSTRAINT "TicketMessage_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddColumn: Agency.trialEndsAt
+ALTER TABLE "Agency" ADD COLUMN "trialEndsAt" TIMESTAMP(3);
+
+-- AddColumn: Payment.method
+ALTER TABLE "Payment" ADD COLUMN "method" TEXT;
+
+-- AddColumn: Agency.timezone
+ALTER TABLE "Agency" ADD COLUMN "timezone" TEXT NOT NULL DEFAULT 'America/Puerto_Rico';
+
+-- CreateTable: Tag
+CREATE TABLE "Tag" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "color" TEXT NOT NULL DEFAULT '#6b7280',
+    "agencyId" TEXT NOT NULL,
+    CONSTRAINT "Tag_pkey" PRIMARY KEY ("id")
+);
+CREATE UNIQUE INDEX "Tag_agencyId_name_key" ON "Tag"("agencyId", "name");
+CREATE INDEX "Tag_agencyId_idx" ON "Tag"("agencyId");
+ALTER TABLE "Tag" ADD CONSTRAINT "Tag_agencyId_fkey" FOREIGN KEY ("agencyId") REFERENCES "Agency"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- CreateTable: _ClientToTag (implicit many-to-many)
+CREATE TABLE "_ClientToTag" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL,
+    CONSTRAINT "_ClientToTag_AB_pkey" PRIMARY KEY ("A", "B")
+);
+CREATE INDEX "_ClientToTag_B_index" ON "_ClientToTag"("B");
+ALTER TABLE "_ClientToTag" ADD CONSTRAINT "_ClientToTag_A_fkey" FOREIGN KEY ("A") REFERENCES "Client"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ClientToTag" ADD CONSTRAINT "_ClientToTag_B_fkey" FOREIGN KEY ("B") REFERENCES "Tag"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddColumns: Task approval
+ALTER TABLE "Task" ADD COLUMN "approvedByClient" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "Task" ADD COLUMN "approvedAt" TIMESTAMP(3);
+
+-- AddColumns: Agency notification preferences
+ALTER TABLE "Agency" ADD COLUMN "notifyMilestones" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "Agency" ADD COLUMN "notifyPayments" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "Agency" ADD COLUMN "notifyOverdue" BOOLEAN NOT NULL DEFAULT true;
+
+-- CreateTable: Expense
+CREATE TABLE "Expense" (
+    "id" TEXT NOT NULL,
+    "projectId" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "category" TEXT NOT NULL DEFAULT 'general',
+    "createdBy" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Expense_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX "Expense_projectId_idx" ON "Expense"("projectId");
+ALTER TABLE "Expense" ADD CONSTRAINT "Expense_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- CreateTable: Notification
+CREATE TABLE "Notification" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "read" BOOLEAN NOT NULL DEFAULT false,
+    "link" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX "Notification_userId_read_idx" ON "Notification"("userId", "read");
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add borrador to InvoiceStatus enum
+ALTER TYPE "InvoiceStatus" ADD VALUE IF NOT EXISTS 'borrador' BEFORE 'pendiente';

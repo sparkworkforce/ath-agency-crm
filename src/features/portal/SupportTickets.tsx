@@ -3,12 +3,20 @@
 import { useState } from 'react'
 import StatusBadge from '@/components/StatusBadge'
 
+interface TicketMessage {
+  id: string
+  role: string
+  body: string
+  createdAt: string | Date
+}
+
 interface Ticket {
   id: string
   title: string
   description: string
   status: string
   createdAt: string | Date
+  messages?: TicketMessage[]
 }
 
 interface SupportTicketsProps {
@@ -21,6 +29,9 @@ export default function SupportTickets({ initialTickets }: SupportTicketsProps) 
   const [description, setDescription] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [replyBodies, setReplyBodies] = useState<Record<string, string>>({})
+  const [replying, setReplying] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -37,12 +48,32 @@ export default function SupportTickets({ initialTickets }: SupportTicketsProps) 
 
     if (res.ok) {
       const { ticket } = await res.json()
-      setTickets((prev) => [ticket, ...prev])
+      setTickets((prev) => [{ ...ticket, messages: [] }, ...prev])
       setTitle('')
       setDescription('')
     } else {
       const data = await res.json()
       setError(data.error ?? 'Error al enviar el ticket.')
+    }
+  }
+
+  async function handleReply(ticketId: string) {
+    if (!replyBodies[ticketId]?.trim()) return
+    setReplying(true)
+    const res = await fetch('/api/portal/tickets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticketId, body: replyBodies[ticketId] }),
+    })
+    setReplying(false)
+    if (res.ok) {
+      const { message } = await res.json()
+      setTickets((prev) =>
+        prev.map((t) =>
+          t.id === ticketId ? { ...t, messages: [...(t.messages ?? []), message] } : t
+        )
+      )
+      setReplyBodies(prev => ({ ...prev, [ticketId]: '' }))
     }
   }
 
@@ -96,7 +127,10 @@ export default function SupportTickets({ initialTickets }: SupportTicketsProps) 
         )}
         {tickets.map((ticket) => (
           <div key={ticket.id} className="border border-gray-100 rounded-md p-3" data-testid={`ticket-${ticket.id}`}>
-            <div className="flex items-start justify-between gap-2">
+            <div
+              className="flex items-start justify-between gap-2 cursor-pointer"
+              onClick={() => setExpandedId(expandedId === ticket.id ? null : ticket.id)}
+            >
               <p className="text-sm font-medium text-gray-900">{ticket.title}</p>
               <StatusBadge status={ticket.status} variant="ticket" />
             </div>
@@ -104,6 +138,37 @@ export default function SupportTickets({ initialTickets }: SupportTicketsProps) 
             <p className="text-xs text-gray-400 mt-1">
               {new Date(ticket.createdAt).toLocaleDateString('es-PR')}
             </p>
+
+            {expandedId === ticket.id && (
+              <div className="mt-3 border-t pt-3 space-y-2">
+                {(ticket.messages ?? []).map((msg) => (
+                  <div key={msg.id} className="text-xs bg-gray-50 rounded p-2">
+                    <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium mr-2 ${msg.role === 'CLIENT' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                      {msg.role === 'CLIENT' ? 'Cliente' : 'Agencia'}
+                    </span>
+                    <span className="text-gray-400">{new Date(msg.createdAt).toLocaleString('es-PR')}</span>
+                    <p className="mt-1 text-gray-700">{msg.body}</p>
+                  </div>
+                ))}
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Escribe una respuesta..."
+                    value={replyBodies[ticket.id] ?? ''}
+                    onChange={(e) => setReplyBodies(prev => ({ ...prev, [ticket.id]: e.target.value }))}
+                    className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs"
+                    onKeyDown={(e) => e.key === 'Enter' && handleReply(ticket.id)}
+                  />
+                  <button
+                    onClick={() => handleReply(ticket.id)}
+                    disabled={replying || !replyBodies[ticket.id]?.trim()}
+                    className="px-3 py-1 bg-emerald-600 text-white text-xs rounded disabled:opacity-50"
+                  >
+                    Enviar
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

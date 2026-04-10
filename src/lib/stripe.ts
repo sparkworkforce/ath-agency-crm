@@ -16,7 +16,7 @@ export const stripe = new Proxy({} as Stripe, {
 })
 
 export const PLANS = {
-  FREE:         { priceId: null,                                    maxClients: 3,   maxUsers: 1  },
-  PROFESSIONAL: { priceId: process.env.STRIPE_PRICE_PROFESSIONAL,  maxClients: 25,  maxUsers: 5  },
-  BUSINESS:     { priceId: process.env.STRIPE_PRICE_BUSINESS,      maxClients: 999, maxUsers: 99 },
+  FREE:         { priceId: null,                                    maxClients: 3,   maxUsers: 1,  csvExport: false, portalBranding: false, paymentReminders: false, maxSnippets: 10  },
+  PROFESSIONAL: { priceId: process.env.STRIPE_PRICE_PROFESSIONAL,  maxClients: 25,  maxUsers: 5,  csvExport: true,  portalBranding: true,  paymentReminders: true,  maxSnippets: 999 },
+  BUSINESS:     { priceId: process.env.STRIPE_PRICE_BUSINESS,      maxClients: 999, maxUsers: 99, csvExport: true,  portalBranding: true,  paymentReminders: true,  maxSnippets: 999 },
 } as const

@@ -17,6 +17,7 @@ interface Task {
   dueDate: string | Date | null
   assignedToId: string | null
   assignedTo?: { id: string; name: string } | null
+  timeEntries?: { minutes: number | null }[]
 }
 
 interface ProjectFile {
@@ -177,6 +178,7 @@ export default function ProjectDetail({ project: initial, agencyUsers }: Props) 
                     {task.estimatedDays && (
                       <span className="text-xs text-gray-400">~{task.estimatedDays}d</span>
                     )}
+                    {(() => { const m = (task.timeEntries ?? []).reduce((s, e) => s + (e.minutes ?? 0), 0); return m > 0 ? <span className="text-xs text-blue-500">{Math.floor(m / 60)}h {m % 60}m</span> : null })()}
                   </div>
                   <div className="flex flex-wrap gap-3">
                     <select
@@ -253,6 +255,7 @@ export default function ProjectDetail({ project: initial, agencyUsers }: Props) 
                     {(f.fileSize / 1024).toFixed(1)} KB · {new Date(f.createdAt).toLocaleDateString('es-PR')}
                   </p>
                 </div>
+                <a href={`/api/projects/${project.id}/files/${f.id}/download`} className="text-sm text-emerald-600 hover:text-emerald-700">Descargar</a>
               </li>
             ))}
           </ul>

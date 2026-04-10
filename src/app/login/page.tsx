@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import LoginForm from '@/features/auth/LoginForm'
+import { getTranslations } from 'next-intl/server'
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalid: 'El enlace de acceso no es válido.',
@@ -23,6 +24,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   const params = await searchParams
   const errorMessage = params.error ? ERROR_MESSAGES[params.error] : null
+  const t = await getTranslations('auth')
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -32,13 +34,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <span className="text-3xl">🐍</span>
           </div>
           <h1 className="text-2xl font-semibold text-gray-900 mb-2 text-center">CobraHub</h1>
-          <p className="text-sm text-gray-500 text-center mb-6">Inicia sesión para continuar</p>
+          <p className="text-sm text-gray-500 text-center mb-6">{t('loginSub')}</p>
 
           {errorMessage && (
-            <div
-              role="alert"
-              className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700"
-            >
+            <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
               {errorMessage}
             </div>
           )}

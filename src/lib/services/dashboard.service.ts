@@ -61,6 +61,60 @@ export async function getDashboardMetrics(agencyId: string) {
   const totalRev = Number(totalInvoiced._sum.totalAmount ?? 0)
   const revenuePerClient = totalClients > 0 ? Math.round(totalRev / totalClients) : 0
 
+  // ─── New KPIs ───────────────────────────────────────────
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+  const [paidInvoicesWithPayments, allInvoicesAgg, allPaymentsAgg, retainerMrr, feedbackAgg, timeEntriesAgg, agencyUserCount] = await Promise.all([
+    // invoiceAging: paid invoices with their first payment
+    prisma.invoice.findMany({
+      where: { client: { agencyId }, payments: { some: {} } },
+      select: { createdAt: true, payments: { orderBy: { receivedAt: 'asc' }, take: 1, select: { receivedAt: true } } },
+    }),
+    // collectionRate denominator
+    prisma.invoice.aggregate({ where: { client: { agencyId } }, _sum: { totalAmount: true } }),
+    // collectionRate numerator
+    prisma.payment.aggregate({ where: { invoice: { client: { agencyId } } }, _sum: { amount: true } }),
+    // mrr
+    prisma.invoice.aggregate({
+      where: { client: { agencyId }, isRetainer: true, status: 'pagado', createdAt: { gte: thirtyDaysAgo } },
+      _sum: { totalAmount: true },
+    }),
+    // satisfaction
+    prisma.projectFeedback.aggregate({
+      where: { project: { client: { agencyId } } },
+      _avg: { rating: true },
+    }),
+    // utilization
+    prisma.timeEntry.aggregate({
+      where: { user: { agencyId }, startedAt: { gte: thirtyDaysAgo } },
+      _sum: { minutes: true },
+    }),
+    prisma.user.count({ where: { agencyId, active: true, role: 'AGENCY' } }),
+  ])
+
+  // invoiceAging
+  const agingDays = paidInvoicesWithPayments
+    .filter(i => i.payments.length > 0)
+    .map(i => (i.payments[0].receivedAt.getTime() - i.createdAt.getTime()) / (1000 * 60 * 60 * 24))
+  const invoiceAging = agingDays.length > 0 ? Math.round(agingDays.reduce((a, b) => a + b, 0) / agingDays.length) : null
+
+  // collectionRate
+  const totalInvoicedAmt = Number(allInvoicesAgg._sum.totalAmount ?? 0)
+  const totalPaidAmt = Number(allPaymentsAgg._sum.amount ?? 0)
+  const collectionRate = totalInvoicedAmt > 0 ? Math.round((totalPaidAmt / totalInvoicedAmt) * 100) : null
+
+  // mrr
+  const mrr = Number(retainerMrr._sum.totalAmount ?? 0)
+
+  // satisfaction
+  const satisfaction = feedbackAgg._avg.rating ? Math.round(feedbackAgg._avg.rating * 10) / 10 : null
+
+  // utilization
+  const totalMinutes = Number(timeEntriesAgg._sum.minutes ?? 0)
+  const workingDays = 22 // approximate working days in 30 days
+  const capacity = workingDays * 8 * 60 * Math.max(agencyUserCount, 1)
+  const utilization = capacity > 0 ? Math.round((totalMinutes / capacity) * 100) : null
+
   return {
     activeClientsCount,
     projectsInProgressCount,
@@ -71,6 +125,11 @@ export async function getDashboardMetrics(agencyId: string) {
     revenuePerClient,
     avgIntegrationDays,
     pipelineClients,
+    invoiceAging,
+    collectionRate,
+    mrr,
+    satisfaction,
+    utilization,
   }
 }
 
