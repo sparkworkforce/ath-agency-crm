@@ -187,6 +187,8 @@
       "clients": "Clients",
       "projects": "Projects",
       "invoices": "Invoices",
+      "quotes": "Quotes",
+      "templates": "Templates",
       "snippets": "Snippets",
       "timesheet": "Timesheet",
       "users": "Users",

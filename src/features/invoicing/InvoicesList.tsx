@@ -155,6 +155,7 @@ export default function InvoicesList({ initialInvoices, clients }: Props) {
           <input type="search" placeholder="Buscar facturas..." value={search} onChange={e => setSearch(e.target.value)} className="flex-1 text-sm border border-gray-300 rounded-md px-3 py-1.5" />
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="text-sm border border-gray-300 rounded-md px-3 py-1.5">
             <option value="">Todos</option>
+            <option value="borrador">Borrador</option>
             <option value="pendiente">Pendiente</option>
             <option value="pagado">Pagado</option>
             <option value="vencido">Vencido</option>

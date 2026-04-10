@@ -10,6 +10,8 @@ const NAV_ITEMS = [
   { href: '/clients', key: 'clients' },
   { href: '/projects', key: 'projects' },
   { href: '/invoices', key: 'invoices' },
+  { href: '/quotes', key: 'quotes' },
+  { href: '/templates', key: 'templates' },
   { href: '/snippets', key: 'snippets' },
   { href: '/timesheet', key: 'timesheet' },
   { href: '/users', key: 'users' },

@@ -32,8 +32,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const session = await auth()
     if (!session?.user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
+    const clientFilter = session.user.role === 'CLIENT'
+      ? { users: { some: { id: session.user.id } } }
+      : { agencyId: session.user.agencyId! }
+
     const quote = await prisma.quote.findFirst({
-      where: { id, status: 'enviado', client: { users: { some: { id: session.user.id } } } },
+      where: { id, status: 'enviado', client: clientFilter },
     })
     if (!quote) return NextResponse.json({ error: 'Cotización no disponible' }, { status: 400 })
 
@@ -55,7 +59,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const invoice = await prisma.$transaction(async (tx) => {
       const inv = await tx.invoice.create({
         data: {
-          clientId: quote.clientId, totalAmount: quote.totalAmount, status: 'pendiente',
+          clientId: quote.clientId, totalAmount: Math.round(Number(quote.totalAmount) * 1.115 * 100) / 100, status: 'pendiente',
           dueDate: new Date(Date.now() + 30 * 86400000), createdBy: session.user.id,
           lineItems: { create: quote.lines.map(l => ({ description: l.description, amount: l.amount, order: l.order })) },
         },

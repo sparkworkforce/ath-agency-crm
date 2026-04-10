@@ -29,6 +29,8 @@ export default function SnippetsLibrary() {
   const [showCreate, setShowCreate] = useState(false)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ title: '', description: '', code: '', language: '', platform: '', category: '' })
   const [form, setForm] = useState({
     title: '', description: '', code: '', language: 'typescript', platform: 'GENERAL', category: 'utility',
   })
@@ -72,6 +74,24 @@ export default function SnippetsLibrary() {
     const res = await fetch(`/api/snippets/${id}`, { method: 'DELETE' })
     if (!res.ok) { toast.error('Error al eliminar snippet'); return }
     setSnippets((prev) => prev.filter((s) => s.id !== id))
+  }
+
+  function handleCopy(code: string) {
+    navigator.clipboard.writeText(code).then(() => toast.success('Código copiado'))
+  }
+
+  function startEdit(s: Snippet) {
+    setEditingId(s.id)
+    setEditForm({ title: s.title, description: s.description, code: s.code, language: s.language, platform: s.platform, category: s.category })
+  }
+
+  async function handleEditSave(id: string) {
+    const res = await fetch(`/api/snippets/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editForm) })
+    if (!res.ok) { toast.error('Error al actualizar snippet'); return }
+    const { snippet } = await res.json()
+    setSnippets((prev) => prev.map((s) => s.id === id ? { ...s, ...snippet } : s))
+    setEditingId(null)
+    toast.success('Snippet actualizado')
   }
 
   return (
@@ -193,15 +213,44 @@ export default function SnippetsLibrary() {
               </button>
               {expanded === s.id && (
                 <div className="border-t border-gray-200 px-4 py-3">
-                  <pre className="bg-gray-900 text-gray-100 rounded-md p-4 text-xs overflow-x-auto">
-                    <code>{s.code}</code>
-                  </pre>
-                  <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
-                    <span>Por: {s.author?.name ?? 'Desconocido'} · {new Date(s.updatedAt).toLocaleDateString('es-PR')}</span>
-                    <button onClick={() => handleDelete(s.id)} className="text-red-500 hover:text-red-700">
-                      Eliminar
-                    </button>
-                  </div>
+                  {editingId === s.id ? (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <input value={editForm.title} onChange={(e) => setEditForm((p) => ({ ...p, title: e.target.value }))} placeholder="Título" className="px-3 py-2 border border-gray-300 rounded-md text-sm" />
+                        <input value={editForm.language} onChange={(e) => setEditForm((p) => ({ ...p, language: e.target.value }))} placeholder="Lenguaje" className="px-3 py-2 border border-gray-300 rounded-md text-sm" />
+                      </div>
+                      <input value={editForm.description} onChange={(e) => setEditForm((p) => ({ ...p, description: e.target.value }))} placeholder="Descripción" className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm" />
+                      <div className="grid grid-cols-2 gap-3">
+                        <select value={editForm.platform} onChange={(e) => setEditForm((p) => ({ ...p, platform: e.target.value }))} className="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                          <option value="WOOCOMMERCE">WooCommerce</option><option value="SHOPIFY">Shopify</option><option value="CUSTOM">Custom</option><option value="GENERAL">General</option>
+                        </select>
+                        <select value={editForm.category} onChange={(e) => setEditForm((p) => ({ ...p, category: e.target.value }))} className="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                          <option value="wrapper">Wrapper</option><option value="webhook">Webhook</option><option value="utility">Utility</option>
+                        </select>
+                      </div>
+                      <textarea rows={8} value={editForm.code} onChange={(e) => setEditForm((p) => ({ ...p, code: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm font-mono" />
+                      <div className="flex gap-2">
+                        <button onClick={() => handleEditSave(s.id)} className="px-3 py-1.5 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700">Guardar</button>
+                        <button onClick={() => setEditingId(null)} className="px-3 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50">Cancelar</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative">
+                        <pre className="bg-gray-900 text-gray-100 rounded-md p-4 text-xs overflow-x-auto">
+                          <code>{s.code}</code>
+                        </pre>
+                        <button onClick={() => handleCopy(s.code)} className="absolute top-2 right-2 px-2 py-1 text-xs bg-gray-700 text-gray-200 rounded hover:bg-gray-600">Copiar</button>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
+                        <span>Por: {s.author?.name ?? 'Desconocido'} · {new Date(s.updatedAt).toLocaleDateString('es-PR')}</span>
+                        <div className="flex gap-3">
+                          <button onClick={() => startEdit(s)} className="text-emerald-600 hover:text-emerald-800">Editar</button>
+                          <button onClick={() => handleDelete(s.id)} className="text-red-500 hover:text-red-700">Eliminar</button>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
