@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import EmptyState from '@/components/EmptyState'
+import { Button } from '@/components/ui'
 
 interface Task {
   status: string
@@ -65,12 +66,9 @@ export default function ProjectsList({ initialProjects, clients }: Props) {
   return (
     <div>
       <div className="mb-4 flex justify-end">
-        <button
-          onClick={() => setShowCreate(!showCreate)}
-          className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700"
-        >
+        <Button onClick={() => setShowCreate(!showCreate)}>
           Nuevo proyecto
-        </button>
+        </Button>
       </div>
 
       {showCreate && (
@@ -101,9 +99,9 @@ export default function ProjectsList({ initialProjects, clients }: Props) {
               ))}
             </select>
           </div>
-          <button type="submit" disabled={creating} className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700 disabled:opacity-50 whitespace-nowrap">
+          <Button type="submit" loading={creating}>
             {creating ? 'Creando...' : 'Crear'}
-          </button>
+          </Button>
           {error && <p className="text-sm text-red-600">{error}</p>}
         </form>
       )}

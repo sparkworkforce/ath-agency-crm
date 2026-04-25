@@ -1,13 +1,15 @@
-import { rateLimit } from '@/lib/rate-limit'
+import { rateLimitAuth as rateLimit } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, emailButton } from '@/lib/email'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function POST(request: NextRequest) {
-  const blocked = await rateLimit(request.headers.get('x-forwarded-for') ?? 'unknown')
+  const blocked = await rateLimit(request)
   if (blocked) return blocked
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody<Record<string, unknown>>(request)
+  if (parseError) return parseError
   const email = typeof body?.email === 'string' ? body.email.trim() : null
   if (!email) return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
 

@@ -4,13 +4,13 @@ import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
 export async function POST(request: NextRequest) {
-  const blocked = await rateLimit(request.headers.get('x-forwarded-for') ?? 'demo')
+  const blocked = await rateLimit(request)
   if (blocked) return blocked
 
   const demoId = crypto.randomUUID().slice(0, 8)
   const email = `demo-${demoId}@cobrahub.demo`
   const password = crypto.randomUUID()
-  const hashed = await bcrypt.hash(password, 10)
+  const hashed = await bcrypt.hash(password, 12)
 
   try {
     await prisma.$transaction(async (tx) => {

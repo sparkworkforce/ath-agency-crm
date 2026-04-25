@@ -31,7 +31,13 @@ export async function middleware(request: NextRequest) {
     if (EXEMPT_PATHS.some(p => path.startsWith(p)) || path.startsWith('/api/v1/')) return NextResponse.next()
 
     const origin = request.headers.get('origin')
-    if (!origin) return NextResponse.next()
+
+    // Require Origin header for mutation requests.
+    // Browsers always send Origin on cross-origin and same-origin POST/PUT/PATCH/DELETE.
+    // Requests without Origin (curl, server-side) must use API key auth (/api/v1/) or cron secret.
+    if (!origin) {
+      return NextResponse.json({ error: 'Missing Origin header' }, { status: 403 })
+    }
 
     try {
       if (new URL(origin).host === host) return NextResponse.next()

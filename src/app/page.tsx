@@ -49,14 +49,59 @@ export default async function RootPage() {
           <Link href="/demo" className="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 px-6 py-3 rounded-md">{t('demo')}</Link>
         </div>
         <p className="text-xs text-gray-400 mt-4">{t('heroNote')}</p>
-        <div className="mt-12 mx-auto max-w-3xl rounded-lg border border-gray-200 bg-gray-100 aspect-video relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-200/50 to-transparent" />
-          <div className="absolute top-0 inset-x-0 h-8 bg-gray-200 flex items-center gap-1.5 px-3">
+        {/* Dashboard Mockup */}
+        <div className="mt-12 mx-auto max-w-3xl rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden">
+          {/* Browser chrome */}
+          <div className="h-8 bg-gray-100 border-b border-gray-200 flex items-center gap-1.5 px-3">
             <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
             <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
             <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
+            <span className="ml-3 text-[10px] text-gray-400 bg-gray-200 rounded px-2 py-0.5">cobrahub.io/dashboard</span>
           </div>
-          <p className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium">{t('dashboardPreview')}</p>
+          <div className="flex">
+            {/* Sidebar mock */}
+            <div className="w-36 border-r border-gray-100 bg-gray-50 p-3 hidden sm:block">
+              <p className="text-[10px] font-bold text-gray-800 mb-3">🐍 CobraHub</p>
+              {['Dashboard', 'Clientes', 'Proyectos', 'Facturas', 'Snippets'].map((n, i) => (
+                <div key={n} className={`text-[10px] px-2 py-1 rounded mb-0.5 ${i === 0 ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-500'}`}>{n}</div>
+              ))}
+            </div>
+            {/* Main content mock */}
+            <div className="flex-1 p-4 space-y-3">
+              <p className="text-xs font-semibold text-gray-800">Dashboard</p>
+              {/* KPI cards */}
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { label: 'Clientes', val: '12', color: 'text-emerald-600' },
+                  { label: 'Proyectos', val: '8', color: 'text-indigo-600' },
+                  { label: 'Revenue', val: '$4,250', color: 'text-green-600' },
+                  { label: 'Vencidas', val: '2', color: 'text-red-500' },
+                ].map(c => (
+                  <div key={c.label} className="bg-gray-50 rounded p-2">
+                    <p className="text-[8px] text-gray-400">{c.label}</p>
+                    <p className={`text-xs font-bold ${c.color}`}>{c.val}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Chart mock */}
+              <div className="bg-gray-50 rounded p-2 h-24 flex items-end gap-1">
+                {[35, 50, 40, 65, 55, 80].map((h, i) => (
+                  <div key={i} className="flex-1 bg-emerald-400 rounded-t opacity-70" style={{ height: `${h}%` }} />
+                ))}
+              </div>
+              {/* Table mock */}
+              <div className="bg-gray-50 rounded p-2 space-y-1">
+                {['Café Luna — En progreso', 'TechShop PR — Completado', 'Isla Fitness — Prospecto'].map(r => (
+                  <div key={r} className="flex items-center justify-between text-[9px]">
+                    <span className="text-gray-600">{r.split(' — ')[0]}</span>
+                    <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${r.includes('Completado') ? 'bg-green-100 text-green-700' : r.includes('progreso') ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                      {r.split(' — ')[1]}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -184,12 +229,15 @@ export default async function RootPage() {
       <section className="py-16">
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">{t('faqTitle')}</h2>
-          <div className="space-y-6">
+          <div className="space-y-2">
             {[1, 2, 3, 4, 5].map((n) => (
-              <div key={n}>
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">{t(`faq.q${n}`)}</h3>
-                <p className="text-sm text-gray-500">{t(`faq.a${n}`)}</p>
-              </div>
+              <details key={n} className="group border border-gray-200 rounded-lg">
+                <summary className="flex items-center justify-between cursor-pointer px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50">
+                  {t(`faq.q${n}`)}
+                  <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <p className="text-sm text-gray-500 px-4 pb-3">{t(`faq.a${n}`)}</p>
+              </details>
             ))}
           </div>
         </div>

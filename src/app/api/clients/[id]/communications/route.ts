@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateCommunicationSchema } from '@/lib/validations/clients'
 import { logCommunication, getCommunications } from '@/lib/services/clients.service'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const [session, authError] = await requireAgencyAuth()
@@ -17,7 +18,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (authError) return authError
 
   const { id } = await params
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = CreateCommunicationSchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })

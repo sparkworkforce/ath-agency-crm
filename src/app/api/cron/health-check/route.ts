@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { runIntegrationHealthChecks } from '@/lib/services/health-monitor.service'
-import { dispatchWebhook } from '@/lib/webhook'
+import { dispatchWebhook, type WebhookEvent } from '@/lib/webhook'
+import { verifyCronAuth } from '@/lib/cron-auth'
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  }
+  const authError = verifyCronAuth(request)
+  if (authError) return authError
 
   const results = await runIntegrationHealthChecks()
   const failures = results.filter(r => r.webhookOk === false || r.sslOk === false)
@@ -22,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     const agency = await prisma.agency.findUnique({ where: { id: integration.project.client.agencyId }, select: { id: true } })
     if (agency) {
-      await dispatchWebhook(agency.id, 'integration.health.failed', {
+      await dispatchWebhook(agency.id, 'integration.health.failed' as WebhookEvent, {
         projectId: fail.projectId,
         client: integration.project.client.businessName,
         webhookOk: fail.webhookOk,

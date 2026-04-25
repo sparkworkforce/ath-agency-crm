@@ -4,12 +4,14 @@ import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { sendEmail, emailButton } from '@/lib/email'
 import { RegisterAgencySchema } from '@/lib/validations/agency'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function POST(request: NextRequest) {
-  const blocked = await rateLimit(request.headers.get('x-forwarded-for') ?? 'unknown')
+  const blocked = await rateLimit(request)
   if (blocked) return blocked
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = RegisterAgencySchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos', details: result.error.flatten() }, { status: 400 })
@@ -107,7 +109,7 @@ export async function POST(request: NextRequest) {
     ).catch(() => {}) // Don't fail registration if email fails
 
     // Handle referral code
-    const referralCode = body.referralCode as string | undefined
+    const referralCode = (body as Record<string, unknown>).referralCode as string | undefined
     if (referralCode) {
       const ref = await prisma.referral.findFirst({ where: { code: referralCode, referredAgencyId: null } })
       if (ref) {

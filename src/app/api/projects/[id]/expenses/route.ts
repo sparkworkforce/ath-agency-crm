@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 const CreateExpenseSchema = z.object({
   description: z.string().min(1),
@@ -26,7 +27,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params
   const project = await prisma.project.findFirst({ where: { id, client: { agencyId: session.user.agencyId } }, select: { id: true } })
   if (!project) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
-  const body = await req.json()
+  const [body, parseError] = await safeParseBody(req)
+  if (parseError) return parseError
   const result = CreateExpenseSchema.safeParse(body)
   if (!result.success) return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
   const expense = await prisma.expense.create({

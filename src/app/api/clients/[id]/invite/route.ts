@@ -3,13 +3,19 @@ import { requireAgencyAuth } from '@/lib/tenant'
 import { InviteClientUserSchema } from '@/lib/validations/clients'
 import { inviteClientUser } from '@/lib/services/clients.service'
 import { prisma } from '@/lib/prisma'
+import { safeParseBody } from '@/lib/safe-parse-body'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = await rateLimit(request)
+  if (blocked) return blocked
+
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
   const { id } = await params
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = InviteClientUserSchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })

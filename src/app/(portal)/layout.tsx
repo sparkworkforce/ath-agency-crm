@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import PortalHeader from '@/features/auth/PortalHeader'
+import OfflineBanner from '@/components/OfflineBanner'
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -28,7 +29,8 @@ export default async function PortalLayout({ children }: { children: React.React
         logoUrl={branding.logoUrl}
         primaryColor={branding.primaryColor ?? '#059669'}
       />
-      <main className="max-w-4xl mx-auto px-4 py-6">{children}</main>
+      <OfflineBanner />
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-20 sm:pb-6">{children}</main>
     </div>
   )
 }

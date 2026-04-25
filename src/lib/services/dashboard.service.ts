@@ -1,7 +1,48 @@
 import { prisma } from '../prisma'
 import { getCurrentMonthRevenue, getMonthlyRevenueChart } from './invoicing.service'
 
-export async function getDashboardMetrics(agencyId: string) {
+// Simple in-memory cache for dashboard metrics (60s TTL, max 100 entries)
+const metricsCache = new Map<string, { data: unknown; expires: number }>()
+const CACHE_TTL = 60_000
+const CACHE_MAX = 100
+
+function getCached<T>(key: string): T | null {
+  const entry = metricsCache.get(key)
+  if (entry && entry.expires > Date.now()) return entry.data as T
+  metricsCache.delete(key)
+  return null
+}
+
+function setCache(key: string, data: unknown) {
+  if (metricsCache.size >= CACHE_MAX) {
+    const oldest = metricsCache.keys().next().value
+    if (oldest) metricsCache.delete(oldest)
+  }
+  metricsCache.set(key, { data, expires: Date.now() + CACHE_TTL })
+}
+
+type DashboardMetrics = {
+  activeClientsCount: number
+  projectsInProgressCount: number
+  upcomingRetainers: { id: string; dueDate: Date; status: string; totalAmount: unknown; client: { businessName: string } }[]
+  monthlyRevenue: number
+  revenueChart: { month: string; revenue: number }[]
+  overdueTasksCount: number
+  revenuePerClient: number
+  avgIntegrationDays: number | null
+  pipelineClients: number
+  invoiceAging: number | null
+  collectionRate: number | null
+  mrr: number
+  satisfaction: number | null
+  utilization: number | null
+}
+
+export async function getDashboardMetrics(agencyId: string): Promise<DashboardMetrics> {
+  const cacheKey = `dashboard:${agencyId}`
+  const cached = getCached<Record<string, unknown>>(cacheKey)
+  if (cached) return cached as DashboardMetrics
+
   const now = new Date()
   const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
 
@@ -115,7 +156,7 @@ export async function getDashboardMetrics(agencyId: string) {
   const capacity = workingDays * 8 * 60 * Math.max(agencyUserCount, 1)
   const utilization = capacity > 0 ? Math.round((totalMinutes / capacity) * 100) : null
 
-  return {
+  const result = {
     activeClientsCount,
     projectsInProgressCount,
     upcomingRetainers,
@@ -131,6 +172,8 @@ export async function getDashboardMetrics(agencyId: string) {
     satisfaction,
     utilization,
   }
+  setCache(cacheKey, result)
+  return result
 }
 
 export async function getOnboardingStatus(agencyId: string) {
@@ -142,15 +185,26 @@ export async function getOnboardingStatus(agencyId: string) {
     prisma.agency.findUnique({ where: { id: agencyId }, select: { plan: true } }),
   ])
   return [
-    { key: 'client', label: 'Agrega tu primer cliente', done: clients > 0, href: '/clients/new' },
-    { key: 'project', label: 'Crea un proyecto', done: projects > 0, href: '/projects' },
-    { key: 'invoice', label: 'Envía tu primera factura', done: invoices > 0, href: '/invoices' },
-    { key: 'portal', label: 'Invita un cliente al portal', done: portalUsers > 0, href: '/clients' },
-    { key: 'plan', label: 'Configura tu plan', done: agency?.plan !== 'FREE', href: '/settings' },
+    { key: 'client', label: 'addClient', done: clients > 0, href: '/clients/new' },
+    { key: 'project', label: 'createProject', done: projects > 0, href: '/projects' },
+    { key: 'invoice', label: 'sendInvoice', done: invoices > 0, href: '/invoices' },
+    { key: 'portal', label: 'inviteClient', done: portalUsers > 0, href: '/clients' },
+    { key: 'plan', label: 'configurePlan', done: agency?.plan !== 'FREE', href: '/settings' },
   ]
 }
 
-export async function getRevenueForecast(agencyId: string) {
+type RevenueForecast = {
+  pipeline: { status: string; count: number; rate: number; projected: number }[]
+  totalProjected: number
+  avgDeal: number
+  monthlyTrend: number[]
+}
+
+export async function getRevenueForecast(agencyId: string): Promise<RevenueForecast> {
+  const cacheKey = `forecast:${agencyId}`
+  const cached = getCached<RevenueForecast>(cacheKey)
+  if (cached) return cached
+
   const now = new Date()
   const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1)
 
@@ -192,5 +246,7 @@ export async function getRevenueForecast(agencyId: string) {
     if (monthsAgo >= 0 && monthsAgo < 3) monthlyTotals[2 - monthsAgo] += Number(inv.totalAmount)
   }
 
-  return { pipeline, totalProjected, avgDeal: Math.round(avgDeal), monthlyTrend: monthlyTotals }
+  const result = { pipeline, totalProjected, avgDeal: Math.round(avgDeal), monthlyTrend: monthlyTotals }
+  setCache(cacheKey, result)
+  return result
 }

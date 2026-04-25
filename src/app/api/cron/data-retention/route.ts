@@ -3,14 +3,11 @@ import { prisma } from '@/lib/prisma'
 import { purgeExpiredClients } from '@/lib/services/retention.service'
 import { markOverdueTasks } from '@/lib/services/projects.service'
 import { checkAndUpdateOverdueInvoices } from '@/lib/services/invoicing.service'
+import { verifyCronAuth } from '@/lib/cron-auth'
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('authorization')
-  const cronSecret = process.env.CRON_SECRET
-
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  }
+  const authError = verifyCronAuth(request)
+  if (authError) return authError
 
   try {
     await Promise.all([

@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
 import { stripe, PLANS } from '@/lib/stripe'
+import { safeParseBody } from '@/lib/safe-parse-body'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
+  const blocked = await rateLimit(request)
+  if (blocked) return blocked
+
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
@@ -11,7 +16,9 @@ export async function POST(request: NextRequest) {
   const ag = await prisma.agency.findUnique({ where: { id: session.user.agencyId }, select: { slug: true } })
   if (ag?.slug.startsWith('demo-')) return NextResponse.json({ error: 'Demo accounts cannot access billing' }, { status: 403 })
 
-  const { plan } = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
+  const { plan } = body as any
   if (plan !== 'PROFESSIONAL' && plan !== 'BUSINESS') return NextResponse.json({ error: 'Plan inválido' }, { status: 400 })
   const planConfig = PLANS[plan as keyof typeof PLANS]
 

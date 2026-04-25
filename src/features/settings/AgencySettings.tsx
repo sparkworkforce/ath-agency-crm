@@ -29,6 +29,15 @@ const PLAN_LABELS: Record<string, string> = {
 
 export default function AgencySettings({ agency: initial }: Props) {
   const [agency, setAgency] = useState(initial)
+
+  function safeRedirect(url: string) {
+    try {
+      const parsed = new URL(url)
+      if (parsed.hostname.endsWith('stripe.com') || parsed.origin === window.location.origin) {
+        window.location.href = url
+      }
+    } catch {}
+  }
   const [name, setName] = useState(agency.name)
   const [primaryColor, setPrimaryColor] = useState(agency.primaryColor)
   const [logoUrl, setLogoUrl] = useState(agency.logoUrl ?? '')
@@ -51,14 +60,14 @@ export default function AgencySettings({ agency: initial }: Props) {
     })
     if (!res.ok) return toast.error('Error al procesar. Intenta de nuevo.')
     const { url } = await res.json()
-    if (url) window.location.href = url
+    if (url) safeRedirect(url)
   }
 
   async function handleManageBilling() {
     const res = await fetch('/api/billing/portal', { method: 'POST' })
     if (!res.ok) return toast.error('Error al abrir portal de facturación.')
     const { url } = await res.json()
-    if (url) window.location.href = url
+    if (url) safeRedirect(url)
   }
 
   async function handleSave(e: React.FormEvent) {
@@ -224,7 +233,13 @@ export default function AgencySettings({ agency: initial }: Props) {
         <h2 className="text-sm font-semibold text-gray-900 mb-4">API Key</h2>
         <div className="flex items-center gap-3">
           <code className="text-sm bg-gray-50 px-3 py-2 rounded-md flex-1">{apiKeyMasked}</code>
-          <button onClick={() => { navigator.clipboard.writeText(agency.apiKey ?? ''); toast.success('Copiado') }} className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Copy</button>
+          <button onClick={async () => {
+            const res = await fetch('/api/agency/api-key')
+            if (res.ok) {
+              const { apiKey } = await res.json()
+              if (apiKey) { navigator.clipboard.writeText(apiKey); toast.success('API key copied') }
+            }
+          }} className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Copy</button>
           <button onClick={async () => {
             const res = await fetch('/api/agency/api-key', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirm: true }) })
             if (res.ok) { const { apiKey } = await res.json(); setApiKeyMasked(`****${apiKey.slice(-4)}`); toast.success('API key rotada') }

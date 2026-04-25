@@ -10,7 +10,7 @@ export function getEffectivePlan(agency: AgencyWithTrial): AgencyPlan {
   return agency.plan
 }
 
-export async function checkPlanLimit(agencyId: string, resource: 'clients' | 'users'): Promise<boolean> {
+export async function checkPlanLimit(agencyId: string, resource: 'clients' | 'users' | 'snippets'): Promise<boolean> {
   const agency = await prisma.agency.findUnique({ where: { id: agencyId } })
   if (!agency) return false
 
@@ -26,6 +26,12 @@ export async function checkPlanLimit(agencyId: string, resource: 'clients' | 'us
     const count = await prisma.user.count({ where: { agencyId, role: 'AGENCY', active: true } })
     const limit = effectivePlan === 'FREE' ? 1 : effectivePlan === 'PROFESSIONAL' ? 5 : 99
     return count < limit
+  }
+
+  if (resource === 'snippets') {
+    if (effectivePlan !== 'FREE') return true
+    const count = await prisma.codeSnippet.count({ where: { agencyId } })
+    return count < 10
   }
 
   return true

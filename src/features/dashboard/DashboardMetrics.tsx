@@ -21,7 +21,7 @@ export default async function DashboardMetrics(props: Props) {
 
   if (props.activeClientsCount === 0 && props.projectsInProgressCount === 0 && props.monthlyRevenue === 0) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
         <p className="text-lg mb-4">{t('emptyDashboard')}</p>
         <Link href="/clients/new" className="inline-block px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700">{t('addFirstClient')}</Link>
       </div>
@@ -46,8 +46,8 @@ export default async function DashboardMetrics(props: Props) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       {cards.map((c) => (
-        <div key={c.label} className="bg-white rounded-lg border border-gray-200 p-4">
-          <p className="text-xs text-gray-500 mb-1">{c.label}</p>
+        <div key={c.label} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{c.label}</p>
           <p className={`text-lg font-semibold ${c.color}`}>{c.value}</p>
         </div>
       ))}

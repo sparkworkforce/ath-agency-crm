@@ -3,6 +3,7 @@ import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateProjectSchema } from '@/lib/validations/projects'
 import { PaginationSchema } from '@/lib/pagination'
 import { createProject, listProjectsByClient, listAllProjects } from '@/lib/services/projects.service'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
@@ -31,7 +32,8 @@ export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = CreateProjectSchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })

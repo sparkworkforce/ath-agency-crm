@@ -3,8 +3,12 @@ import { requireAgencyAuth } from '@/lib/tenant'
 import { getInvoiceById } from '@/lib/services/invoicing.service'
 import { sendEmail, emailButton, esc } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = await rateLimit(_req)
+  if (blocked) return blocked
+
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 

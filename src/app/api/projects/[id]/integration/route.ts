@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 const PROCESSORS = ['ath_business', 'ath_movil', 'paypal', 'stripe_connect', 'square', 'mercado_pago'] as const
 
@@ -37,7 +38,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const project = await prisma.project.findFirst({ where: { id, client: { agencyId: session.user.agencyId } } })
   if (!project) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = IntegrationUpdateSchema.safeParse(body)
   if (!result.success) return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
 

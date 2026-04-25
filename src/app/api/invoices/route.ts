@@ -3,6 +3,7 @@ import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateInvoiceSchema } from '@/lib/validations/invoices'
 import { PaginationSchema } from '@/lib/pagination'
 import { createInvoice, listInvoicesByClient, listAllInvoices } from '@/lib/services/invoicing.service'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
@@ -31,7 +32,8 @@ export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = CreateInvoiceSchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos', details: result.error.flatten() }, { status: 400 })

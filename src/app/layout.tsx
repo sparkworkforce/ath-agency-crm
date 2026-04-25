@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Toaster } from 'sonner'
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 import Script from 'next/script'
@@ -35,11 +36,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
           <Script defer data-domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN} src="https://plausible.io/js/script.js" strategy="beforeInteractive" />
         )}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#059669" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body>
         <NextIntlClientProvider messages={messages}>
           {children}
           <Toaster position="top-right" richColors closeButton />
+          <ServiceWorkerRegistration />
         </NextIntlClientProvider>
       </body>
     </html>

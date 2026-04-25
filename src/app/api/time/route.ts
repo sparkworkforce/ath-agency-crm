@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
+import { safeParseBody } from '@/lib/safe-parse-body'
+import { z } from 'zod'
+
+const CreateTimeEntrySchema = z.object({
+  taskId: z.string().min(1),
+  minutes: z.number().int().min(1).max(1440).optional(),
+  note: z.string().max(500).optional(),
+})
 
 // GET — list time entries for current user (optional ?taskId= filter)
 export async function GET(request: NextRequest) {
@@ -22,8 +30,11 @@ export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
-  const { taskId, minutes, note } = await request.json()
-  if (!taskId) return NextResponse.json({ error: 'taskId required' }, { status: 400 })
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
+  const result = CreateTimeEntrySchema.safeParse(body)
+  if (!result.success) return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
+  const { taskId, minutes, note } = result.data
 
   // Verify task belongs to agency
   const task = await prisma.task.findFirst({ where: { id: taskId, project: { client: { agencyId: session.user.agencyId } } } })

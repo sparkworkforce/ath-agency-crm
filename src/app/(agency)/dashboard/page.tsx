@@ -11,6 +11,7 @@ import OnboardingWizard from '@/features/dashboard/OnboardingWizard'
 import RevenueForecast from '@/features/dashboard/RevenueForecast'
 import { prisma } from '@/lib/prisma'
 import { getTranslations } from 'next-intl/server'
+import DashboardLiveIndicator from '@/components/DashboardLiveIndicator'
 
 export default async function DashboardPage() {
   const session = await requireAgencySession().catch(() => redirect('/login'))
@@ -30,15 +31,18 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold text-gray-900">{t('dashboardTitle')}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-gray-900">{t('dashboardTitle')}</h1>
+        <DashboardLiveIndicator />
+      </div>
       {agency?.slug?.startsWith('demo-') && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
           <h2 className="font-semibold text-amber-900 mb-2">{t('demoBanner')}</h2>
           <ul className="text-sm text-amber-800 space-y-1">
-            <li>👥 Explora 3 clientes en diferentes etapas del pipeline</li>
-            <li>📋 Revisa el proyecto con Go-Live Score activo</li>
-            <li>💰 Ve facturas pendientes y pagadas</li>
-            <li>🔗 Prueba los snippets de código ATH Business</li>
+            <li>{t('demoBannerItems.clients')}</li>
+            <li>{t('demoBannerItems.project')}</li>
+            <li>{t('demoBannerItems.invoices')}</li>
+            <li>{t('demoBannerItems.snippets')}</li>
           </ul>
         </div>
       )}

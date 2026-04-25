@@ -214,7 +214,37 @@
     "collectionRate": "Collection rate",
     "mrr": "MRR",
     "satisfaction": "Satisfaction",
-    "utilization": "Utilization"
+    "utilization": "Utilization",
+    "onboarding": {
+      "step": "Step {step} of {total}",
+      "step1Title": "Add your first client",
+      "step1Desc": "Start by adding a client to manage their integration.",
+      "step2Title": "Create a project",
+      "step2Desc": "Select the platform and tasks are auto-generated.",
+      "step3Title": "Customize your portal",
+      "step3Desc": "Upload your logo and choose a color for your client portal.",
+      "step4Title": "Ready to go!",
+      "step4Desc": "Your agency is set up. Explore the dashboard to see your metrics.",
+      "goNow": "Go now",
+      "later": "Later",
+      "skip": "Skip",
+      "start": "Get started",
+      "firstSteps": "Getting started",
+      "completed": "{done}/{total} completed",
+      "hide": "Hide",
+      "addClient": "Add your first client",
+      "createProject": "Create a project",
+      "sendInvoice": "Send your first invoice",
+      "inviteClient": "Invite a client to the portal",
+      "configurePlan": "Configure your plan"
+    },
+    "demoBannerItems": {
+      "clients": "👥 Explore 3 clients at different pipeline stages",
+      "project": "📋 Review the project with active Go-Live Score",
+      "invoices": "💰 See pending and paid invoices",
+      "snippets": "🔗 Try the ATH Business code snippets"
+    },
+    "days": "days"
   },
   "auth": {
     "login": "Sign in",

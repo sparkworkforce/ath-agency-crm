@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { CreateSnippetSchema } from '@/lib/validations/snippets'
 import { updateSnippet, deleteSnippet } from '@/lib/services/snippets.service'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
   const { id } = await params
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = CreateSnippetSchema.partial().safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })

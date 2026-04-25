@@ -6,6 +6,7 @@ import StatusBadge from '@/components/StatusBadge'
 import ConfirmDialog from '@/components/ConfirmDialog'
 import { toast } from 'sonner'
 import EmptyState from '@/components/EmptyState'
+import { Button } from '@/components/ui'
 
 interface Client {
   id: string
@@ -38,7 +39,7 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
   const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(0)
   const [offboardingId, setOffboardingId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
 
   const filtered = clients.filter((c) => {
     const matchesSearch =
@@ -53,13 +54,25 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
 
   async function handleOffboard() {
     if (!offboardingId) return
-    setLoading(true)
-    const res = await fetch(`/api/clients/${offboardingId}`, { method: 'DELETE' })
-    if (!res.ok) { toast.error('Error al archivar cliente'); setLoading(false); setOffboardingId(null); return }
-    setClients((prev) => prev.filter((c) => c.id !== offboardingId))
+    const targetId = offboardingId
     setOffboardingId(null)
-    setLoading(false)
-    toast.success('Offboarding iniciado')
+    setClients(prev => prev.filter(c => c.id !== targetId))
+
+    const timer = setTimeout(async () => {
+      await fetch(`/api/clients/${targetId}`, { method: 'DELETE' })
+    }, 5000)
+
+    toast('Client archived', {
+      action: {
+        label: 'Undo',
+        onClick: () => {
+          clearTimeout(timer)
+          setClients(prev => [...initialClients.filter(c => c.id === targetId), ...prev])
+          toast.success('Offboarding cancelled')
+        },
+      },
+      duration: 5000,
+    })
   }
 
   async function handleStatusChange(clientId: string, status: string) {
@@ -74,6 +87,42 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
     } else {
       toast.error('Error al actualizar estado')
     }
+  }
+
+  function toggleSelect(id: string) {
+    setSelected(prev => { const next = new Set(prev); next.has(id) ? next.delete(id) : next.add(id); return next })
+  }
+  function toggleAll() {
+    if (selected.size === paginated.length) setSelected(new Set())
+    else setSelected(new Set(paginated.map(c => c.id)))
+  }
+
+  async function handleBulkStatus(status: string) {
+    const ids = Array.from(selected)
+    const previousStates = new Map(ids.map(id => [id, clients.find(c => c.id === id)?.status ?? '']))
+    setClients(prev => prev.map(c => selected.has(c.id) ? { ...c, status } : c))
+    setSelected(new Set())
+
+    const timer = setTimeout(async () => {
+      for (let i = 0; i < ids.length; i += 5) {
+        const batch = ids.slice(i, i + 5)
+        await Promise.all(batch.map(id =>
+          fetch(`/api/clients/${id}/status`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) })
+        ))
+      }
+    }, 5000)
+
+    toast(`${ids.length} client(s) updated`, {
+      action: {
+        label: 'Undo',
+        onClick: () => {
+          clearTimeout(timer)
+          setClients(prev => prev.map(c => previousStates.has(c.id) ? { ...c, status: previousStates.get(c.id)! } : c))
+          toast.success('Status change reverted')
+        },
+      },
+      duration: 5000,
+    })
   }
 
   return (
@@ -112,13 +161,12 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
             Pipeline
           </button>
         </div>
-        <button
+        <Button
           onClick={() => router.push('/clients/new')}
-          className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700"
           data-testid="clients-new-button"
         >
           Nuevo cliente
-        </button>
+        </Button>
       </div>
 
       {view === 'kanban' ? (
@@ -126,13 +174,34 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
           {STATUSES.map((status) => {
             const col = filtered.filter((c) => c.status === status)
             return (
-              <div key={status} className="min-w-[220px] flex-1 bg-gray-50 rounded-lg p-3">
+              <div
+                key={status}
+                className="min-w-[220px] flex-1 bg-gray-50 rounded-lg p-3 transition-colors"
+                onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-emerald-50') }}
+                onDragLeave={(e) => { e.currentTarget.classList.remove('bg-emerald-50') }}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  e.currentTarget.classList.remove('bg-emerald-50')
+                  const clientId = e.dataTransfer.getData('text/plain')
+                  if (clientId) handleStatusChange(clientId, status)
+                }}
+              >
                 <h3 className="text-sm font-semibold text-gray-700 mb-3">
                   {STATUS_LABELS[status]} <span className="text-gray-400">({col.length})</span>
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-2 min-h-[60px]">
                   {col.map((client) => (
-                    <div key={client.id} className="bg-white rounded-md border border-gray-200 p-3 shadow-sm">
+                    <div
+                      key={client.id}
+                      draggable
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData('text/plain', client.id)
+                        e.dataTransfer.effectAllowed = 'move'
+                        ;(e.target as HTMLElement).classList.add('opacity-50')
+                      }}
+                      onDragEnd={(e) => { (e.target as HTMLElement).classList.remove('opacity-50') }}
+                      className="bg-white rounded-md border border-gray-200 p-3 shadow-sm cursor-grab active:cursor-grabbing"
+                    >
                       <button
                         onClick={() => router.push(`/clients/${client.id}`)}
                         className="text-sm font-medium text-emerald-600 hover:underline text-left block"
@@ -143,18 +212,9 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
                       <span className="inline-block mt-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
                         {client.platform}
                       </span>
-                      <select
-                        value={client.status}
-                        onChange={(e) => handleStatusChange(client.id, e.target.value)}
-                        className="mt-2 w-full text-xs border border-gray-200 rounded px-2 py-1"
-                      >
-                        {STATUSES.map((s) => (
-                          <option key={s} value={s}>{STATUS_LABELS[s]}</option>
-                        ))}
-                      </select>
                     </div>
                   ))}
-                  {col.length === 0 && <p className="text-xs text-gray-400">Sin clientes</p>}
+                  {col.length === 0 && <p className="text-xs text-gray-400 text-center py-4">Drop here</p>}
                 </div>
               </div>
             )
@@ -166,6 +226,7 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
             <table className="w-full text-sm" data-testid="clients-table">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-4 py-3 w-8"><input type="checkbox" checked={selected.size === paginated.length && paginated.length > 0} onChange={toggleAll} className="rounded border-gray-300" /></th>
                   <th className="text-left px-4 py-3 font-medium text-gray-600">Negocio</th>
                   <th className="text-left px-4 py-3 font-medium text-gray-600">Contacto</th>
                   <th className="text-left px-4 py-3 font-medium text-gray-600">Plataforma</th>
@@ -176,6 +237,7 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
               <tbody className="divide-y divide-gray-100">
                 {paginated.map((client) => (
                   <tr key={client.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 w-8"><input type="checkbox" checked={selected.has(client.id)} onChange={() => toggleSelect(client.id)} className="rounded border-gray-300" /></td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => router.push(`/clients/${client.id}`)}
@@ -206,7 +268,7 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
                 ))}
                 {paginated.length === 0 && (
                   <tr>
-                    <td colSpan={5}>
+                    <td colSpan={6}>
                       <EmptyState icon="👥" title="Sin clientes" description="Agrega tu primer cliente para comenzar a gestionar proyectos e integraciones." actionLabel="Agregar cliente" actionHref="/clients/new" />
                     </td>
                   </tr>
@@ -238,6 +300,20 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
         </>
       )}
 
+      {selected.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white rounded-lg shadow-xl px-4 py-3 flex items-center gap-4 z-50">
+          <span className="text-sm font-medium">{selected.size} selected</span>
+          <select onChange={e => { if (e.target.value) handleBulkStatus(e.target.value); e.target.value = '' }} className="text-sm bg-gray-800 border border-gray-700 rounded px-2 py-1 text-white">
+            <option value="">Change status...</option>
+            <option value="prospecto">Prospecto</option>
+            <option value="en_progreso">En Progreso</option>
+            <option value="completado">Completado</option>
+            <option value="soporte_mensual">Soporte Mensual</option>
+          </select>
+          <button onClick={() => setSelected(new Set())} className="text-sm text-gray-400 hover:text-white">Clear</button>
+        </div>
+      )}
+
       <ConfirmDialog
         open={!!offboardingId}
         title="Iniciar offboarding"
@@ -245,7 +321,6 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
         confirmLabel="Iniciar offboarding"
         cancelLabel="Cancelar"
         destructive
-        loading={loading}
         onConfirm={handleOffboard}
         onCancel={() => setOffboardingId(null)}
       />

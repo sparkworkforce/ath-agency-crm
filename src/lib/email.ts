@@ -28,10 +28,12 @@ export function emailButton(href: string, label: string): string {
 }
 
 export async function sendEmail(to: string, subject: string, body: string, agency?: AgencyBranding) {
+  // Strip newlines and control characters to prevent email header injection
+  const safeSubject = subject.replace(/[\r\n\x00-\x1f]/g, '').slice(0, 200)
   return resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL!,
     to,
-    subject,
+    subject: safeSubject,
     html: emailTemplate(body, agency),
   })
 }

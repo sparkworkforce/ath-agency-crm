@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { UpdateClientStatusSchema } from '@/lib/validations/clients'
 import { updateClientStatus } from '@/lib/services/clients.service'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
   const { id } = await params
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = UpdateClientStatusSchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Estado inválido' }, { status: 400 })

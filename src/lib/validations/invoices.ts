@@ -19,3 +19,13 @@ export const RecordPaymentSchema = z.object({
 
 export type CreateInvoiceInput = z.infer<typeof CreateInvoiceSchema>
 export type RecordPaymentInput = z.infer<typeof RecordPaymentSchema>
+
+export const UpdateInvoiceSchema = z.object({
+  dueDate: z.string().datetime().optional(),
+  lineItems: z.array(z.object({
+    description: z.string().min(1).max(500),
+    amount: z.number().positive(),
+  })).min(1).optional(),
+})
+
+export type UpdateInvoiceInput = z.infer<typeof UpdateInvoiceSchema>

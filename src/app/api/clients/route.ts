@@ -4,6 +4,7 @@ import { checkPlanLimit } from '@/lib/plan-gating'
 import { CreateClientSchema } from '@/lib/validations/clients'
 import { PaginationSchema } from '@/lib/pagination'
 import { createClient, searchClients } from '@/lib/services/clients.service'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
@@ -30,7 +31,8 @@ export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const allowed = await checkPlanLimit(session.user.agencyId, 'clients')
   if (!allowed) return NextResponse.json({ error: 'Límite de clientes alcanzado. Actualiza tu plan.' }, { status: 403 })
 

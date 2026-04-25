@@ -1,9 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
 import { stripe } from '@/lib/stripe'
+import { rateLimit } from '@/lib/rate-limit'
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const blocked = await rateLimit(request)
+  if (blocked) return blocked
+
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 

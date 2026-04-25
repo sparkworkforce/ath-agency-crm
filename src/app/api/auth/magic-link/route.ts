@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { consumeMagicLinkToken } from '@/lib/services/auth.service'
+import { rateLimitAuth } from '@/lib/rate-limit'
 
 export async function GET(request: NextRequest) {
+  const blocked = await rateLimitAuth(request)
+  if (blocked) return blocked
+
   const token = request.nextUrl.searchParams.get('token')
 
   if (!token) {
@@ -32,10 +36,13 @@ export async function GET(request: NextRequest) {
     },
   })
 
+  const isProd = process.env.NODE_ENV === 'production'
+  const cookieName = isProd ? '__Secure-next-auth.session-token' : 'next-auth.session-token'
+
   const response = NextResponse.redirect(new URL('/portal', request.url))
-  response.cookies.set('next-auth.session-token', sessionToken, {
+  response.cookies.set(cookieName, sessionToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProd,
     sameSite: 'lax',
     expires: new Date(Date.now() + maxAge * 1000),
     path: '/',

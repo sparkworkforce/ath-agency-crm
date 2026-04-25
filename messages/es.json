@@ -214,7 +214,37 @@
     "collectionRate": "Tasa de cobro",
     "mrr": "MRR",
     "satisfaction": "Satisfacción",
-    "utilization": "Utilización"
+    "utilization": "Utilización",
+    "onboarding": {
+      "step": "Paso {step} de {total}",
+      "step1Title": "Agrega tu primer cliente",
+      "step1Desc": "Comienza agregando un cliente para gestionar su integración.",
+      "step2Title": "Crea un proyecto",
+      "step2Desc": "Selecciona la plataforma y las tareas se generan automáticamente.",
+      "step3Title": "Personaliza tu portal",
+      "step3Desc": "Sube tu logo y elige un color para el portal de tus clientes.",
+      "step4Title": "¡Listo para comenzar!",
+      "step4Desc": "Tu agencia está configurada. Explora el dashboard para ver tus métricas.",
+      "goNow": "Ir ahora",
+      "later": "Después",
+      "skip": "Omitir",
+      "start": "Comenzar",
+      "firstSteps": "Primeros pasos",
+      "completed": "{done}/{total} completados",
+      "hide": "Ocultar",
+      "addClient": "Agrega tu primer cliente",
+      "createProject": "Crea un proyecto",
+      "sendInvoice": "Envía tu primera factura",
+      "inviteClient": "Invita un cliente al portal",
+      "configurePlan": "Configura tu plan"
+    },
+    "demoBannerItems": {
+      "clients": "👥 Explora 3 clientes en diferentes etapas del pipeline",
+      "project": "📋 Revisa el proyecto con Go-Live Score activo",
+      "invoices": "💰 Ve facturas pendientes y pagadas",
+      "snippets": "🔗 Prueba los snippets de código ATH Business"
+    },
+    "days": "días"
   },
   "auth": {
     "login": "Iniciar sesión",

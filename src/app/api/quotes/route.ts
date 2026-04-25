@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
+import { CreateQuoteSchema } from '@/lib/validations/quotes'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
@@ -18,19 +20,25 @@ export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
-  const { clientId, title, description, lines, validUntil } = await request.json()
-  if (!clientId || !title || !lines?.length) return NextResponse.json({ error: 'Datos incompletos' }, { status: 400 })
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
+  const result = CreateQuoteSchema.safeParse(body)
+  if (!result.success) {
+    return NextResponse.json({ error: 'Datos inválidos', details: result.error.flatten() }, { status: 400 })
+  }
+
+  const { clientId, title, description, lines, validUntil } = result.data
 
   const client = await prisma.client.findFirst({ where: { id: clientId, agencyId: session.user.agencyId } })
   if (!client) return NextResponse.json({ error: 'Cliente no encontrado' }, { status: 404 })
 
-  const totalAmount = lines.reduce((sum: number, l: { amount: number }) => sum + l.amount, 0)
+  const totalAmount = lines.reduce((sum, l) => sum + l.amount, 0)
 
   const quote = await prisma.quote.create({
     data: {
       clientId, title, description, totalAmount, createdBy: session.user.id,
       validUntil: validUntil ? new Date(validUntil) : null,
-      lines: { create: lines.map((l: { description: string; amount: number }, i: number) => ({ description: l.description, amount: l.amount, order: i })) },
+      lines: { create: lines.map((l, i) => ({ description: l.description, amount: l.amount, order: i })) },
     },
     include: { lines: true },
   })

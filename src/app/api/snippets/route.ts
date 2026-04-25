@@ -3,6 +3,8 @@ import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
 import { CreateSnippetSchema, SnippetSearchSchema } from '@/lib/validations/snippets'
 import { searchSnippets, createSnippet } from '@/lib/services/snippets.service'
+import { checkPlanLimit } from '@/lib/plan-gating'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
@@ -27,14 +29,12 @@ export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
 
-  // Free plan: max 10 snippets
-  const agency = await prisma.agency.findUnique({ where: { id: session.user.agencyId }, select: { plan: true } })
-  if (agency?.plan === 'FREE') {
-    const count = await prisma.codeSnippet.count({ where: { agencyId: session.user.agencyId } })
-    if (count >= 10) return NextResponse.json({ error: 'Límite de snippets alcanzado. Actualiza tu plan.' }, { status: 403 })
-  }
+  // Plan limit check for snippets
+  const allowed = await checkPlanLimit(session.user.agencyId, 'snippets')
+  if (!allowed) return NextResponse.json({ error: 'Límite de snippets alcanzado. Actualiza tu plan.' }, { status: 403 })
 
   const result = CreateSnippetSchema.safeParse(body)
   if (!result.success) {

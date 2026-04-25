@@ -4,6 +4,7 @@ import { CreateTicketSchema } from '@/lib/validations/projects'
 import { createSupportTicket } from '@/lib/services/projects.service'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 const ReplySchema = z.object({ ticketId: z.string(), body: z.string().min(1).max(5000) })
 
@@ -33,7 +34,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Acceso denegado' }, { status: 403 })
   }
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
 
   // Reply to existing ticket
   const reply = ReplySchema.safeParse(body)

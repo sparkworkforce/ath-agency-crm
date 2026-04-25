@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { getInvoiceById } from '@/lib/services/invoicing.service'
 import { prisma } from '@/lib/prisma'
+import { UpdateInvoiceSchema } from '@/lib/validations/invoices'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const [session, authError] = await requireAgencyAuth()
@@ -26,14 +28,23 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     return NextResponse.json({ error: 'Solo se pueden editar facturas pendientes o en borrador' }, { status: 400 })
   }
 
-  const body = await request.json()
-  const { dueDate, lineItems, totalAmount } = body
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
+  const result = UpdateInvoiceSchema.safeParse(body)
+  if (!result.success) {
+    return NextResponse.json({ error: 'Datos inválidos', details: result.error.flatten() }, { status: 400 })
+  }
+
+  const { dueDate, lineItems } = result.data
+
+  // Compute totalAmount from validated line items — never accept from user input
+  const totalAmount = lineItems ? lineItems.reduce((sum, li) => sum + li.amount, 0) : undefined
 
   const updated = await prisma.$transaction(async (tx) => {
     if (lineItems) {
       await tx.invoiceLineItem.deleteMany({ where: { invoiceId: id } })
       await tx.invoiceLineItem.createMany({
-        data: lineItems.map((li: { description: string; amount: number }, i: number) => ({
+        data: lineItems.map((li, i) => ({
           invoiceId: id,
           description: li.description,
           amount: li.amount,

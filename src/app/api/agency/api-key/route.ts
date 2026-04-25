@@ -1,8 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
+import { rateLimit } from '@/lib/rate-limit'
+
+export async function GET(request: NextRequest) {
+  const blocked = await rateLimit(request)
+  if (blocked) return blocked
+
+  const [session, authError] = await requireAgencyAuth()
+  if (authError) return authError
+
+  const agency = await prisma.agency.findUnique({ where: { id: session.user.agencyId }, select: { apiKey: true } })
+  return NextResponse.json({ apiKey: agency?.apiKey ?? null })
+}
 
 export async function POST(request: NextRequest) {
+  const blocked = await rateLimit(request)
+  if (blocked) return blocked
+
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 

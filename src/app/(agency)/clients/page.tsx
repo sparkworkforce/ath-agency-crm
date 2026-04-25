@@ -2,6 +2,7 @@ import { requireAgencySession } from '@/lib/tenant'
 import { redirect } from 'next/navigation'
 import { searchClients } from '@/lib/services/clients.service'
 import ClientsTable from '@/features/crm/ClientsTable'
+import CsvImport from '@/features/crm/CsvImport'
 import ExportButton from '@/components/ExportButton'
 
 export default async function ClientsPage() {
@@ -16,6 +17,7 @@ export default async function ClientsPage() {
         <ExportButton type="clients" />
       </div>
       <ClientsTable initialClients={clients} />
+      <div className="mt-6"><CsvImport /></div>
     </div>
   )
 }

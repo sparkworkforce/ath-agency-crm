@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { prisma } from '@/lib/prisma'
 import { UpdateAgencySchema } from '@/lib/validations/agency'
+import { safeParseBody } from '@/lib/safe-parse-body'
 
 export async function PATCH(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
-  const body = await request.json()
+  const [body, parseError] = await safeParseBody(request)
+  if (parseError) return parseError
   const result = UpdateAgencySchema.safeParse(body)
   if (!result.success) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
