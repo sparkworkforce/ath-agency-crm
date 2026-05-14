@@ -1,5 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
+  throw new Error('[FATAL] NEXT_PUBLIC_SUPABASE_URL not configured in production')
+}
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
 
@@ -28,7 +32,7 @@ export async function uploadFile(
 export async function getSignedUrl(bucket: string, path: string, expiresIn = 3600): Promise<string> {
   const { data, error } = await storage.storage
     .from(bucket)
-    .createSignedUrl(path, expiresIn)
+    .createSignedUrl(path, expiresIn, { download: true })
 
   if (error || !data) throw new Error(`Failed to get signed URL: ${error?.message}`)
   return data.signedUrl

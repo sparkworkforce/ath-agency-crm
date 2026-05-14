@@ -41,6 +41,13 @@ export async function GET(request: NextRequest) {
 
     for (const client of clients) {
       if (client.agency.plan === 'FREE') continue
+
+      // Deduplication: skip if drip already sent for this step
+      const alreadySent = await prisma.communication.findFirst({
+        where: { clientId: client.id, channel: 'drip', summary: { contains: drip.template } },
+      })
+      if (alreadySent) continue
+
       const subject = drip.subject.replace('{{agency}}', client.agency.name)
       const portalUrl = `${process.env.NEXTAUTH_URL}/portal`
       const body = getDripBody(drip.template, { clientName: client.contactName, agencyName: client.agency.name, portalUrl })
@@ -48,6 +55,9 @@ export async function GET(request: NextRequest) {
 
       try {
         await sendEmail(client.contactEmail, subject, body, branding)
+        await prisma.communication.create({
+          data: { clientId: client.id, channel: 'drip', summary: `drip:${drip.template}`, date: now, createdBy: 'system' },
+        })
         sent++
       } catch {}
     }

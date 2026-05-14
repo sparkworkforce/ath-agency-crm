@@ -3,8 +3,8 @@ import { z } from 'zod'
 export const RegisterAgencySchema = z.object({
   agencyName: z.string().min(2, { error: 'El nombre de la agencia debe tener al menos 2 caracteres' }).max(100),
   name: z.string().min(1, { error: 'Tu nombre es requerido' }).max(100),
-  email: z.email({ error: 'Email inválido' }),
-  password: z.string().min(8, { error: 'La contraseña debe tener al menos 8 caracteres' }),
+  email: z.email({ error: 'Email inválido' }).max(254),
+  password: z.string().min(8, { error: 'La contraseña debe tener al menos 8 caracteres' }).max(128),
 })
 
 export const UpdateAgencySchema = z.object({
@@ -13,7 +13,7 @@ export const UpdateAgencySchema = z.object({
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
   webhookUrl: z.string().url().nullable().optional(),
   customDomain: z.string().min(4).max(253).regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/).nullable().optional(),
-  timezone: z.string().optional(),
+  timezone: z.string().max(100).optional(),
   notifyMilestones: z.boolean().optional(),
   notifyPayments: z.boolean().optional(),
   notifyOverdue: z.boolean().optional(),

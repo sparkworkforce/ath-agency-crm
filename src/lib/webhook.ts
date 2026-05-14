@@ -1,5 +1,7 @@
 import { prisma } from './prisma'
 import { createHmac } from 'crypto'
+import { resolve4, resolve6 } from 'dns/promises'
+import { redis } from './rate-limit'
 
 export type WebhookEvent =
   | 'client.created' | 'client.status_changed'
@@ -21,11 +23,34 @@ async function logDelivery(data: Record<string, unknown>) {
   } catch {}
 }
 
+function isPrivateIP(ip: string): boolean {
+  if (ip === '127.0.0.1' || ip === '0.0.0.0' || ip === '::1') return true
+  // IPv6 private ranges
+  const lower = ip.toLowerCase()
+  if (lower.startsWith('fc') || lower.startsWith('fd')) return true // fc00::/7
+  if (lower.startsWith('fe80')) return true // fe80::/10 link-local
+  if (lower === '::' || lower === '::1') return true
+  const parts = ip.split('.').map(Number)
+  if (parts.length !== 4) return false
+  if (parts[0] === 10) return true
+  if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true
+  if (parts[0] === 192 && parts[1] === 168) return true
+  if (parts[0] === 169 && parts[1] === 254) return true // link-local
+  return false
+}
+
 export async function dispatchWebhook(
   agencyId: string,
   event: WebhookEvent,
   data: Record<string, unknown>
 ): Promise<DeliveryResult> {
+  // Deduplication: skip if same event+data dispatched within 5 minutes
+  const dedupKey = `wh:dedup:${createHmac('sha256', event).update(JSON.stringify(data)).digest('hex')}`
+  if (redis) {
+    const seen = await redis.get(dedupKey)
+    if (seen) return { success: true }
+  }
+
   const agency = await prisma.agency.findUnique({
     where: { id: agencyId },
     select: { webhookUrl: true, apiKey: true },
@@ -42,6 +67,23 @@ export async function dispatchWebhook(
         host.startsWith('10.') || host.startsWith('192.168.') ||
         /^172\.(1[6-9]|2\d|3[01])\./.test(host)) {
       return { success: false, error: 'Webhook URL cannot target private networks' }
+    }
+
+    // DNS resolution check — resolve hostname and verify IP is not private
+    try {
+      const ips = await resolve4(parsed.hostname)
+      if (ips.some(isPrivateIP)) {
+        return { success: false, error: 'Webhook URL resolves to a private IP address' }
+      }
+      // Also check IPv6
+      try {
+        const ipv6s = await resolve6(parsed.hostname)
+        if (ipv6s.some(isPrivateIP)) {
+          return { success: false, error: 'Webhook URL resolves to a private IPv6 address' }
+        }
+      } catch { /* No AAAA records is fine */ }
+    } catch {
+      return { success: false, error: 'Could not resolve webhook hostname' }
     }
   } catch {
     return { success: false, error: 'Invalid webhook URL' }
@@ -66,6 +108,7 @@ export async function dispatchWebhook(
         headers,
         body: payload,
         signal: AbortSignal.timeout(10000),
+        redirect: 'manual',
       })
 
       const result: DeliveryResult = { success: res.ok, statusCode: res.status }
@@ -73,8 +116,11 @@ export async function dispatchWebhook(
       // Log delivery
       await logDelivery({ agencyId, event, url: agency.webhookUrl, payload, statusCode: res.status, success: res.ok, attempt: attempt + 1 })
 
-      if (res.ok) return result
-      if (attempt === 0) continue // retry once
+      if (res.ok) {
+        if (redis) await redis.set(dedupKey, '1', { ex: 300 })
+        return result
+      }
+      if (attempt === 0) { await new Promise(r => setTimeout(r, 2000)); continue }
       return result
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Unknown error'

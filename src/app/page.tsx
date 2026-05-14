@@ -45,10 +45,11 @@ export default async function RootPage() {
           {t('heroSub')}
         </p>
         <div className="flex items-center justify-center gap-4">
-          <Link href="/register" className="bg-emerald-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-emerald-700">{t('cta')}</Link>
+          <Link href="/register" className="bg-emerald-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-emerald-700">{t('ctaBenefit')}</Link>
           <Link href="/demo" className="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 px-6 py-3 rounded-md">{t('demo')}</Link>
         </div>
         <p className="text-xs text-gray-400 mt-4">{t('heroNote')}</p>
+        <p className="mt-3 inline-block text-xs font-medium text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">{t('socialProof')}</p>
         {/* Dashboard Mockup */}
         <div className="mt-12 mx-auto max-w-3xl rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden">
           {/* Browser chrome */}

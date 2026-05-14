@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { sendEmail, esc } from '@/lib/email'
 import { getEffectivePlan } from '@/lib/plan-gating'
 import { verifyCronAuth } from '@/lib/cron-auth'
+import { cronAlert } from '@/lib/logger'
 
 export async function GET(request: NextRequest) {
   const authError = verifyCronAuth(request)
@@ -63,7 +64,8 @@ export async function GET(request: NextRequest) {
     const agencyBranding = { name: agency.name, logoUrl: agency.logoUrl, primaryColor: agency.primaryColor }
     const safeName = agency.name.replace(/[\r\n]/g, '')
 
-    for (const inv of invoices) {
+    // Batch emails in chunks of 10
+    const emailTasks = invoices.map((inv) => {
       const daysUntilDue = Math.ceil((inv.dueDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
       let subject: string
       let message: string
@@ -82,15 +84,20 @@ export async function GET(request: NextRequest) {
         message = `Tu factura por $${inv.totalAmount} lleva ${Math.abs(daysUntilDue)} días vencida. Contacta a ${safeName} para resolver.`
       }
 
-      try {
-        await sendEmail(inv.client.contactEmail, subject,
-          `<p>Hola ${esc(inv.client.contactName)},</p><p>${message}</p><p style="color:#6b7280">— ${esc(agency.name)}</p>`,
-          agencyBranding
-        )
-        sent++
-      } catch { /* continue on email failure */ }
+      return () => sendEmail(inv.client.contactEmail, subject,
+        `<p>Hola ${esc(inv.client.contactName)},</p><p>${message}</p><p style="color:#6b7280">— ${esc(agency.name)}</p>`,
+        agencyBranding
+      )
+    })
+
+    for (let i = 0; i < emailTasks.length; i += 10) {
+      const chunk = emailTasks.slice(i, i + 10)
+      const results = await Promise.allSettled(chunk.map(fn => fn()))
+      sent += results.filter(r => r.status === 'fulfilled').length
     }
   }
+
+  if (sent === 0 && total > 0) cronAlert('payment-reminders', `0/${total} emails sent`)
 
   return NextResponse.json({ sent, total, overdueTransitioned: overdueCount.count, autoPaid })
 }

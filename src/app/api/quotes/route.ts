@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
+import { requireRoutePermission } from '@/lib/permissions'
 import { prisma } from '@/lib/prisma'
 import { CreateQuoteSchema } from '@/lib/validations/quotes'
 import { safeParseBody } from '@/lib/safe-parse-body'
@@ -19,6 +20,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
+
+  const permError = requireRoutePermission(session.user.agencyRole, 'quotes')
+  if (permError) return permError
 
   const [body, parseError] = await safeParseBody(request)
   if (parseError) return parseError

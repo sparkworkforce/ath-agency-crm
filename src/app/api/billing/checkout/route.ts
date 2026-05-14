@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
+import { requireRoutePermission } from '@/lib/permissions'
 import { prisma } from '@/lib/prisma'
 import { stripe, PLANS } from '@/lib/stripe'
 import { safeParseBody } from '@/lib/safe-parse-body'
@@ -11,6 +12,9 @@ export async function POST(request: NextRequest) {
 
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
+
+  const permError = requireRoutePermission(session.user.agencyRole, 'billing')
+  if (permError) return permError
 
   // Block demo accounts from billing
   const ag = await prisma.agency.findUnique({ where: { id: session.user.agencyId }, select: { slug: true } })

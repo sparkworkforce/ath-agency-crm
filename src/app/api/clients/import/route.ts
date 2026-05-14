@@ -36,21 +36,37 @@ export async function POST(request: NextRequest) {
   const allowed = await checkPlanLimit(agencyId, 'clients')
   if (!allowed) return NextResponse.json({ error: 'Client limit reached. Upgrade your plan.' }, { status: 403 })
 
+  // Check exact count to prevent exceeding limit
+  const currentCount = await prisma.client.count({ where: { agencyId, deletedAt: null } })
+  const agency = await prisma.agency.findUnique({ where: { id: agencyId }, select: { maxClients: true } })
+  if (agency && currentCount + result.data.rows.length > agency.maxClients) {
+    return NextResponse.json({ error: `Import would exceed client limit (${agency.maxClients}). You have ${currentCount} clients.` }, { status: 403 })
+  }
+
   let imported = 0
   const errors: { row: number; error: string }[] = []
 
-  for (let i = 0; i < result.data.rows.length; i++) {
-    const row = result.data.rows[i]
-    try {
-      const existing = await prisma.client.findFirst({ where: { agencyId, contactEmail: row.contactEmail, deletedAt: null } })
-      if (existing) { errors.push({ row: i, error: `Duplicate email: ${row.contactEmail}` }); continue }
+  // Check for duplicates first
+  const emails = result.data.rows.map(r => r.contactEmail)
+  const existing = await prisma.client.findMany({ where: { agencyId, contactEmail: { in: emails }, deletedAt: null }, select: { contactEmail: true } })
+  const existingEmails = new Set(existing.map(e => e.contactEmail))
 
-      await prisma.client.create({
-        data: { ...row, agencyId, contactPhone: row.contactPhone ?? null },
+  const validRows = result.data.rows.filter((row, i) => {
+    if (existingEmails.has(row.contactEmail)) { errors.push({ row: i, error: `Duplicate email: ${row.contactEmail}` }); return false }
+    return true
+  })
+
+  if (validRows.length > 0) {
+    try {
+      await prisma.$transaction(async (tx) => {
+        const { count } = await tx.client.createMany({
+          data: validRows.map(row => ({ ...row, agencyId, contactPhone: row.contactPhone ?? null })),
+          skipDuplicates: true,
+        })
+        imported = count
       })
-      imported++
     } catch {
-      errors.push({ row: i, error: 'Failed to create client' })
+      return NextResponse.json({ error: 'Import failed' }, { status: 500 })
     }
   }
 

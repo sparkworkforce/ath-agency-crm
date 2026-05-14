@@ -5,6 +5,7 @@ import { CreateClientSchema } from '@/lib/validations/clients'
 import { PaginationSchema } from '@/lib/pagination'
 import { createClient, searchClients } from '@/lib/services/clients.service'
 import { safeParseBody } from '@/lib/safe-parse-body'
+import { logger } from '@/lib/logger'
 
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
@@ -22,7 +23,8 @@ export async function GET(request: NextRequest) {
     }
     const clients = await searchClients(session.user.agencyId, q)
     return NextResponse.json({ clients })
-  } catch {
+  } catch (err) {
+    logger.error('GET /api/clients failed', { requestId: request.headers.get('x-request-id') ?? undefined, error: err instanceof Error ? err.message : 'Unknown' })
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
   }
 }
@@ -44,7 +46,8 @@ export async function POST(request: NextRequest) {
   try {
     const client = await createClient(result.data, session.user.id, session.user.agencyId)
     return NextResponse.json({ client }, { status: 201 })
-  } catch {
+  } catch (err) {
+    logger.error('POST /api/clients failed', { requestId: request.headers.get('x-request-id') ?? undefined, error: err instanceof Error ? err.message : 'Unknown' })
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
   }
 }

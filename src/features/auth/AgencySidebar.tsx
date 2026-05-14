@@ -9,16 +9,16 @@ import NotificationBell from '@/components/NotificationBell'
 import ThemeToggle from '@/components/ThemeToggle'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', key: 'dashboard' },
-  { href: '/clients', key: 'clients' },
-  { href: '/projects', key: 'projects' },
-  { href: '/invoices', key: 'invoices' },
-  { href: '/quotes', key: 'quotes' },
-  { href: '/templates', key: 'templates' },
-  { href: '/snippets', key: 'snippets' },
-  { href: '/timesheet', key: 'timesheet' },
-  { href: '/users', key: 'users' },
-  { href: '/settings', key: 'settings' },
+  { href: '/dashboard', key: 'dashboard', shortcut: 'G D' },
+  { href: '/clients', key: 'clients', shortcut: 'G C' },
+  { href: '/projects', key: 'projects', shortcut: 'G P' },
+  { href: '/invoices', key: 'invoices', shortcut: 'G I' },
+  { href: '/quotes', key: 'quotes', shortcut: '' },
+  { href: '/templates', key: 'templates', shortcut: '' },
+  { href: '/snippets', key: 'snippets', shortcut: 'G S' },
+  { href: '/timesheet', key: 'timesheet', shortcut: '' },
+  { href: '/users', key: 'users', shortcut: '' },
+  { href: '/settings', key: 'settings', shortcut: '' },
 ] as const
 
 interface AgencySidebarProps {
@@ -41,14 +41,15 @@ export default function AgencySidebar({ userName }: AgencySidebarProps) {
           <Link
             key={item.href}
             href={item.href}
-            className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               pathname.startsWith(item.href)
                 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
                 : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
             }`}
             data-testid={`nav-${item.href.replace('/', '')}`}
           >
-            {t(item.key)}
+            <span>{t(item.key)}</span>
+            {item.shortcut && <kbd className="hidden lg:inline text-[10px] text-gray-400 dark:text-gray-500 font-mono">{item.shortcut}</kbd>}
           </Link>
         ))}
       </nav>

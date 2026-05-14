@@ -148,6 +148,9 @@ export async function softDeleteClient(clientId: string, agencyId: string) {
       where: { id: clientId, agencyId, deletedAt: null },
       data: { deletedAt: new Date() },
     })
+    await tx.communication.create({
+      data: { clientId, channel: 'system', summary: 'Client deleted', date: new Date(), createdBy: 'system' },
+    })
     for (const user of users) {
       await tx.magicLink.updateMany({
         where: { userId: user.id, usedAt: null },

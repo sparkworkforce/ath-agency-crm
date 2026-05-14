@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
   const token = crypto.randomUUID()
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
 
+  await prisma.verificationToken.deleteMany({ where: { identifier: email } })
   await prisma.verificationToken.create({
     data: { identifier: email, token, expires },
   })

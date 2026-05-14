@@ -5,6 +5,8 @@
     "heroBadge": "Diseñado para agencias en Puerto Rico 🇵🇷",
     "heroNote": "Sin tarjeta de crédito. Gratis para siempre hasta 3 clientes.",
     "cta": "Comenzar gratis",
+    "ctaBenefit": "Empieza gratis — 14 días",
+    "socialProof": "127+ agencias en Puerto Rico",
     "demo": "Ver demo",
     "login": "Iniciar sesión",
     "createAccount": "Crear cuenta",
@@ -215,6 +217,18 @@
     "mrr": "MRR",
     "satisfaction": "Satisfacción",
     "utilization": "Utilización",
+    "helpActiveClients": "Clientes con estado 'en progreso' o 'soporte mensual'",
+    "helpProjectsInProgress": "Proyectos con al menos una tarea pendiente o en progreso",
+    "helpMonthlyRevenue": "Total de facturas pagadas este mes calendario",
+    "helpOverdueTasks": "Tareas vencidas que no se han completado",
+    "helpRevenuePerClient": "Ingreso total dividido entre número de clientes",
+    "helpAvgIntegrationDays": "Promedio de días desde creación del proyecto hasta 100%",
+    "helpPipelineCount": "Clientes en estado 'prospecto' o 'en progreso'",
+    "helpInvoiceAging": "Promedio de días entre crear factura y recibir primer pago",
+    "helpCollectionRate": "Porcentaje del monto facturado que se ha cobrado",
+    "helpMrr": "Ingreso recurrente mensual de retainers (últimos 30 días)",
+    "helpSatisfaction": "Calificación promedio de feedback de clientes (1-5 estrellas)",
+    "helpUtilization": "Horas registradas vs capacidad disponible (últimos 30 días)",
     "onboarding": {
       "step": "Paso {step} de {total}",
       "step1Title": "Agrega tu primer cliente",
@@ -244,7 +258,9 @@
       "invoices": "💰 Ve facturas pendientes y pagadas",
       "snippets": "🔗 Prueba los snippets de código ATH Business"
     },
-    "days": "días"
+    "days": "días",
+    "showMoreMetrics": "Ver más métricas",
+    "showLessMetrics": "Ver menos métricas"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -254,6 +270,7 @@
     "password": "Contraseña",
     "agencyName": "Nombre de la agencia",
     "name": "Tu nombre",
+    "nameOptional": "Tu nombre (opcional)",
     "submit": "Crear cuenta",
     "loading": "Creando cuenta...",
     "loginLink": "¿Ya tienes cuenta?",

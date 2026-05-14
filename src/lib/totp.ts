@@ -1,4 +1,5 @@
 import { createHmac } from 'crypto'
+import { redis } from './rate-limit'
 
 const DIGITS = 6
 const PERIOD = 30
@@ -27,6 +28,17 @@ export function verifyTOTP(secret: string, token: string): boolean {
     if (generateTOTP(secret, now + offset * PERIOD) === token) return true
   }
   return false
+}
+
+/** Verify TOTP with replay protection via Redis. Rejects codes used within 90s. */
+export async function verifyTOTPWithReplay(secret: string, token: string, userId: string): Promise<boolean> {
+  if (!verifyTOTP(secret, token)) return false
+  if (!redis) return true // No Redis = skip replay check (dev only)
+  const key = `totp:used:${userId}:${token}`
+  const exists = await redis.get(key)
+  if (exists) return false // Replay detected
+  await redis.set(key, '1', { ex: 90 })
+  return true
 }
 
 export function getTOTPUri(secret: string, email: string, issuer = 'CobraHub'): string {

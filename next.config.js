@@ -32,20 +32,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://js.stripe.com https://plausible.io",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://*.supabase.co",
-              "font-src 'self'",
-              "connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io https://api.stripe.com https://plausible.io",
-              "frame-src https://js.stripe.com",
-              "frame-ancestors 'none'",
-            ].join('; '),
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
           },
         ],
       },

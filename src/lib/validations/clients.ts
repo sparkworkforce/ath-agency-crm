@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const CreateClientSchema = z.object({
   businessName: z.string().min(1, { error: 'El nombre del negocio es requerido' }).max(200),
   contactName: z.string().min(1, { error: 'El nombre de contacto es requerido' }).max(100),
-  contactEmail: z.email({ error: 'Email inválido' }),
+  contactEmail: z.email({ error: 'Email inválido' }).max(254),
   contactPhone: z.string().max(20).optional(),
   industry: z.string().max(100).optional(),
   platform: z.enum(['WOOCOMMERCE', 'SHOPIFY', 'CUSTOM']),
@@ -22,7 +22,7 @@ export const CreateCommunicationSchema = z.object({
 })
 
 export const InviteClientUserSchema = z.object({
-  email: z.email({ error: 'Email inválido' }),
+  email: z.email({ error: 'Email inválido' }).max(254),
   name: z.string().min(1, { error: 'El nombre es requerido' }).max(100),
 })
 

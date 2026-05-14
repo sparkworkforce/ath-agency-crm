@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   const existingUser = await prisma.user.findUnique({ where: { email } })
   if (existingUser) {
-    return NextResponse.json({ error: 'Ya existe una cuenta con ese email' }, { status: 409 })
+    return NextResponse.json({ agency: { id: 'ok', slug: 'ok' } }, { status: 201 })
   }
 
   const baseSlug = agencyName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -30,6 +30,11 @@ export async function POST(request: NextRequest) {
   while (await prisma.agency.findUnique({ where: { slug } })) {
     counter++
     slug = `${baseSlug}-${counter}`
+  }
+
+  const WEAK_PASSWORDS = ['12345678','password','qwerty123','abcdefgh','11111111','123456789','password1','iloveyou','admin123','welcome1']
+  if (WEAK_PASSWORDS.includes(password.toLowerCase())) {
+    return NextResponse.json({ error: 'Contraseña muy común' }, { status: 400 })
   }
 
   try {
@@ -44,7 +49,7 @@ export async function POST(request: NextRequest) {
         data: {
           businessName: 'Tienda Demo',
           contactName: 'María García',
-          contactEmail: 'demo@ejemplo.com',
+          contactEmail: `demo+${slug}@ejemplo.com`,
           contactPhone: '787-555-0100',
           platform: 'WOOCOMMERCE',
           status: 'en_progreso',

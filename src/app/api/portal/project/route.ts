@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getClientActiveProject } from '@/lib/services/projects.service'
+import { logger } from '@/lib/logger'
 
 export async function GET() {
   const session = await auth()
@@ -11,6 +12,8 @@ export async function GET() {
   if (!session.user.clientId) {
     return NextResponse.json({ error: 'Acceso denegado' }, { status: 403 })
   }
+
+  logger.info('Portal request', { path: '/api/portal/project', clientId: session.user.clientId })
 
   try {
     const project = await getClientActiveProject(session.user.clientId)

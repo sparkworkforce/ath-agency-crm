@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
+import { requireRoutePermission } from '@/lib/permissions'
 import { prisma } from '@/lib/prisma'
 import { toCsv, csvResponse } from '@/lib/csv'
 import { getEffectivePlan } from '@/lib/plan-gating'
@@ -7,6 +8,9 @@ import { getEffectivePlan } from '@/lib/plan-gating'
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
+
+  const permError = requireRoutePermission(session.user.agencyRole, 'export')
+  if (permError) return permError
 
   const agencyId = session.user.agencyId
   const type = request.nextUrl.searchParams.get('type')

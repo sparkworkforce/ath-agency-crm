@@ -20,6 +20,9 @@ vi.mock('@/lib/prisma', () => ({
     session: {
       deleteMany: vi.fn(),
     },
+    user: {
+      update: vi.fn(),
+    },
   },
 }))
 
@@ -171,9 +174,14 @@ describe('revokeAllUserSessions', () => {
 
   it('deletes all sessions for the user', async () => {
     mockPrisma.session.deleteMany.mockResolvedValue({ count: 2 })
+    mockPrisma.user.update.mockResolvedValue({})
     await revokeAllUserSessions('user-123')
     expect(mockPrisma.session.deleteMany).toHaveBeenCalledWith({
       where: { userId: 'user-123' },
+    })
+    expect(mockPrisma.user.update).toHaveBeenCalledWith({
+      where: { id: 'user-123' },
+      data: { sessionVersion: { increment: 1 } },
     })
   })
 })

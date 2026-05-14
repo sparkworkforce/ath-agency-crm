@@ -4,6 +4,7 @@ import { UpdateClientSchema } from '@/lib/validations/clients'
 import { getClientById, updateClient, softDeleteClient } from '@/lib/services/clients.service'
 import { prisma } from '@/lib/prisma'
 import { safeParseBody } from '@/lib/safe-parse-body'
+import { requireRoutePermission } from '@/lib/permissions'
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const [session, authError] = await requireAgencyAuth()
@@ -58,6 +59,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
+
+  const permError = requireRoutePermission(session.user.agencyRole, 'delete')
+  if (permError) return permError
 
   const { id } = await params
   try {

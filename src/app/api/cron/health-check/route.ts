@@ -3,10 +3,20 @@ import { prisma } from '@/lib/prisma'
 import { runIntegrationHealthChecks } from '@/lib/services/health-monitor.service'
 import { dispatchWebhook, type WebhookEvent } from '@/lib/webhook'
 import { verifyCronAuth } from '@/lib/cron-auth'
+import { redis } from '@/lib/rate-limit'
+import { cronAlert } from '@/lib/logger'
 
 export async function GET(request: NextRequest) {
   const authError = verifyCronAuth(request)
   if (authError) return authError
+
+  // Redis health check
+  if (redis) {
+    try { await redis.ping() } catch { cronAlert('health-check', 'Redis unreachable') }
+  }
+
+  // Database health check
+  try { await prisma.$queryRaw`SELECT 1` } catch (e) { cronAlert('health-check', 'Database unreachable', { error: (e as Error).message }) }
 
   const results = await runIntegrationHealthChecks()
   const failures = results.filter(r => r.webhookOk === false || r.sslOk === false)

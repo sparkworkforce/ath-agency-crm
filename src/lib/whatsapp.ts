@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 const WHATSAPP_API = 'https://graph.facebook.com/v21.0'
 
 interface WhatsAppConfig {
@@ -30,7 +32,8 @@ export async function sendWhatsAppMessage(to: string, message: string): Promise<
       signal: AbortSignal.timeout(10000),
     })
     return res.ok
-  } catch {
+  } catch (e) {
+    logger.error('WhatsApp message failed', { to: phone, error: (e as Error).message })
     return false
   }
 }
@@ -57,7 +60,8 @@ export async function sendWhatsAppTemplate(to: string, templateName: string, par
       signal: AbortSignal.timeout(10000),
     })
     return res.ok
-  } catch {
+  } catch (e) {
+    logger.error('WhatsApp template failed', { to: phone, template: templateName, error: (e as Error).message })
     return false
   }
 }

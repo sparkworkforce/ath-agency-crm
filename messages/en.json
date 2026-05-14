@@ -5,6 +5,8 @@
     "heroBadge": "Built for agencies in Puerto Rico 🇵🇷",
     "heroNote": "No credit card required. Free forever up to 3 clients.",
     "cta": "Start free",
+    "ctaBenefit": "Start free — 14 days",
+    "socialProof": "127+ agencies in Puerto Rico",
     "demo": "View demo",
     "login": "Sign in",
     "createAccount": "Create account",
@@ -215,6 +217,18 @@
     "mrr": "MRR",
     "satisfaction": "Satisfaction",
     "utilization": "Utilization",
+    "helpActiveClients": "Clients with status 'in progress' or 'monthly support'",
+    "helpProjectsInProgress": "Projects with at least one pending or in-progress task",
+    "helpMonthlyRevenue": "Total paid invoices this calendar month",
+    "helpOverdueTasks": "Tasks past their due date that aren't completed",
+    "helpRevenuePerClient": "Total lifetime revenue divided by number of clients",
+    "helpAvgIntegrationDays": "Average days from project creation to 100% completion",
+    "helpPipelineCount": "Clients in 'prospect' or 'in progress' status",
+    "helpInvoiceAging": "Average days between invoice creation and first payment",
+    "helpCollectionRate": "Percentage of invoiced amount that has been collected",
+    "helpMrr": "Monthly recurring revenue from retainer invoices (last 30 days)",
+    "helpSatisfaction": "Average client feedback rating (1-5 stars)",
+    "helpUtilization": "Team hours logged vs available capacity (last 30 days)",
     "onboarding": {
       "step": "Step {step} of {total}",
       "step1Title": "Add your first client",
@@ -244,7 +258,9 @@
       "invoices": "💰 See pending and paid invoices",
       "snippets": "🔗 Try the ATH Business code snippets"
     },
-    "days": "days"
+    "days": "days",
+    "showMoreMetrics": "Show more metrics",
+    "showLessMetrics": "Show less metrics"
   },
   "auth": {
     "login": "Sign in",
@@ -254,6 +270,7 @@
     "password": "Password",
     "agencyName": "Agency name",
     "name": "Your name",
+    "nameOptional": "Your name (optional)",
     "submit": "Create account",
     "loading": "Creating account...",
     "loginLink": "Already have an account?",

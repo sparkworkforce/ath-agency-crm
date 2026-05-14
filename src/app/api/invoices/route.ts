@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
+import { requireRoutePermission } from '@/lib/permissions'
 import { CreateInvoiceSchema } from '@/lib/validations/invoices'
 import { PaginationSchema } from '@/lib/pagination'
 import { createInvoice, listInvoicesByClient, listAllInvoices } from '@/lib/services/invoicing.service'
@@ -31,6 +32,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
+
+  const permError = requireRoutePermission(session.user.agencyRole, 'invoices')
+  if (permError) return permError
 
   const [body, parseError] = await safeParseBody(request)
   if (parseError) return parseError

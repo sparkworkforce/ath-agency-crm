@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server'
+
 export type AgencyRole = 'admin' | 'manager' | 'member'
 
 const PERMISSIONS = {
@@ -15,4 +17,12 @@ export function hasPermission(role: AgencyRole | string | undefined, permission:
 
 export function requirePermission(role: AgencyRole | string | undefined, permission: Permission): boolean {
   return hasPermission(role, permission)
+}
+
+/** Returns a 403 NextResponse if the user lacks the required permission, or null if allowed. */
+export function requireRoutePermission(role: AgencyRole | string | undefined, permission: Permission): NextResponse | null {
+  if (!hasPermission(role, permission)) {
+    return NextResponse.json({ error: 'Permiso insuficiente' }, { status: 403 })
+  }
+  return null
 }

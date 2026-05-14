@@ -16,6 +16,7 @@ interface Client {
   platform: string
   status: string
   createdAt: string | Date
+  updatedAt?: string | Date
 }
 
 interface ClientsTableProps {
@@ -209,6 +210,9 @@ export default function ClientsTable({ initialClients }: ClientsTableProps) {
                         {client.businessName}
                       </button>
                       <p className="text-xs text-gray-500 mt-1">{client.contactName}</p>
+                      {client.updatedAt && (
+                        <p className="text-[10px] text-gray-400 mt-1">Last activity: {new Date(client.updatedAt).toLocaleDateString('es-PR')}</p>
+                      )}
                       <span className="inline-block mt-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
                         {client.platform}
                       </span>

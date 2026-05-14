@@ -55,6 +55,9 @@ export type AgencyMinAggregateOutputType = {
   timezone: string | null
   webhookUrl: string | null
   apiKey: string | null
+  apiKeyHash: string | null
+  apiKeyPrefix: string | null
+  widgetSecret: string | null
   customDomain: string | null
   notifyMilestones: boolean | null
   notifyPayments: boolean | null
@@ -82,6 +85,9 @@ export type AgencyMaxAggregateOutputType = {
   timezone: string | null
   webhookUrl: string | null
   apiKey: string | null
+  apiKeyHash: string | null
+  apiKeyPrefix: string | null
+  widgetSecret: string | null
   customDomain: string | null
   notifyMilestones: boolean | null
   notifyPayments: boolean | null
@@ -109,6 +115,9 @@ export type AgencyCountAggregateOutputType = {
   timezone: number
   webhookUrl: number
   apiKey: number
+  apiKeyHash: number
+  apiKeyPrefix: number
+  widgetSecret: number
   customDomain: number
   notifyMilestones: number
   notifyPayments: number
@@ -148,6 +157,9 @@ export type AgencyMinAggregateInputType = {
   timezone?: true
   webhookUrl?: true
   apiKey?: true
+  apiKeyHash?: true
+  apiKeyPrefix?: true
+  widgetSecret?: true
   customDomain?: true
   notifyMilestones?: true
   notifyPayments?: true
@@ -175,6 +187,9 @@ export type AgencyMaxAggregateInputType = {
   timezone?: true
   webhookUrl?: true
   apiKey?: true
+  apiKeyHash?: true
+  apiKeyPrefix?: true
+  widgetSecret?: true
   customDomain?: true
   notifyMilestones?: true
   notifyPayments?: true
@@ -202,6 +217,9 @@ export type AgencyCountAggregateInputType = {
   timezone?: true
   webhookUrl?: true
   apiKey?: true
+  apiKeyHash?: true
+  apiKeyPrefix?: true
+  widgetSecret?: true
   customDomain?: true
   notifyMilestones?: true
   notifyPayments?: true
@@ -316,6 +334,9 @@ export type AgencyGroupByOutputType = {
   timezone: string
   webhookUrl: string | null
   apiKey: string | null
+  apiKeyHash: string | null
+  apiKeyPrefix: string | null
+  widgetSecret: string | null
   customDomain: string | null
   notifyMilestones: boolean
   notifyPayments: boolean
@@ -366,6 +387,9 @@ export type AgencyWhereInput = {
   timezone?: Prisma.StringFilter<"Agency"> | string
   webhookUrl?: Prisma.StringNullableFilter<"Agency"> | string | null
   apiKey?: Prisma.StringNullableFilter<"Agency"> | string | null
+  apiKeyHash?: Prisma.StringNullableFilter<"Agency"> | string | null
+  apiKeyPrefix?: Prisma.StringNullableFilter<"Agency"> | string | null
+  widgetSecret?: Prisma.StringNullableFilter<"Agency"> | string | null
   customDomain?: Prisma.StringNullableFilter<"Agency"> | string | null
   notifyMilestones?: Prisma.BoolFilter<"Agency"> | boolean
   notifyPayments?: Prisma.BoolFilter<"Agency"> | boolean
@@ -400,6 +424,9 @@ export type AgencyOrderByWithRelationInput = {
   timezone?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  apiKeyHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  apiKeyPrefix?: Prisma.SortOrderInput | Prisma.SortOrder
+  widgetSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   customDomain?: Prisma.SortOrderInput | Prisma.SortOrder
   notifyMilestones?: Prisma.SortOrder
   notifyPayments?: Prisma.SortOrder
@@ -420,6 +447,7 @@ export type AgencyWhereUniqueInput = Prisma.AtLeast<{
   slug?: string
   stripeCustomerId?: string
   apiKey?: string
+  apiKeyHash?: string
   customDomain?: string
   AND?: Prisma.AgencyWhereInput | Prisma.AgencyWhereInput[]
   OR?: Prisma.AgencyWhereInput[]
@@ -438,6 +466,8 @@ export type AgencyWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringFilter<"Agency"> | string
   timezone?: Prisma.StringFilter<"Agency"> | string
   webhookUrl?: Prisma.StringNullableFilter<"Agency"> | string | null
+  apiKeyPrefix?: Prisma.StringNullableFilter<"Agency"> | string | null
+  widgetSecret?: Prisma.StringNullableFilter<"Agency"> | string | null
   notifyMilestones?: Prisma.BoolFilter<"Agency"> | boolean
   notifyPayments?: Prisma.BoolFilter<"Agency"> | boolean
   notifyOverdue?: Prisma.BoolFilter<"Agency"> | boolean
@@ -450,7 +480,7 @@ export type AgencyWhereUniqueInput = Prisma.AtLeast<{
   tags?: Prisma.TagListRelationFilter
   referralsMade?: Prisma.ReferralListRelationFilter
   referralsReceived?: Prisma.ReferralListRelationFilter
-}, "id" | "slug" | "stripeCustomerId" | "apiKey" | "customDomain">
+}, "id" | "slug" | "stripeCustomerId" | "apiKey" | "apiKeyHash" | "customDomain">
 
 export type AgencyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -471,6 +501,9 @@ export type AgencyOrderByWithAggregationInput = {
   timezone?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   apiKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  apiKeyHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  apiKeyPrefix?: Prisma.SortOrderInput | Prisma.SortOrder
+  widgetSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   customDomain?: Prisma.SortOrderInput | Prisma.SortOrder
   notifyMilestones?: Prisma.SortOrder
   notifyPayments?: Prisma.SortOrder
@@ -506,6 +539,9 @@ export type AgencyScalarWhereWithAggregatesInput = {
   timezone?: Prisma.StringWithAggregatesFilter<"Agency"> | string
   webhookUrl?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
   apiKey?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
+  apiKeyHash?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
+  apiKeyPrefix?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
+  widgetSecret?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
   customDomain?: Prisma.StringNullableWithAggregatesFilter<"Agency"> | string | null
   notifyMilestones?: Prisma.BoolWithAggregatesFilter<"Agency"> | boolean
   notifyPayments?: Prisma.BoolWithAggregatesFilter<"Agency"> | boolean
@@ -533,6 +569,9 @@ export type AgencyCreateInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -567,6 +606,9 @@ export type AgencyUncheckedCreateInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -601,6 +643,9 @@ export type AgencyUpdateInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -635,6 +680,9 @@ export type AgencyUncheckedUpdateInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -669,6 +717,9 @@ export type AgencyCreateManyInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -696,6 +747,9 @@ export type AgencyUpdateManyMutationInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -723,6 +777,9 @@ export type AgencyUncheckedUpdateManyInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -750,6 +807,9 @@ export type AgencyCountOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  apiKeyHash?: Prisma.SortOrder
+  apiKeyPrefix?: Prisma.SortOrder
+  widgetSecret?: Prisma.SortOrder
   customDomain?: Prisma.SortOrder
   notifyMilestones?: Prisma.SortOrder
   notifyPayments?: Prisma.SortOrder
@@ -782,6 +842,9 @@ export type AgencyMaxOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  apiKeyHash?: Prisma.SortOrder
+  apiKeyPrefix?: Prisma.SortOrder
+  widgetSecret?: Prisma.SortOrder
   customDomain?: Prisma.SortOrder
   notifyMilestones?: Prisma.SortOrder
   notifyPayments?: Prisma.SortOrder
@@ -809,6 +872,9 @@ export type AgencyMinOrderByAggregateInput = {
   timezone?: Prisma.SortOrder
   webhookUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
+  apiKeyHash?: Prisma.SortOrder
+  apiKeyPrefix?: Prisma.SortOrder
+  widgetSecret?: Prisma.SortOrder
   customDomain?: Prisma.SortOrder
   notifyMilestones?: Prisma.SortOrder
   notifyPayments?: Prisma.SortOrder
@@ -985,6 +1051,9 @@ export type AgencyCreateWithoutUsersInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1018,6 +1087,9 @@ export type AgencyUncheckedCreateWithoutUsersInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1067,6 +1139,9 @@ export type AgencyUpdateWithoutUsersInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1100,6 +1175,9 @@ export type AgencyUncheckedUpdateWithoutUsersInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1133,6 +1211,9 @@ export type AgencyCreateWithoutClientsInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1166,6 +1247,9 @@ export type AgencyUncheckedCreateWithoutClientsInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1215,6 +1299,9 @@ export type AgencyUpdateWithoutClientsInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1248,6 +1335,9 @@ export type AgencyUncheckedUpdateWithoutClientsInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1281,6 +1371,9 @@ export type AgencyCreateWithoutSnippetsInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1314,6 +1407,9 @@ export type AgencyUncheckedCreateWithoutSnippetsInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1363,6 +1459,9 @@ export type AgencyUpdateWithoutSnippetsInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1396,6 +1495,9 @@ export type AgencyUncheckedUpdateWithoutSnippetsInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1429,6 +1531,9 @@ export type AgencyCreateWithoutTemplatesInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1462,6 +1567,9 @@ export type AgencyUncheckedCreateWithoutTemplatesInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1511,6 +1619,9 @@ export type AgencyUpdateWithoutTemplatesInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1544,6 +1655,9 @@ export type AgencyUncheckedUpdateWithoutTemplatesInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1577,6 +1691,9 @@ export type AgencyCreateWithoutReferralsMadeInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1610,6 +1727,9 @@ export type AgencyUncheckedCreateWithoutReferralsMadeInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1648,6 +1768,9 @@ export type AgencyCreateWithoutReferralsReceivedInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1681,6 +1804,9 @@ export type AgencyUncheckedCreateWithoutReferralsReceivedInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1730,6 +1856,9 @@ export type AgencyUpdateWithoutReferralsMadeInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1763,6 +1892,9 @@ export type AgencyUncheckedUpdateWithoutReferralsMadeInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1807,6 +1939,9 @@ export type AgencyUpdateWithoutReferralsReceivedInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1840,6 +1975,9 @@ export type AgencyUncheckedUpdateWithoutReferralsReceivedInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1873,6 +2011,9 @@ export type AgencyCreateWithoutTagsInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1906,6 +2047,9 @@ export type AgencyUncheckedCreateWithoutTagsInput = {
   timezone?: string
   webhookUrl?: string | null
   apiKey?: string | null
+  apiKeyHash?: string | null
+  apiKeyPrefix?: string | null
+  widgetSecret?: string | null
   customDomain?: string | null
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -1955,6 +2099,9 @@ export type AgencyUpdateWithoutTagsInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1988,6 +2135,9 @@ export type AgencyUncheckedUpdateWithoutTagsInput = {
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
   webhookUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apiKeyPrefix?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  widgetSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customDomain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyMilestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notifyPayments?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2106,6 +2256,9 @@ export type AgencySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   timezone?: boolean
   webhookUrl?: boolean
   apiKey?: boolean
+  apiKeyHash?: boolean
+  apiKeyPrefix?: boolean
+  widgetSecret?: boolean
   customDomain?: boolean
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -2141,6 +2294,9 @@ export type AgencySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   timezone?: boolean
   webhookUrl?: boolean
   apiKey?: boolean
+  apiKeyHash?: boolean
+  apiKeyPrefix?: boolean
+  widgetSecret?: boolean
   customDomain?: boolean
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -2168,6 +2324,9 @@ export type AgencySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   timezone?: boolean
   webhookUrl?: boolean
   apiKey?: boolean
+  apiKeyHash?: boolean
+  apiKeyPrefix?: boolean
+  widgetSecret?: boolean
   customDomain?: boolean
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -2195,6 +2354,9 @@ export type AgencySelectScalar = {
   timezone?: boolean
   webhookUrl?: boolean
   apiKey?: boolean
+  apiKeyHash?: boolean
+  apiKeyPrefix?: boolean
+  widgetSecret?: boolean
   customDomain?: boolean
   notifyMilestones?: boolean
   notifyPayments?: boolean
@@ -2203,7 +2365,7 @@ export type AgencySelectScalar = {
   updatedAt?: boolean
 }
 
-export type AgencyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "logoUrl" | "primaryColor" | "plan" | "stripeCustomerId" | "stripeSubId" | "stripePriceId" | "subStatus" | "subCurrentPeriodEnd" | "maxClients" | "maxUsers" | "trialEndsAt" | "currency" | "timezone" | "webhookUrl" | "apiKey" | "customDomain" | "notifyMilestones" | "notifyPayments" | "notifyOverdue" | "createdAt" | "updatedAt", ExtArgs["result"]["agency"]>
+export type AgencyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "logoUrl" | "primaryColor" | "plan" | "stripeCustomerId" | "stripeSubId" | "stripePriceId" | "subStatus" | "subCurrentPeriodEnd" | "maxClients" | "maxUsers" | "trialEndsAt" | "currency" | "timezone" | "webhookUrl" | "apiKey" | "apiKeyHash" | "apiKeyPrefix" | "widgetSecret" | "customDomain" | "notifyMilestones" | "notifyPayments" | "notifyOverdue" | "createdAt" | "updatedAt", ExtArgs["result"]["agency"]>
 export type AgencyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Agency$usersArgs<ExtArgs>
   clients?: boolean | Prisma.Agency$clientsArgs<ExtArgs>
@@ -2247,6 +2409,9 @@ export type $AgencyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     timezone: string
     webhookUrl: string | null
     apiKey: string | null
+    apiKeyHash: string | null
+    apiKeyPrefix: string | null
+    widgetSecret: string | null
     customDomain: string | null
     notifyMilestones: boolean
     notifyPayments: boolean
@@ -2701,6 +2866,9 @@ export interface AgencyFieldRefs {
   readonly timezone: Prisma.FieldRef<"Agency", 'String'>
   readonly webhookUrl: Prisma.FieldRef<"Agency", 'String'>
   readonly apiKey: Prisma.FieldRef<"Agency", 'String'>
+  readonly apiKeyHash: Prisma.FieldRef<"Agency", 'String'>
+  readonly apiKeyPrefix: Prisma.FieldRef<"Agency", 'String'>
+  readonly widgetSecret: Prisma.FieldRef<"Agency", 'String'>
   readonly customDomain: Prisma.FieldRef<"Agency", 'String'>
   readonly notifyMilestones: Prisma.FieldRef<"Agency", 'Boolean'>
   readonly notifyPayments: Prisma.FieldRef<"Agency", 'Boolean'>

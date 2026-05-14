@@ -20,8 +20,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  sessionVersion: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  sessionVersion: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -32,9 +42,13 @@ export type UserMinAggregateOutputType = {
   image: string | null
   password: string | null
   role: $Enums.UserRole | null
+  agencyRole: string | null
   agencyId: string | null
   clientId: string | null
   active: boolean | null
+  sessionVersion: number | null
+  totpSecret: string | null
+  totpPending: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,9 +61,13 @@ export type UserMaxAggregateOutputType = {
   image: string | null
   password: string | null
   role: $Enums.UserRole | null
+  agencyRole: string | null
   agencyId: string | null
   clientId: string | null
   active: boolean | null
+  sessionVersion: number | null
+  totpSecret: string | null
+  totpPending: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,14 +80,26 @@ export type UserCountAggregateOutputType = {
   image: number
   password: number
   role: number
+  agencyRole: number
   agencyId: number
   clientId: number
   active: number
+  sessionVersion: number
+  totpSecret: number
+  totpPending: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  sessionVersion?: true
+}
+
+export type UserSumAggregateInputType = {
+  sessionVersion?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -79,9 +109,13 @@ export type UserMinAggregateInputType = {
   image?: true
   password?: true
   role?: true
+  agencyRole?: true
   agencyId?: true
   clientId?: true
   active?: true
+  sessionVersion?: true
+  totpSecret?: true
+  totpPending?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,9 +128,13 @@ export type UserMaxAggregateInputType = {
   image?: true
   password?: true
   role?: true
+  agencyRole?: true
   agencyId?: true
   clientId?: true
   active?: true
+  sessionVersion?: true
+  totpSecret?: true
+  totpPending?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -109,9 +147,13 @@ export type UserCountAggregateInputType = {
   image?: true
   password?: true
   role?: true
+  agencyRole?: true
   agencyId?: true
   clientId?: true
   active?: true
+  sessionVersion?: true
+  totpSecret?: true
+  totpPending?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -155,6 +197,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -185,6 +239,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -197,12 +253,18 @@ export type UserGroupByOutputType = {
   image: string | null
   password: string | null
   role: $Enums.UserRole
+  agencyRole: string
   agencyId: string | null
   clientId: string | null
   active: boolean
+  sessionVersion: number
+  totpSecret: string | null
+  totpPending: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -233,9 +295,13 @@ export type UserWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   password?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  agencyRole?: Prisma.StringFilter<"User"> | string
   agencyId?: Prisma.StringNullableFilter<"User"> | string | null
   clientId?: Prisma.StringNullableFilter<"User"> | string | null
   active?: Prisma.BoolFilter<"User"> | boolean
+  sessionVersion?: Prisma.IntFilter<"User"> | number
+  totpSecret?: Prisma.StringNullableFilter<"User"> | string | null
+  totpPending?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   agency?: Prisma.XOR<Prisma.AgencyNullableScalarRelationFilter, Prisma.AgencyWhereInput> | null
@@ -258,9 +324,13 @@ export type UserOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  agencyRole?: Prisma.SortOrder
   agencyId?: Prisma.SortOrderInput | Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  totpSecret?: Prisma.SortOrderInput | Prisma.SortOrder
+  totpPending?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   agency?: Prisma.AgencyOrderByWithRelationInput
@@ -286,9 +356,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"User"> | string | null
   password?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  agencyRole?: Prisma.StringFilter<"User"> | string
   agencyId?: Prisma.StringNullableFilter<"User"> | string | null
   clientId?: Prisma.StringNullableFilter<"User"> | string | null
   active?: Prisma.BoolFilter<"User"> | boolean
+  sessionVersion?: Prisma.IntFilter<"User"> | number
+  totpSecret?: Prisma.StringNullableFilter<"User"> | string | null
+  totpPending?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   agency?: Prisma.XOR<Prisma.AgencyNullableScalarRelationFilter, Prisma.AgencyWhereInput> | null
@@ -311,14 +385,20 @@ export type UserOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  agencyRole?: Prisma.SortOrder
   agencyId?: Prisma.SortOrderInput | Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  totpSecret?: Prisma.SortOrderInput | Prisma.SortOrder
+  totpPending?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -332,9 +412,13 @@ export type UserScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+  agencyRole?: Prisma.StringWithAggregatesFilter<"User"> | string
   agencyId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   clientId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   active?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  sessionVersion?: Prisma.IntWithAggregatesFilter<"User"> | number
+  totpSecret?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  totpPending?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -347,7 +431,11 @@ export type UserCreateInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -370,9 +458,13 @@ export type UserUncheckedCreateInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -393,7 +485,11 @@ export type UserUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -416,9 +512,13 @@ export type UserUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -439,9 +539,13 @@ export type UserCreateManyInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -454,7 +558,11 @@ export type UserUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -467,9 +575,13 @@ export type UserUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -497,11 +609,19 @@ export type UserCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  agencyRole?: Prisma.SortOrder
   agencyId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  totpSecret?: Prisma.SortOrder
+  totpPending?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  sessionVersion?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -512,9 +632,13 @@ export type UserMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  agencyRole?: Prisma.SortOrder
   agencyId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  totpSecret?: Prisma.SortOrder
+  totpPending?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -527,11 +651,19 @@ export type UserMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   password?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  agencyRole?: Prisma.SortOrder
   agencyId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  totpSecret?: Prisma.SortOrder
+  totpPending?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  sessionVersion?: Prisma.SortOrder
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -749,7 +881,11 @@ export type UserCreateWithoutAgencyInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -771,8 +907,12 @@ export type UserUncheckedCreateWithoutAgencyInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -822,9 +962,13 @@ export type UserScalarWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   password?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  agencyRole?: Prisma.StringFilter<"User"> | string
   agencyId?: Prisma.StringNullableFilter<"User"> | string | null
   clientId?: Prisma.StringNullableFilter<"User"> | string | null
   active?: Prisma.BoolFilter<"User"> | boolean
+  sessionVersion?: Prisma.IntFilter<"User"> | number
+  totpSecret?: Prisma.StringNullableFilter<"User"> | string | null
+  totpPending?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -837,7 +981,11 @@ export type UserCreateWithoutAccountsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -859,9 +1007,13 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -897,7 +1049,11 @@ export type UserUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -919,9 +1075,13 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -941,7 +1101,11 @@ export type UserCreateWithoutSessionsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -963,9 +1127,13 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1001,7 +1169,11 @@ export type UserUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1023,9 +1195,13 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1045,7 +1221,11 @@ export type UserCreateWithoutMagicLinksInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1067,9 +1247,13 @@ export type UserUncheckedCreateWithoutMagicLinksInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1105,7 +1289,11 @@ export type UserUpdateWithoutMagicLinksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1127,9 +1315,13 @@ export type UserUncheckedUpdateWithoutMagicLinksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1149,7 +1341,11 @@ export type UserCreateWithoutClientInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1171,8 +1367,12 @@ export type UserUncheckedCreateWithoutClientInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1219,7 +1419,11 @@ export type UserCreateWithoutAssignedTasksInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1241,9 +1445,13 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1279,7 +1487,11 @@ export type UserUpdateWithoutAssignedTasksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1301,9 +1513,13 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1323,7 +1539,11 @@ export type UserCreateWithoutTicketMessagesInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1345,9 +1565,13 @@ export type UserUncheckedCreateWithoutTicketMessagesInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1383,7 +1607,11 @@ export type UserUpdateWithoutTicketMessagesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1405,9 +1633,13 @@ export type UserUncheckedUpdateWithoutTicketMessagesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1427,7 +1659,11 @@ export type UserCreateWithoutSnippetsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1449,9 +1685,13 @@ export type UserUncheckedCreateWithoutSnippetsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1487,7 +1727,11 @@ export type UserUpdateWithoutSnippetsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1509,9 +1753,13 @@ export type UserUncheckedUpdateWithoutSnippetsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1531,7 +1779,11 @@ export type UserCreateWithoutTimeEntriesInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1553,9 +1805,13 @@ export type UserUncheckedCreateWithoutTimeEntriesInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1591,7 +1847,11 @@ export type UserUpdateWithoutTimeEntriesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1613,9 +1873,13 @@ export type UserUncheckedUpdateWithoutTimeEntriesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1635,7 +1899,11 @@ export type UserCreateWithoutNotificationsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1657,9 +1925,13 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1695,7 +1967,11 @@ export type UserUpdateWithoutNotificationsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1717,9 +1993,13 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1739,8 +2019,12 @@ export type UserCreateManyAgencyInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   clientId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1753,7 +2037,11 @@ export type UserUpdateWithoutAgencyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1775,8 +2063,12 @@ export type UserUncheckedUpdateWithoutAgencyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1797,8 +2089,12 @@ export type UserUncheckedUpdateManyWithoutAgencyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1811,8 +2107,12 @@ export type UserCreateManyClientInput = {
   image?: string | null
   password?: string | null
   role: $Enums.UserRole
+  agencyRole?: string
   agencyId?: string | null
   active?: boolean
+  sessionVersion?: number
+  totpSecret?: string | null
+  totpPending?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1825,7 +2125,11 @@ export type UserUpdateWithoutClientInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1847,8 +2151,12 @@ export type UserUncheckedUpdateWithoutClientInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1869,8 +2177,12 @@ export type UserUncheckedUpdateManyWithoutClientInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  agencyRole?: Prisma.StringFieldUpdateOperationsInput | string
   agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1977,9 +2289,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   image?: boolean
   password?: boolean
   role?: boolean
+  agencyRole?: boolean
   agencyId?: boolean
   clientId?: boolean
   active?: boolean
+  sessionVersion?: boolean
+  totpSecret?: boolean
+  totpPending?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
@@ -2003,9 +2319,13 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   password?: boolean
   role?: boolean
+  agencyRole?: boolean
   agencyId?: boolean
   clientId?: boolean
   active?: boolean
+  sessionVersion?: boolean
+  totpSecret?: boolean
+  totpPending?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
@@ -2020,9 +2340,13 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   password?: boolean
   role?: boolean
+  agencyRole?: boolean
   agencyId?: boolean
   clientId?: boolean
   active?: boolean
+  sessionVersion?: boolean
+  totpSecret?: boolean
+  totpPending?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
@@ -2037,14 +2361,18 @@ export type UserSelectScalar = {
   image?: boolean
   password?: boolean
   role?: boolean
+  agencyRole?: boolean
   agencyId?: boolean
   clientId?: boolean
   active?: boolean
+  sessionVersion?: boolean
+  totpSecret?: boolean
+  totpPending?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "role" | "agencyId" | "clientId" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "role" | "agencyRole" | "agencyId" | "clientId" | "active" | "sessionVersion" | "totpSecret" | "totpPending" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -2089,9 +2417,13 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     image: string | null
     password: string | null
     role: $Enums.UserRole
+    agencyRole: string
     agencyId: string | null
     clientId: string | null
     active: boolean
+    sessionVersion: number
+    totpSecret: string | null
+    totpPending: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2534,9 +2866,13 @@ export interface UserFieldRefs {
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
+  readonly agencyRole: Prisma.FieldRef<"User", 'String'>
   readonly agencyId: Prisma.FieldRef<"User", 'String'>
   readonly clientId: Prisma.FieldRef<"User", 'String'>
   readonly active: Prisma.FieldRef<"User", 'Boolean'>
+  readonly sessionVersion: Prisma.FieldRef<"User", 'Int'>
+  readonly totpSecret: Prisma.FieldRef<"User", 'String'>
+  readonly totpPending: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

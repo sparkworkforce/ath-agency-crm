@@ -87,6 +87,9 @@ model Agency {
   timezone         String     @default("America/Puerto_Rico")
   webhookUrl       String?
   apiKey           String?    @unique
+  apiKeyHash       String?    @unique
+  apiKeyPrefix     String?
+  widgetSecret     String?
   customDomain     String?    @unique
   notifyMilestones Boolean    @default(true)
   notifyPayments   Boolean    @default(true)
@@ -156,9 +159,13 @@ model User {
   image         String?
   password      String?
   role          UserRole
+  agencyRole    String    @default("member") // admin | manager | member
   agencyId      String?
   clientId      String?
   active        Boolean   @default(true)
+  sessionVersion Int      @default(0)
+  totpSecret    String?
+  totpPending   String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -257,6 +264,7 @@ model Communication {
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@index([clientId])
+  @@index([clientId, channel])
 }
 
 model Project {
@@ -569,7 +577,7 @@ model Expense {
   id          String   @id @default(cuid())
   projectId   String
   description String
-  amount      Float
+  amount      Decimal  @db.Decimal(10, 2)
   date        DateTime
   category    String   @default("general")
   createdBy   String

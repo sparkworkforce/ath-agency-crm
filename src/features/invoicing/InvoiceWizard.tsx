@@ -40,7 +40,7 @@ export default function InvoiceWizard({ clients, onClose }: Props) {
       })
       if (res.ok) {
         const { invoice } = await res.json()
-        toast.success('Invoice created')
+        toast.success('🎉 ¡Factura creada!')
         router.push(`/invoices/${invoice.id}`)
       } else { toast.error('Error creating invoice') }
     } catch { toast.error('Error creating invoice') }
@@ -122,7 +122,7 @@ export default function InvoiceWizard({ clients, onClose }: Props) {
           </div>
           <div className="flex justify-between">
             <Button variant="secondary" onClick={() => setStep(1)}>Back</Button>
-            <Button onClick={handleCreate} loading={creating} disabled={!dueDate}>Create Invoice</Button>
+            <Button onClick={handleCreate} loading={creating} disabled={!dueDate || total === 0}>Create Invoice</Button>
           </div>
         </div>
       )}

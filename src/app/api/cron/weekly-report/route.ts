@@ -11,11 +11,16 @@ export async function GET(request: NextRequest) {
   const now = new Date()
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-  const agencies = await prisma.agency.findMany({
+  let sent = 0
+  let skip = 0
+  const BATCH_SIZE = 50
+  let agencies = await prisma.agency.findMany({
     select: { id: true, name: true, logoUrl: true, primaryColor: true, plan: true, trialEndsAt: true, stripeSubId: true },
+    take: BATCH_SIZE,
+    skip,
   })
 
-  let sent = 0
+  while (agencies.length > 0) {
   for (const agency of agencies) {
     if (getEffectivePlan(agency) === 'FREE') continue
 
@@ -47,6 +52,13 @@ export async function GET(request: NextRequest) {
         sent++
       } catch { /* continue on email failure */ }
     }
+  }
+  skip += BATCH_SIZE
+  agencies = await prisma.agency.findMany({
+    select: { id: true, name: true, logoUrl: true, primaryColor: true, plan: true, trialEndsAt: true, stripeSubId: true },
+    take: BATCH_SIZE,
+    skip,
+  })
   }
 
   return NextResponse.json({ sent })

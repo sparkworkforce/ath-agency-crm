@@ -1,4 +1,5 @@
 import { auth } from './auth'
+import { prisma } from './prisma'
 import { NextResponse } from 'next/server'
 
 export async function getAgencyId(): Promise<string> {
@@ -21,5 +22,10 @@ export async function requireAgencyAuth() {
   if (!session?.user || session.user.role !== 'AGENCY' || !session.user.agencyId) {
     return [null, NextResponse.json({ error: 'No autorizado' }, { status: 401 })] as const
   }
-  return [session as typeof session & { user: { agencyId: string; id: string; email: string } }, null] as const
+  if (session.user.requires2fa) {
+    return [null, NextResponse.json({ error: 'Se requiere verificación 2FA' }, { status: 403 })] as const
+  }
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { agencyRole: true } })
+  const agencyRole = user?.agencyRole ?? 'member'
+  return [{ ...session, user: { ...session.user, agencyRole } } as typeof session & { user: { agencyId: string; id: string; email: string; agencyRole: string } }, null] as const
 }

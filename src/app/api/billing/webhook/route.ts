@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe, PLANS } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { invalidateAgencySessions } from '@/lib/session-rotation'
+import { redis } from '@/lib/rate-limit'
 type AgencyPlan = 'FREE' | 'PROFESSIONAL' | 'BUSINESS'
 
 export async function POST(request: NextRequest) {
@@ -14,6 +15,12 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!)
   } catch {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+  }
+
+  // Deduplication: skip already-processed events
+  if (redis) {
+    const seen = await redis.get(`stripe:evt:${event.id}`)
+    if (seen) return NextResponse.json({ received: true })
   }
 
   const sub = event.data.object as any
@@ -59,6 +66,8 @@ export async function POST(request: NextRequest) {
     await prisma.agency.update({ where: { id: agency.id }, data })
     await invalidateAgencySessions(agency.id)
   }
+
+  if (redis) await redis.set(`stripe:evt:${event.id}`, '1', { ex: 86400 })
 
   return NextResponse.json({ ok: true })
 }

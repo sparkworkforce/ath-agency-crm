@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
+import { requireRoutePermission } from '@/lib/permissions'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
+
+  const permError = requireRoutePermission(session.user.agencyRole, 'audit')
+  if (permError) return permError
 
   const logs = await prisma.invoiceAuditLog.findMany({
     where: { invoice: { client: { agencyId: session.user.agencyId } } },

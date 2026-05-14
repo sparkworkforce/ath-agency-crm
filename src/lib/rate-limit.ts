@@ -6,9 +6,11 @@ const redis = process.env.UPSTASH_REDIS_REST_URL
   ? new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN! })
   : null
 
-if (!redis && process.env.NODE_ENV === 'production') {
-  console.warn('[SECURITY] UPSTASH_REDIS_REST_URL not configured — rate limiting is DISABLED in production')
+if (!redis && process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE) {
+  throw new Error('[FATAL] UPSTASH_REDIS_REST_URL not configured in production. Rate limiting is required.')
 }
+
+export { redis }
 
 // 10 requests per 60 seconds per IP
 const limiter = redis ? new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, '60 s') }) : null
@@ -27,7 +29,7 @@ export async function rateLimit(request: NextRequest): Promise<NextResponse | nu
   if (!limiter) return null
   const { success } = await limiter.limit(getClientIp(request))
   if (!success) {
-    return NextResponse.json({ error: 'Demasiadas solicitudes. Intenta más tarde.' }, { status: 429 })
+    return NextResponse.json({ error: 'Demasiadas solicitudes. Intenta más tarde.' }, { status: 429, headers: { 'Retry-After': '60' } })
   }
   return null
 }
@@ -36,7 +38,7 @@ export async function rateLimitAuth(request: NextRequest): Promise<NextResponse 
   if (!authLimiter) return null
   const { success } = await authLimiter.limit(getClientIp(request))
   if (!success) {
-    return NextResponse.json({ error: 'Demasiadas solicitudes. Intenta más tarde.' }, { status: 429 })
+    return NextResponse.json({ error: 'Demasiadas solicitudes. Intenta más tarde.' }, { status: 429, headers: { 'Retry-After': '60' } })
   }
   return null
 }

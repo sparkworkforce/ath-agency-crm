@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from '@/lib/validations/projects'
 import { uploadProjectFile } from '@/lib/services/projects.service'
+import { validateUpload } from '@/lib/upload-validation'
 
 export async function POST(
   request: NextRequest,
@@ -14,17 +15,12 @@ export async function POST(
   const formData = await request.formData()
   const file = formData.get('file') as File | null
 
-  if (!file) return NextResponse.json({ error: 'Archivo requerido' }, { status: 400 })
-  if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-    return NextResponse.json({ error: 'Tipo de archivo no permitido. Solo PDF, PNG, JPG, ZIP.' }, { status: 400 })
-  }
-  if (file.size > MAX_FILE_SIZE_BYTES) {
-    return NextResponse.json({ error: 'El archivo excede el límite de 10MB.' }, { status: 400 })
-  }
+  const uploadError = await validateUpload(file, { maxSizeBytes: MAX_FILE_SIZE_BYTES, allowedTypes: ALLOWED_FILE_TYPES })
+  if (uploadError) return uploadError
 
   try {
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const projectFile = await uploadProjectFile(id, file.name, file.type, file.size, buffer, session.user.id, session.user.agencyId)
+    const buffer = Buffer.from(await file!.arrayBuffer())
+    const projectFile = await uploadProjectFile(id, file!.name, file!.type, file!.size, buffer, session.user.id, session.user.agencyId)
     return NextResponse.json({ file: projectFile }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAgencyAuth } from '@/lib/tenant'
+import { requireRoutePermission } from '@/lib/permissions'
 import { checkPlanLimit } from '@/lib/plan-gating'
 import { CreateAgencyUserSchema } from '@/lib/validations/users'
 import { createAgencyUser, listAgencyUsers } from '@/lib/services/users.service'
@@ -9,6 +10,9 @@ export async function GET() {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
 
+  const permError = requireRoutePermission(session.user.agencyRole, 'users')
+  if (permError) return permError
+
   const users = await listAgencyUsers(session.user.agencyId)
   return NextResponse.json({ users })
 }
@@ -16,6 +20,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const [session, authError] = await requireAgencyAuth()
   if (authError) return authError
+
+  const permError = requireRoutePermission(session.user.agencyRole, 'users')
+  if (permError) return permError
 
   const [body, parseError] = await safeParseBody(request)
   if (parseError) return parseError

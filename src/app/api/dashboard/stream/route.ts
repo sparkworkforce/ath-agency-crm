@@ -1,10 +1,14 @@
 import { NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
+import { rateLimit } from '@/lib/rate-limit'
 import { getDashboardMetrics } from '@/lib/services/dashboard.service'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
+  const blocked = await rateLimit(request)
+  if (blocked) return blocked
+
   const session = await auth()
   if (!session?.user?.agencyId) {
     return new Response('Unauthorized', { status: 401 })
@@ -17,6 +21,11 @@ export async function GET(request: NextRequest) {
     async start(controller) {
       async function sendMetrics() {
         try {
+          const reSession = await auth()
+          if (!reSession?.user?.agencyId) {
+            controller.close()
+            return
+          }
           const metrics = await getDashboardMetrics(agencyId)
           const data = JSON.stringify({
             activeClientsCount: metrics.activeClientsCount,
@@ -32,11 +41,16 @@ export async function GET(request: NextRequest) {
         }
       }
 
+      controller.enqueue(encoder.encode('retry: 5000\n\n'))
       await sendMetrics()
-      const interval = setInterval(sendMetrics, 30000)
+      const metricsInterval = setInterval(sendMetrics, 30000)
+      const heartbeatInterval = setInterval(() => {
+        controller.enqueue(encoder.encode(`: heartbeat\n\n`))
+      }, 15000)
 
       request.signal.addEventListener('abort', () => {
-        clearInterval(interval)
+        clearInterval(metricsInterval)
+        clearInterval(heartbeatInterval)
         controller.close()
       })
     },

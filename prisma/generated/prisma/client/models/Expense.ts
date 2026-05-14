@@ -27,18 +27,18 @@ export type AggregateExpense = {
 }
 
 export type ExpenseAvgAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type ExpenseSumAggregateOutputType = {
-  amount: number | null
+  amount: runtime.Decimal | null
 }
 
 export type ExpenseMinAggregateOutputType = {
   id: string | null
   projectId: string | null
   description: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   date: Date | null
   category: string | null
   createdBy: string | null
@@ -49,7 +49,7 @@ export type ExpenseMaxAggregateOutputType = {
   id: string | null
   projectId: string | null
   description: string | null
-  amount: number | null
+  amount: runtime.Decimal | null
   date: Date | null
   category: string | null
   createdBy: string | null
@@ -201,7 +201,7 @@ export type ExpenseGroupByOutputType = {
   id: string
   projectId: string
   description: string
-  amount: number
+  amount: runtime.Decimal
   date: Date
   category: string
   createdBy: string
@@ -235,7 +235,7 @@ export type ExpenseWhereInput = {
   id?: Prisma.StringFilter<"Expense"> | string
   projectId?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
-  amount?: Prisma.FloatFilter<"Expense"> | number
+  amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   category?: Prisma.StringFilter<"Expense"> | string
   createdBy?: Prisma.StringFilter<"Expense"> | string
@@ -262,7 +262,7 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ExpenseWhereInput | Prisma.ExpenseWhereInput[]
   projectId?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
-  amount?: Prisma.FloatFilter<"Expense"> | number
+  amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   category?: Prisma.StringFilter<"Expense"> | string
   createdBy?: Prisma.StringFilter<"Expense"> | string
@@ -293,7 +293,7 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   projectId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   description?: Prisma.StringWithAggregatesFilter<"Expense"> | string
-  amount?: Prisma.FloatWithAggregatesFilter<"Expense"> | number
+  amount?: Prisma.DecimalWithAggregatesFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
   category?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   createdBy?: Prisma.StringWithAggregatesFilter<"Expense"> | string
@@ -303,7 +303,7 @@ export type ExpenseScalarWhereWithAggregatesInput = {
 export type ExpenseCreateInput = {
   id?: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   category?: string
   createdBy: string
@@ -315,7 +315,7 @@ export type ExpenseUncheckedCreateInput = {
   id?: string
   projectId: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   category?: string
   createdBy: string
@@ -325,7 +325,7 @@ export type ExpenseUncheckedCreateInput = {
 export type ExpenseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -337,7 +337,7 @@ export type ExpenseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -348,7 +348,7 @@ export type ExpenseCreateManyInput = {
   id?: string
   projectId: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   category?: string
   createdBy: string
@@ -358,7 +358,7 @@ export type ExpenseCreateManyInput = {
 export type ExpenseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -369,7 +369,7 @@ export type ExpenseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -472,7 +472,7 @@ export type ExpenseUncheckedUpdateManyWithoutProjectNestedInput = {
 export type ExpenseCreateWithoutProjectInput = {
   id?: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   category?: string
   createdBy: string
@@ -482,7 +482,7 @@ export type ExpenseCreateWithoutProjectInput = {
 export type ExpenseUncheckedCreateWithoutProjectInput = {
   id?: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   category?: string
   createdBy: string
@@ -522,7 +522,7 @@ export type ExpenseScalarWhereInput = {
   id?: Prisma.StringFilter<"Expense"> | string
   projectId?: Prisma.StringFilter<"Expense"> | string
   description?: Prisma.StringFilter<"Expense"> | string
-  amount?: Prisma.FloatFilter<"Expense"> | number
+  amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   category?: Prisma.StringFilter<"Expense"> | string
   createdBy?: Prisma.StringFilter<"Expense"> | string
@@ -532,7 +532,7 @@ export type ExpenseScalarWhereInput = {
 export type ExpenseCreateManyProjectInput = {
   id?: string
   description: string
-  amount: number
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   date: Date | string
   category?: string
   createdBy: string
@@ -542,7 +542,7 @@ export type ExpenseCreateManyProjectInput = {
 export type ExpenseUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -552,7 +552,7 @@ export type ExpenseUpdateWithoutProjectInput = {
 export type ExpenseUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -562,7 +562,7 @@ export type ExpenseUncheckedUpdateWithoutProjectInput = {
 export type ExpenseUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
@@ -638,7 +638,7 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     projectId: string
     description: string
-    amount: number
+    amount: runtime.Decimal
     date: Date
     category: string
     createdBy: string
@@ -1070,7 +1070,7 @@ export interface ExpenseFieldRefs {
   readonly id: Prisma.FieldRef<"Expense", 'String'>
   readonly projectId: Prisma.FieldRef<"Expense", 'String'>
   readonly description: Prisma.FieldRef<"Expense", 'String'>
-  readonly amount: Prisma.FieldRef<"Expense", 'Float'>
+  readonly amount: Prisma.FieldRef<"Expense", 'Decimal'>
   readonly date: Prisma.FieldRef<"Expense", 'DateTime'>
   readonly category: Prisma.FieldRef<"Expense", 'String'>
   readonly createdBy: Prisma.FieldRef<"Expense", 'String'>

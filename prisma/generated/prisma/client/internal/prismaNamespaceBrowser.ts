@@ -118,6 +118,9 @@ export const AgencyScalarFieldEnum = {
   timezone: 'timezone',
   webhookUrl: 'webhookUrl',
   apiKey: 'apiKey',
+  apiKeyHash: 'apiKeyHash',
+  apiKeyPrefix: 'apiKeyPrefix',
+  widgetSecret: 'widgetSecret',
   customDomain: 'customDomain',
   notifyMilestones: 'notifyMilestones',
   notifyPayments: 'notifyPayments',
@@ -174,9 +177,13 @@ export const UserScalarFieldEnum = {
   image: 'image',
   password: 'password',
   role: 'role',
+  agencyRole: 'agencyRole',
   agencyId: 'agencyId',
   clientId: 'clientId',
   active: 'active',
+  sessionVersion: 'sessionVersion',
+  totpSecret: 'totpSecret',
+  totpPending: 'totpPending',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

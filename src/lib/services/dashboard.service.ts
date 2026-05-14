@@ -1,24 +1,18 @@
 import { prisma } from '../prisma'
 import { getCurrentMonthRevenue, getMonthlyRevenueChart } from './invoicing.service'
+import { redis } from '../rate-limit'
 
-// Simple in-memory cache for dashboard metrics (60s TTL, max 100 entries)
-const metricsCache = new Map<string, { data: unknown; expires: number }>()
-const CACHE_TTL = 60_000
-const CACHE_MAX = 100
-
-function getCached<T>(key: string): T | null {
-  const entry = metricsCache.get(key)
-  if (entry && entry.expires > Date.now()) return entry.data as T
-  metricsCache.delete(key)
-  return null
+// Redis-backed cache (60s TTL). Falls back to no caching if redis is null (dev).
+async function getCached<T>(key: string): Promise<T | null> {
+  if (!redis) return null
+  const data = await redis.get(key)
+  if (data) { redis.incr('cache:hit').catch(() => {}) } else { redis.incr('cache:miss').catch(() => {}) }
+  return data ? (data as T) : null
 }
 
-function setCache(key: string, data: unknown) {
-  if (metricsCache.size >= CACHE_MAX) {
-    const oldest = metricsCache.keys().next().value
-    if (oldest) metricsCache.delete(oldest)
-  }
-  metricsCache.set(key, { data, expires: Date.now() + CACHE_TTL })
+async function setCache(key: string, data: unknown) {
+  if (!redis) return
+  await redis.set(key, JSON.stringify(data), { ex: 60 })
 }
 
 type DashboardMetrics = {
@@ -40,7 +34,7 @@ type DashboardMetrics = {
 
 export async function getDashboardMetrics(agencyId: string): Promise<DashboardMetrics> {
   const cacheKey = `dashboard:${agencyId}`
-  const cached = getCached<Record<string, unknown>>(cacheKey)
+  const cached = await getCached<Record<string, unknown>>(cacheKey)
   if (cached) return cached as DashboardMetrics
 
   const now = new Date()
@@ -82,10 +76,12 @@ export async function getDashboardMetrics(agencyId: string): Promise<DashboardMe
       where: { client: { agencyId }, status: 'pagado' },
       _sum: { totalAmount: true },
     }),
-    // Completed projects for avg integration time
+    // Completed projects for avg integration time (last 12 months, max 200)
     prisma.project.findMany({
-      where: { client: { agencyId }, completionPercentage: 100 },
+      where: { client: { agencyId }, completionPercentage: 100, updatedAt: { gte: new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true, updatedAt: true },
+      take: 200,
+      orderBy: { updatedAt: 'desc' },
     }),
     // Pipeline value: prospecto + en_progreso clients
     prisma.client.count({
@@ -106,10 +102,12 @@ export async function getDashboardMetrics(agencyId: string): Promise<DashboardMe
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
   const [paidInvoicesWithPayments, allInvoicesAgg, allPaymentsAgg, retainerMrr, feedbackAgg, timeEntriesAgg, agencyUserCount] = await Promise.all([
-    // invoiceAging: paid invoices with their first payment
+    // invoiceAging: paid invoices with their first payment (last 12 months, max 200)
     prisma.invoice.findMany({
-      where: { client: { agencyId }, payments: { some: {} } },
+      where: { client: { agencyId }, payments: { some: {} }, createdAt: { gte: new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true, payments: { orderBy: { receivedAt: 'asc' }, take: 1, select: { receivedAt: true } } },
+      take: 200,
+      orderBy: { createdAt: 'desc' },
     }),
     // collectionRate denominator
     prisma.invoice.aggregate({ where: { client: { agencyId } }, _sum: { totalAmount: true } }),
@@ -202,7 +200,7 @@ type RevenueForecast = {
 
 export async function getRevenueForecast(agencyId: string): Promise<RevenueForecast> {
   const cacheKey = `forecast:${agencyId}`
-  const cached = getCached<RevenueForecast>(cacheKey)
+  const cached = await getCached<RevenueForecast>(cacheKey)
   if (cached) return cached
 
   const now = new Date()

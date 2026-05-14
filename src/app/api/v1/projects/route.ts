@@ -6,6 +6,12 @@ import { safeParseBody } from '@/lib/safe-parse-body'
 import { CreateProjectSchema } from '@/lib/validations/projects'
 import { createProject } from '@/lib/services/projects.service'
 
+const corsHeaders = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'X-API-Key, Content-Type', 'API-Version': '1' }
+
+export async function OPTIONS() {
+  return new Response(null, { status: 204, headers: corsHeaders })
+}
+
 export async function GET(request: NextRequest) {
   const blocked = await rateLimit(request)
   if (blocked) return blocked
@@ -13,13 +19,24 @@ export async function GET(request: NextRequest) {
   const [agency, error] = await requireApiKey(request)
   if (error) return error
 
-  const projects = await prisma.project.findMany({
-    where: { client: { agencyId: agency.id, deletedAt: null } },
-    select: { id: true, name: true, completionPercentage: true, estimatedCompletionDate: true, createdAt: true, client: { select: { id: true, businessName: true } }, tasks: { select: { id: true, title: true, status: true, order: true }, orderBy: { order: 'asc' } } },
-    orderBy: { createdAt: 'desc' },
-  })
+  const { searchParams } = new URL(request.url)
+  const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1)
+  const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') ?? '50', 10) || 50))
+  const skip = (page - 1) * limit
 
-  return NextResponse.json({ projects })
+  const where = { client: { agencyId: agency.id, deletedAt: null } }
+  const [projects, total] = await Promise.all([
+    prisma.project.findMany({
+      where,
+      select: { id: true, name: true, completionPercentage: true, estimatedCompletionDate: true, createdAt: true, client: { select: { id: true, businessName: true } }, tasks: { select: { id: true, title: true, status: true, order: true }, orderBy: { order: 'asc' } } },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.project.count({ where }),
+  ])
+
+  return NextResponse.json({ projects, pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } }, { headers: corsHeaders })
 }
 
 export async function POST(request: NextRequest) {
@@ -37,7 +54,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const project = await createProject(result.data, agency.id)
-    return NextResponse.json({ project }, { status: 201 })
+    return NextResponse.json({ project }, { status: 201, headers: corsHeaders })
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }

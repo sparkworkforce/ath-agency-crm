@@ -6,7 +6,7 @@ export const CreateInvoiceSchema = z.object({
   dueDate: z.string().datetime(),
   isRetainer: z.boolean().default(false),
   lineItems: z.array(z.object({
-    description: z.string().min(1),
+    description: z.string().min(1).max(500),
     amount: z.number().positive(),
   })).min(1, { error: 'Se requiere al menos un ítem' }),
 })
@@ -14,7 +14,7 @@ export const CreateInvoiceSchema = z.object({
 export const RecordPaymentSchema = z.object({
   amount: z.number().positive({ error: 'El monto debe ser mayor a 0' }),
   receivedAt: z.string().datetime(),
-  method: z.string().optional(),
+  method: z.string().max(100).optional(),
 })
 
 export type CreateInvoiceInput = z.infer<typeof CreateInvoiceSchema>
