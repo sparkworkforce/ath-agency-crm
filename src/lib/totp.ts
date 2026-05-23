@@ -70,3 +70,29 @@ function base32Decode(str: string): Buffer {
   }
   return Buffer.from(out)
 }
+
+
+/** Generate 8 one-time backup codes (8 chars each, hex) */
+export function generateBackupCodes(): string[] {
+  const codes: string[] = []
+  for (let i = 0; i < 8; i++) {
+    const bytes = new Uint8Array(4)
+    crypto.getRandomValues(bytes)
+    codes.push(Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''))
+  }
+  return codes
+}
+
+/** Hash backup codes for storage (SHA-256 with per-user salt) */
+export function hashBackupCodes(codes: string[], userId: string): string[] {
+  return codes.map(code => {
+    const hash = createHmac('sha256', `${userId}:backup`).update(code).digest('hex')
+    return hash
+  })
+}
+
+/** Verify a backup code against stored hashes. Returns the index if valid, -1 if not. */
+export function verifyBackupCode(code: string, hashedCodes: string[], userId: string): number {
+  const hash = createHmac('sha256', `${userId}:backup`).update(code.toLowerCase().replace(/\s/g, '')).digest('hex')
+  return hashedCodes.indexOf(hash)
+}

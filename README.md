@@ -18,7 +18,7 @@ Multi-tenant SaaS platform for agencies that integrate ATH Business payments. CR
 - **Real-time**: Server-Sent Events (SSE)
 - **PWA**: Service worker with offline portal support
 - **Deployment**: Vercel
-- **Testing**: Vitest (66 unit tests) + Playwright (13 e2e tests)
+- **Testing**: Vitest (72 unit tests) + Playwright (13 e2e tests)
 
 ## Features
 
@@ -41,7 +41,7 @@ Multi-tenant SaaS platform for agencies that integrate ATH Business payments. CR
 
 ### Platform
 - **Billing**: Stripe subscriptions with plan gating (Free/Professional/Business), billing dashboard with usage meters
-- **Auth**: Email verification, password reset, login lockout, rate limiting, TOTP two-factor authentication
+- **Auth**: Email verification, password reset, login lockout, rate limiting, TOTP two-factor authentication, backup recovery codes, breached password detection
 - **i18n**: Full bilingual support (English/Spanish) with locale switcher
 - **Dark Mode**: System preference detection + manual toggle across all components
 - **Command Palette**: Cmd+K search across pages, clients, and projects
@@ -109,6 +109,7 @@ npm run dev
 | `SEED_ADMIN_PASSWORD` | Admin password for initial seed |
 | `WHATSAPP_PHONE_NUMBER_ID` | WhatsApp Business phone number ID (optional) |
 | `WHATSAPP_ACCESS_TOKEN` | WhatsApp Business access token (optional) |
+| `WHATSAPP_WEBHOOK_SECRET` | WhatsApp webhook verification secret (optional) |
 
 ## Scripts
 
@@ -116,7 +117,7 @@ npm run dev
 |---|---|
 | `npm run dev` | Development server |
 | `npm run build` | Production build |
-| `npm run test` | Run unit tests (vitest, 66 tests) |
+| `npm run test` | Run unit tests (vitest, 72 tests) |
 | `npm run test:e2e` | Run e2e tests (playwright, 13 tests) |
 | `npm run test:watch` | Watch mode for unit tests |
 | `npm run db:migrate` | Create new migration |
@@ -124,16 +125,18 @@ npm run dev
 | `npm run db:seed` | Seed initial data |
 | `npm run db:studio` | Open Prisma Studio |
 
-## API Routes (75 total)
+## API Routes (79 total)
 
 ### Public
 - `GET /` — Landing page with dashboard mockup, pricing, comparison table, FAQ accordion
-- `POST /api/agency/register` — Register new agency (with demo data)
+- `POST /api/agency/register` — Register new agency (with demo data, breached password check)
 - `GET/POST /api/auth/verify-email` — Email verification
-- `POST /api/auth/reset-password` — Password reset
+- `POST /api/auth/reset-password` — Password reset (with breached password check)
 - `GET /api/auth/magic-link` — Magic link authentication
 - `POST /api/billing/webhook` — Stripe webhook handler
 - `GET /api/clients/[id]/contracts/sign` — Public contract e-signature endpoint
+- `POST /api/webhooks/whatsapp` — WhatsApp inbound webhook (signature-verified)
+- `GET /api/webhooks/whatsapp` — WhatsApp webhook verification challenge
 
 ### Agency (requires AGENCY role via `requireAgencyAuth()`)
 - `GET/POST /api/clients` — List/create clients
@@ -177,6 +180,8 @@ npm run dev
 - `GET/POST /api/agency/email-templates` — Email template builder
 - `POST /api/billing/checkout` — Start Stripe checkout
 - `POST /api/billing/portal` — Open Stripe billing portal
+- `POST /api/agency/data-erasure` — GDPR Art. 17 on-demand data deletion
+- `GET/PATCH /api/agency/email-preferences` — Per-email-type unsubscribe preferences
 - `GET/POST /api/time` — Time tracking entries
 - `GET/POST /api/quotes` — Quote management
 - `GET/PATCH /api/quotes/[id]` — Quote detail
@@ -214,10 +219,10 @@ npm run dev
 
 - CSRF protection via Origin header validation in middleware
 - Rate limiting on all sensitive endpoints (auth, billing, email, file upload, 2FA)
-- Safe JSON parsing (`safeParseBody`) on all 30+ POST/PATCH routes
+- Safe JSON parsing (`safeParseBody`) on all 30+ POST/PATCH routes with Content-Length pre-check
 - Zod validation on every input
 - Tenant isolation via `agencyId` scoping on all queries
-- HMAC-SHA256 webhook signatures
+- HMAC-SHA256 webhook signatures (timing-safe verification)
 - SSRF protection on webhook dispatch (blocks private IPs, requires HTTPS)
 - CSV formula injection protection
 - API key masking (never sent to client, fetched on demand)
@@ -228,6 +233,19 @@ npm run dev
 - Login lockout with progressive delay
 - Session rotation on plan changes
 - Security headers: HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- Storage path traversal protection (sanitizePath on all file operations)
+- Upload filename sanitization (strips null bytes, path separators, OS-reserved chars)
+- 2FA brute-force lockout (5 attempts / 15 min)
+- 2FA re-authentication required before setup
+- 2FA backup/recovery codes (8 codes, SHA-256 hashed with per-user salt)
+- Breached password detection (~100 common passwords blocked on register/reset)
+- WhatsApp opt-in consent enforcement (fail-closed)
+- WhatsApp 24h conversation window enforcement
+- GDPR on-demand data erasure with password confirmation
+- Per-email-type unsubscribe preferences (CAN-SPAM compliant)
+- List-Unsubscribe + List-Unsubscribe-Post headers (RFC 8058)
+- Skip navigation link for keyboard accessibility
+- prefers-reduced-motion support
 
 ## Architecture
 
@@ -236,7 +254,7 @@ src/
 ├── app/                    # Next.js App Router pages and API routes
 │   ├── (agency)/           # Authenticated agency pages (dashboard, clients, projects, etc.)
 │   ├── (portal)/           # Client portal pages
-│   ├── api/                # 75 API route handlers
+│   ├── api/                # 79 API route handlers
 │   └── ...                 # Public pages (landing, login, register, etc.)
 ├── components/             # 34 shared components
 │   ├── ui/                 # Component library (Button, Input, Card, Modal, Select, Table, Tabs, Skeleton)

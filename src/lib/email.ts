@@ -20,7 +20,7 @@ function emailTemplate(body: string, agency?: AgencyBranding): string {
       ? esc(agency.name)
       : '🐍 CobraHub'
   const footer = agency?.name ? `Powered by CobraHub` : 'CobraHub'
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f9fafb"><div style="max-width:560px;margin:0 auto;padding:40px 20px"><div style="text-align:center;margin-bottom:24px;font-size:18px;font-weight:700;color:${color}">${header}</div><div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:32px">${body}</div><div style="text-align:center;margin-top:24px;font-size:12px;color:#9ca3af"><p style="font-size:11px;"><a href="${process.env.NEXTAUTH_URL}/settings" style="color:#9ca3af;">Administrar notificaciones</a></p>© ${new Date().getFullYear()} ${footer}. Todos los derechos reservados.</div></div></body></html>`
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f9fafb"><div style="max-width:560px;margin:0 auto;padding:40px 20px"><div style="text-align:center;margin-bottom:24px;font-size:18px;font-weight:700;color:${color}">${header}</div><div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:32px">${body}</div><div style="text-align:center;margin-top:24px;font-size:12px;color:#9ca3af"><p style="font-size:11px;"><a href="${process.env.NEXTAUTH_URL}/settings" style="color:#9ca3af;">Administrar notificaciones</a></p><p style="font-size:11px;color:#9ca3af;margin:4px 0;">Spark Workforce LLC, PO Box 195, San Juan, PR 00902</p>© ${new Date().getFullYear()} ${footer}. Todos los derechos reservados.</div></div></body></html>`
 }
 
 export function emailButton(href: string, label: string): string {
@@ -30,10 +30,15 @@ export function emailButton(href: string, label: string): string {
 export async function sendEmail(to: string, subject: string, body: string, agency?: AgencyBranding) {
   // Strip newlines and control characters to prevent email header injection
   const safeSubject = subject.replace(/[\r\n\x00-\x1f]/g, '').slice(0, 200)
+  const unsubUrl = `${process.env.NEXTAUTH_URL}/settings`
   return resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL!,
     to,
     subject: safeSubject,
     html: emailTemplate(body, agency),
+    headers: {
+      'List-Unsubscribe': `<${unsubUrl}>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
   })
 }

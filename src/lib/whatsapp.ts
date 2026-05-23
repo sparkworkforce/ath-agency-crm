@@ -1,6 +1,7 @@
 import { logger } from '@/lib/logger'
 
 const WHATSAPP_API = 'https://graph.facebook.com/v21.0'
+const CONVERSATION_WINDOW_MS = 24 * 60 * 60 * 1000 // 24 hours
 
 interface WhatsAppConfig {
   phoneNumberId: string
@@ -14,11 +15,33 @@ function getConfig(): WhatsAppConfig | null {
   return { phoneNumberId, accessToken }
 }
 
-export async function sendWhatsAppMessage(to: string, message: string): Promise<boolean> {
+/** Check if within 24h conversation window */
+function isWithinWindow(lastInboundAt: Date | null | undefined): boolean {
+  if (!lastInboundAt) return false
+  return Date.now() - new Date(lastInboundAt).getTime() < CONVERSATION_WINDOW_MS
+}
+
+/**
+ * Send a WhatsApp text message. Only allowed within 24h of last inbound message.
+ * @param hasConsent - caller must verify opt-in before calling
+ * @param lastInboundAt - timestamp of last message received from this user
+ */
+export async function sendWhatsAppMessage(to: string, message: string, hasConsent = false, lastInboundAt?: Date | null): Promise<boolean> {
   const config = getConfig()
   if (!config) return false
 
   const phone = to.replace(/[^0-9]/g, '')
+
+  if (!hasConsent) {
+    logger.error('WhatsApp message blocked: no opt-in consent', { to: phone })
+    return false
+  }
+
+  if (!isWithinWindow(lastInboundAt)) {
+    logger.error('WhatsApp message blocked: outside 24h conversation window. Use template instead.', { to: phone })
+    return false
+  }
+
   try {
     const res = await fetch(`${WHATSAPP_API}/${config.phoneNumberId}/messages`, {
       method: 'POST',
@@ -38,11 +61,21 @@ export async function sendWhatsAppMessage(to: string, message: string): Promise<
   }
 }
 
-export async function sendWhatsAppTemplate(to: string, templateName: string, params: string[]): Promise<boolean> {
+/**
+ * Send a WhatsApp template message. Allowed outside 24h window (pre-approved by Meta).
+ * @param hasConsent - caller must verify opt-in before calling
+ */
+export async function sendWhatsAppTemplate(to: string, templateName: string, params: string[], hasConsent = false): Promise<boolean> {
   const config = getConfig()
   if (!config) return false
 
   const phone = to.replace(/[^0-9]/g, '')
+
+  if (!hasConsent) {
+    logger.error('WhatsApp template blocked: no opt-in consent', { to: phone, template: templateName })
+    return false
+  }
+
   try {
     const res = await fetch(`${WHATSAPP_API}/${config.phoneNumberId}/messages`, {
       method: 'POST',

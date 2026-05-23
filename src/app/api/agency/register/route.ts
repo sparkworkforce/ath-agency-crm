@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { sendEmail, emailButton } from '@/lib/email'
 import { RegisterAgencySchema } from '@/lib/validations/agency'
 import { safeParseBody } from '@/lib/safe-parse-body'
+import { isBreachedPassword } from '@/lib/password-check'
 
 export async function POST(request: NextRequest) {
   const blocked = await rateLimit(request)
@@ -32,9 +33,8 @@ export async function POST(request: NextRequest) {
     slug = `${baseSlug}-${counter}`
   }
 
-  const WEAK_PASSWORDS = ['12345678','password','qwerty123','abcdefgh','11111111','123456789','password1','iloveyou','admin123','welcome1']
-  if (WEAK_PASSWORDS.includes(password.toLowerCase())) {
-    return NextResponse.json({ error: 'Contraseña muy común' }, { status: 400 })
+  if (isBreachedPassword(password)) {
+    return NextResponse.json({ error: 'Contraseña muy común o comprometida. Elige otra.' }, { status: 400 })
   }
 
   try {

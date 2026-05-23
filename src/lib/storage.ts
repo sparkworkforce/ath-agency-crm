@@ -14,6 +14,21 @@ export const BUCKETS = {
   CLIENT_UPLOADS: 'client-uploads',
 } as const
 
+/** Sanitize storage path: reject traversal, null bytes, and normalize */
+function sanitizePath(path: string): string {
+  if (!path || path.includes('\0')) throw new Error('Invalid storage path')
+  // Normalize separators and resolve . / ..
+  const segments = path.replace(/\\/g, '/').split('/').filter(Boolean)
+  const safe: string[] = []
+  for (const seg of segments) {
+    if (seg === '..') throw new Error('Path traversal detected')
+    if (seg === '.') continue
+    safe.push(seg)
+  }
+  if (!safe.length) throw new Error('Invalid storage path')
+  return safe.join('/')
+}
+
 export async function uploadFile(
   bucket: string,
   path: string,
@@ -21,24 +36,27 @@ export async function uploadFile(
   contentType: string,
   upsert = false
 ): Promise<string> {
+  const safePath = sanitizePath(path)
   const { error } = await storage.storage
     .from(bucket)
-    .upload(path, file, { contentType, upsert })
+    .upload(safePath, file, { contentType, upsert })
 
   if (error) throw new Error(`Storage upload failed: ${error.message}`)
-  return path
+  return safePath
 }
 
 export async function getSignedUrl(bucket: string, path: string, expiresIn = 3600): Promise<string> {
+  const safePath = sanitizePath(path)
   const { data, error } = await storage.storage
     .from(bucket)
-    .createSignedUrl(path, expiresIn, { download: true })
+    .createSignedUrl(safePath, expiresIn, { download: true })
 
   if (error || !data) throw new Error(`Failed to get signed URL: ${error?.message}`)
   return data.signedUrl
 }
 
 export async function deleteFile(bucket: string, path: string): Promise<void> {
-  const { error } = await storage.storage.from(bucket).remove([path])
+  const safePath = sanitizePath(path)
+  const { error } = await storage.storage.from(bucket).remove([safePath])
   if (error) throw new Error(`Storage delete failed: ${error.message}`)
 }

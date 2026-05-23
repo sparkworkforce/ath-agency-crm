@@ -35,6 +35,21 @@ async function validateMagicBytes(file: File, allowedTypes: string[]): Promise<N
   return null
 }
 
+/** Sanitize filename: strip path separators, null bytes, and OS-reserved characters */
+export function sanitizeFilename(name: string): string {
+  // Remove null bytes and path separators
+  let safe = name.replace(/[\x00/\\]/g, '')
+  // Remove OS-reserved characters (Windows: <>:"|?*)
+  safe = safe.replace(/[<>:"|?*]/g, '')
+  // Remove control characters
+  safe = safe.replace(/[\x01-\x1f\x7f]/g, '')
+  // Collapse whitespace
+  safe = safe.replace(/\s+/g, ' ').trim()
+  // Reject empty or dot-only names
+  if (!safe || /^\.+$/.test(safe)) return `file_${Date.now()}`
+  return safe
+}
+
 export async function validateUpload(
   file: File | null,
   options: ValidateUploadOptions

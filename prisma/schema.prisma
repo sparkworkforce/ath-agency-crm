@@ -166,6 +166,8 @@ model User {
   sessionVersion Int      @default(0)
   totpSecret    String?
   totpPending   String?
+  backupCodes   String[]  @default([])
+  emailPrefs    Json      @default("{\"marketing\":true,\"milestones\":true,\"reminders\":true,\"reports\":true,\"drip\":true}")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -220,6 +222,10 @@ model Client {
   industry     String?
   platform     ClientPlatform
   status       ClientStatus   @default(prospecto)
+  whatsappOptIn Boolean       @default(false)
+  whatsappOptInAt DateTime?
+  whatsappOptInMethod String?
+  whatsappLastInbound DateTime?
   deletedAt    DateTime?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

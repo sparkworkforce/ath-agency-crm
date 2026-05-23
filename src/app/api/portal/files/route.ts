@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { rateLimit } from '@/lib/rate-limit'
 import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE_BYTES } from '@/lib/validations/projects'
 import { uploadClientFile } from '@/lib/services/projects.service'
-import { validateUpload } from '@/lib/upload-validation'
+import { validateUpload, sanitizeFilename } from '@/lib/upload-validation'
 
 export async function POST(request: NextRequest) {
   const blocked = await rateLimit(request)
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file!.arrayBuffer())
     const result = await uploadClientFile(
       session.user.clientId,
-      file!.name,
+      sanitizeFilename(file!.name),
       file!.type,
       file!.size,
       buffer

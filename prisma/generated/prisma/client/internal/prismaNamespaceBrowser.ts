@@ -184,6 +184,8 @@ export const UserScalarFieldEnum = {
   sessionVersion: 'sessionVersion',
   totpSecret: 'totpSecret',
   totpPending: 'totpPending',
+  backupCodes: 'backupCodes',
+  emailPrefs: 'emailPrefs',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -224,6 +226,10 @@ export const ClientScalarFieldEnum = {
   industry: 'industry',
   platform: 'platform',
   status: 'status',
+  whatsappOptIn: 'whatsappOptIn',
+  whatsappOptInAt: 'whatsappOptInAt',
+  whatsappOptInMethod: 'whatsappOptInMethod',
+  whatsappLastInbound: 'whatsappLastInbound',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

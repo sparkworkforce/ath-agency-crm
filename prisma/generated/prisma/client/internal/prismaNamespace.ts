@@ -2777,6 +2777,8 @@ export const UserScalarFieldEnum = {
   sessionVersion: 'sessionVersion',
   totpSecret: 'totpSecret',
   totpPending: 'totpPending',
+  backupCodes: 'backupCodes',
+  emailPrefs: 'emailPrefs',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2817,6 +2819,10 @@ export const ClientScalarFieldEnum = {
   industry: 'industry',
   platform: 'platform',
   status: 'status',
+  whatsappOptIn: 'whatsappOptIn',
+  whatsappOptInAt: 'whatsappOptInAt',
+  whatsappOptInMethod: 'whatsappOptInMethod',
+  whatsappLastInbound: 'whatsappLastInbound',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -3258,6 +3264,20 @@ export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'ClientPlatform'
  */
 export type EnumClientPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ClientPlatform'>
@@ -3296,20 +3316,6 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

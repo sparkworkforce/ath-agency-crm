@@ -8,18 +8,27 @@ export default function TwoFactorSetup() {
   const [secret, setSecret] = useState('')
   const [uri, setUri] = useState('')
   const [token, setToken] = useState('')
+  const [password, setPassword] = useState('')
   const [step, setStep] = useState<'idle' | 'setup' | 'done'>('idle')
   const [loading, setLoading] = useState(false)
 
   async function startSetup() {
+    if (!password) { toast.error('Password required'); return }
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/2fa/setup', { method: 'POST' })
+      const res = await fetch('/api/auth/2fa/setup', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      })
       if (res.ok) {
         const data = await res.json()
         setSecret(data.secret)
         setUri(data.uri)
         setStep('setup')
+        setPassword('')
+      } else {
+        const data = await res.json().catch(() => ({}))
+        toast.error(data.error || 'Failed to start setup')
       }
     } catch {}
     setLoading(false)
@@ -48,7 +57,11 @@ export default function TwoFactorSetup() {
       {step === 'idle' && (
         <div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Add an extra layer of security with a TOTP authenticator app.</p>
-          <Button size="sm" onClick={startSetup} loading={loading}>Enable 2FA</Button>
+          <div className="mb-3">
+            <label htmlFor="2fa-password" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm your password</label>
+            <input id="2fa-password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter current password" className="w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:bg-gray-800 dark:text-gray-100" />
+          </div>
+          <Button size="sm" onClick={startSetup} loading={loading} disabled={!password}>Enable 2FA</Button>
         </div>
       )}
       {step === 'setup' && (

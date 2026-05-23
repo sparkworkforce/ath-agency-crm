@@ -88,32 +88,43 @@ export default function CommandPalette() {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-[20vh]" onClick={() => setOpen(false)}>
+    <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-[20vh]" role="dialog" aria-modal="true" aria-label="Command palette" onClick={() => setOpen(false)}>
       <div className="fixed inset-0 bg-black/40" />
       <div className="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden" onClick={e => e.stopPropagation()}>
         <div className="flex items-center px-4 border-b border-gray-100">
-          <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          <svg className="w-4 h-4 text-gray-400 mr-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           <input
             ref={inputRef}
             value={query}
             onChange={e => search(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Search clients, projects, pages..."
+            role="combobox"
+            aria-expanded="true"
+            aria-haspopup="listbox"
+            aria-owns="cmd-palette-list"
+            aria-label="Search commands"
+            aria-autocomplete="list"
+            aria-controls="cmd-palette-list"
+            aria-activedescendant={results[selected] ? `cmd-result-${results[selected].id}` : undefined}
             className="flex-1 py-3 text-sm outline-none bg-transparent dark:text-gray-100 dark:placeholder-gray-500"
           />
           <kbd className="text-[10px] text-gray-400 border border-gray-200 rounded px-1.5 py-0.5">ESC</kbd>
         </div>
-        <div className="max-h-64 overflow-y-auto">
+        <div className="max-h-64 overflow-y-auto" id="cmd-palette-list" role="listbox" aria-label="Search results">
           {results.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-6">No results</p>
           ) : (
             results.map((r, i) => (
               <button
                 key={r.id}
+                id={`cmd-result-${r.id}`}
+                role="option"
+                aria-selected={i === selected}
                 onClick={() => navigate(r)}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm ${i === selected ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
               >
-                <span>{TYPE_ICONS[r.type]}</span>
+                <span aria-hidden="true">{TYPE_ICONS[r.type]}</span>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium truncate">{r.title}</p>
                   {r.subtitle && <p className="text-xs text-gray-400 truncate">{r.subtitle}</p>}

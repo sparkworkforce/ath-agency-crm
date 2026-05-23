@@ -87,6 +87,8 @@ export type UserCountAggregateOutputType = {
   sessionVersion: number
   totpSecret: number
   totpPending: number
+  backupCodes: number
+  emailPrefs: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -154,6 +156,8 @@ export type UserCountAggregateInputType = {
   sessionVersion?: true
   totpSecret?: true
   totpPending?: true
+  backupCodes?: true
+  emailPrefs?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -260,6 +264,8 @@ export type UserGroupByOutputType = {
   sessionVersion: number
   totpSecret: string | null
   totpPending: string | null
+  backupCodes: string[]
+  emailPrefs: runtime.JsonValue
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -302,6 +308,8 @@ export type UserWhereInput = {
   sessionVersion?: Prisma.IntFilter<"User"> | number
   totpSecret?: Prisma.StringNullableFilter<"User"> | string | null
   totpPending?: Prisma.StringNullableFilter<"User"> | string | null
+  backupCodes?: Prisma.StringNullableListFilter<"User">
+  emailPrefs?: Prisma.JsonFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   agency?: Prisma.XOR<Prisma.AgencyNullableScalarRelationFilter, Prisma.AgencyWhereInput> | null
@@ -331,6 +339,8 @@ export type UserOrderByWithRelationInput = {
   sessionVersion?: Prisma.SortOrder
   totpSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   totpPending?: Prisma.SortOrderInput | Prisma.SortOrder
+  backupCodes?: Prisma.SortOrder
+  emailPrefs?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   agency?: Prisma.AgencyOrderByWithRelationInput
@@ -363,6 +373,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sessionVersion?: Prisma.IntFilter<"User"> | number
   totpSecret?: Prisma.StringNullableFilter<"User"> | string | null
   totpPending?: Prisma.StringNullableFilter<"User"> | string | null
+  backupCodes?: Prisma.StringNullableListFilter<"User">
+  emailPrefs?: Prisma.JsonFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   agency?: Prisma.XOR<Prisma.AgencyNullableScalarRelationFilter, Prisma.AgencyWhereInput> | null
@@ -392,6 +404,8 @@ export type UserOrderByWithAggregationInput = {
   sessionVersion?: Prisma.SortOrder
   totpSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   totpPending?: Prisma.SortOrderInput | Prisma.SortOrder
+  backupCodes?: Prisma.SortOrder
+  emailPrefs?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -419,6 +433,8 @@ export type UserScalarWhereWithAggregatesInput = {
   sessionVersion?: Prisma.IntWithAggregatesFilter<"User"> | number
   totpSecret?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   totpPending?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  backupCodes?: Prisma.StringNullableListFilter<"User">
+  emailPrefs?: Prisma.JsonWithAggregatesFilter<"User">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -436,6 +452,8 @@ export type UserCreateInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -465,6 +483,8 @@ export type UserUncheckedCreateInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -490,6 +510,8 @@ export type UserUpdateInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -519,6 +541,8 @@ export type UserUncheckedUpdateInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -546,6 +570,8 @@ export type UserCreateManyInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -563,6 +589,8 @@ export type UserUpdateManyMutationInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -582,6 +610,8 @@ export type UserUncheckedUpdateManyInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -601,6 +631,14 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -616,6 +654,8 @@ export type UserCountOrderByAggregateInput = {
   sessionVersion?: Prisma.SortOrder
   totpSecret?: Prisma.SortOrder
   totpPending?: Prisma.SortOrder
+  backupCodes?: Prisma.SortOrder
+  emailPrefs?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -741,8 +781,17 @@ export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
 }
 
+export type UserCreatebackupCodesInput = {
+  set: string[]
+}
+
 export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
+}
+
+export type UserUpdatebackupCodesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type UserCreateNestedOneWithoutMagicLinksInput = {
@@ -886,6 +935,8 @@ export type UserCreateWithoutAgencyInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -913,6 +964,8 @@ export type UserUncheckedCreateWithoutAgencyInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -969,6 +1022,8 @@ export type UserScalarWhereInput = {
   sessionVersion?: Prisma.IntFilter<"User"> | number
   totpSecret?: Prisma.StringNullableFilter<"User"> | string | null
   totpPending?: Prisma.StringNullableFilter<"User"> | string | null
+  backupCodes?: Prisma.StringNullableListFilter<"User">
+  emailPrefs?: Prisma.JsonFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -986,6 +1041,8 @@ export type UserCreateWithoutAccountsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1014,6 +1071,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1054,6 +1113,8 @@ export type UserUpdateWithoutAccountsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1082,6 +1143,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1106,6 +1169,8 @@ export type UserCreateWithoutSessionsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1134,6 +1199,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1174,6 +1241,8 @@ export type UserUpdateWithoutSessionsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1202,6 +1271,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1226,6 +1297,8 @@ export type UserCreateWithoutMagicLinksInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1254,6 +1327,8 @@ export type UserUncheckedCreateWithoutMagicLinksInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1294,6 +1369,8 @@ export type UserUpdateWithoutMagicLinksInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1322,6 +1399,8 @@ export type UserUncheckedUpdateWithoutMagicLinksInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1346,6 +1425,8 @@ export type UserCreateWithoutClientInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1373,6 +1454,8 @@ export type UserUncheckedCreateWithoutClientInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1424,6 +1507,8 @@ export type UserCreateWithoutAssignedTasksInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1452,6 +1537,8 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1492,6 +1579,8 @@ export type UserUpdateWithoutAssignedTasksInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1520,6 +1609,8 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1544,6 +1635,8 @@ export type UserCreateWithoutTicketMessagesInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1572,6 +1665,8 @@ export type UserUncheckedCreateWithoutTicketMessagesInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1612,6 +1707,8 @@ export type UserUpdateWithoutTicketMessagesInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1640,6 +1737,8 @@ export type UserUncheckedUpdateWithoutTicketMessagesInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1664,6 +1763,8 @@ export type UserCreateWithoutSnippetsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1692,6 +1793,8 @@ export type UserUncheckedCreateWithoutSnippetsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1732,6 +1835,8 @@ export type UserUpdateWithoutSnippetsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1760,6 +1865,8 @@ export type UserUncheckedUpdateWithoutSnippetsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1784,6 +1891,8 @@ export type UserCreateWithoutTimeEntriesInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1812,6 +1921,8 @@ export type UserUncheckedCreateWithoutTimeEntriesInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1852,6 +1963,8 @@ export type UserUpdateWithoutTimeEntriesInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -1880,6 +1993,8 @@ export type UserUncheckedUpdateWithoutTimeEntriesInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1904,6 +2019,8 @@ export type UserCreateWithoutNotificationsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutUsersInput
@@ -1932,6 +2049,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1972,6 +2091,8 @@ export type UserUpdateWithoutNotificationsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -2000,6 +2121,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2025,6 +2148,8 @@ export type UserCreateManyAgencyInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2042,6 +2167,8 @@ export type UserUpdateWithoutAgencyInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -2069,6 +2196,8 @@ export type UserUncheckedUpdateWithoutAgencyInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2095,6 +2224,8 @@ export type UserUncheckedUpdateManyWithoutAgencyInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2113,6 +2244,8 @@ export type UserCreateManyClientInput = {
   sessionVersion?: number
   totpSecret?: string | null
   totpPending?: string | null
+  backupCodes?: Prisma.UserCreatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2130,6 +2263,8 @@ export type UserUpdateWithoutClientInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutUsersNestedInput
@@ -2157,6 +2292,8 @@ export type UserUncheckedUpdateWithoutClientInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -2183,6 +2320,8 @@ export type UserUncheckedUpdateManyWithoutClientInput = {
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   totpSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   totpPending?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backupCodes?: Prisma.UserUpdatebackupCodesInput | string[]
+  emailPrefs?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2296,6 +2435,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sessionVersion?: boolean
   totpSecret?: boolean
   totpPending?: boolean
+  backupCodes?: boolean
+  emailPrefs?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
@@ -2326,6 +2467,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   sessionVersion?: boolean
   totpSecret?: boolean
   totpPending?: boolean
+  backupCodes?: boolean
+  emailPrefs?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
@@ -2347,6 +2490,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   sessionVersion?: boolean
   totpSecret?: boolean
   totpPending?: boolean
+  backupCodes?: boolean
+  emailPrefs?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
@@ -2368,11 +2513,13 @@ export type UserSelectScalar = {
   sessionVersion?: boolean
   totpSecret?: boolean
   totpPending?: boolean
+  backupCodes?: boolean
+  emailPrefs?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "role" | "agencyRole" | "agencyId" | "clientId" | "active" | "sessionVersion" | "totpSecret" | "totpPending" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "role" | "agencyRole" | "agencyId" | "clientId" | "active" | "sessionVersion" | "totpSecret" | "totpPending" | "backupCodes" | "emailPrefs" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agency?: boolean | Prisma.User$agencyArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -2424,6 +2571,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sessionVersion: number
     totpSecret: string | null
     totpPending: string | null
+    backupCodes: string[]
+    emailPrefs: runtime.JsonValue
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2873,6 +3022,8 @@ export interface UserFieldRefs {
   readonly sessionVersion: Prisma.FieldRef<"User", 'Int'>
   readonly totpSecret: Prisma.FieldRef<"User", 'String'>
   readonly totpPending: Prisma.FieldRef<"User", 'String'>
+  readonly backupCodes: Prisma.FieldRef<"User", 'String[]'>
+  readonly emailPrefs: Prisma.FieldRef<"User", 'Json'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

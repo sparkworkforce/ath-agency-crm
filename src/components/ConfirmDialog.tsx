@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface ConfirmDialogProps {
   open: boolean
@@ -25,9 +25,23 @@ export default function ConfirmDialog({
   cancelLabel = 'Cancelar',
   destructive = false,
 }: ConfirmDialogProps) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (!open) return
-    const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel() }
+    const h = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onCancel(); return }
+      if (e.key === 'Tab') {
+        const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusable || focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+      }
+    }
     document.addEventListener('keydown', h)
     return () => document.removeEventListener('keydown', h)
   }, [open, onCancel])
@@ -42,7 +56,7 @@ export default function ConfirmDialog({
       aria-labelledby="confirm-dialog-title"
       data-testid="confirm-dialog"
     >
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+      <div ref={dialogRef} className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
         <h2 id="confirm-dialog-title" className="text-lg font-semibold text-gray-900 mb-2">
           {title}
         </h2>

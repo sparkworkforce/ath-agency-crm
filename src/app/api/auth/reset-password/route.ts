@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { sendEmail, emailButton } from '@/lib/email'
 import { invalidateUserSessions } from '@/lib/session-rotation'
 import { safeParseBody } from '@/lib/safe-parse-body'
+import { isBreachedPassword } from '@/lib/password-check'
 
 function hashToken(token: string): string {
   return createHash('sha256').update(token).digest('hex')
@@ -45,8 +46,7 @@ export async function POST(request: NextRequest) {
   // Reset password (with token)
   if (token && password) {
     if (password.length < 8) return NextResponse.json({ error: 'Contraseña muy corta' }, { status: 400 })
-    const WEAK_PASSWORDS = ['12345678','password','qwerty123','abcdefgh','11111111','123456789','password1','iloveyou','admin123','welcome1']
-    if (WEAK_PASSWORDS.includes(password.toLowerCase())) return NextResponse.json({ error: 'Contraseña muy común' }, { status: 400 })
+    if (isBreachedPassword(password)) return NextResponse.json({ error: 'Contraseña muy común o comprometida' }, { status: 400 })
 
     const tokenHash = hashToken(token)
     const record = await prisma.verificationToken.findUnique({ where: { token: tokenHash } })

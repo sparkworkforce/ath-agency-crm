@@ -34,6 +34,10 @@ export type ClientMinAggregateOutputType = {
   industry: string | null
   platform: $Enums.ClientPlatform | null
   status: $Enums.ClientStatus | null
+  whatsappOptIn: boolean | null
+  whatsappOptInAt: Date | null
+  whatsappOptInMethod: string | null
+  whatsappLastInbound: Date | null
   deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +53,10 @@ export type ClientMaxAggregateOutputType = {
   industry: string | null
   platform: $Enums.ClientPlatform | null
   status: $Enums.ClientStatus | null
+  whatsappOptIn: boolean | null
+  whatsappOptInAt: Date | null
+  whatsappOptInMethod: string | null
+  whatsappLastInbound: Date | null
   deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -64,6 +72,10 @@ export type ClientCountAggregateOutputType = {
   industry: number
   platform: number
   status: number
+  whatsappOptIn: number
+  whatsappOptInAt: number
+  whatsappOptInMethod: number
+  whatsappLastInbound: number
   deletedAt: number
   createdAt: number
   updatedAt: number
@@ -81,6 +93,10 @@ export type ClientMinAggregateInputType = {
   industry?: true
   platform?: true
   status?: true
+  whatsappOptIn?: true
+  whatsappOptInAt?: true
+  whatsappOptInMethod?: true
+  whatsappLastInbound?: true
   deletedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -96,6 +112,10 @@ export type ClientMaxAggregateInputType = {
   industry?: true
   platform?: true
   status?: true
+  whatsappOptIn?: true
+  whatsappOptInAt?: true
+  whatsappOptInMethod?: true
+  whatsappLastInbound?: true
   deletedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -111,6 +131,10 @@ export type ClientCountAggregateInputType = {
   industry?: true
   platform?: true
   status?: true
+  whatsappOptIn?: true
+  whatsappOptInAt?: true
+  whatsappOptInMethod?: true
+  whatsappLastInbound?: true
   deletedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -199,6 +223,10 @@ export type ClientGroupByOutputType = {
   industry: string | null
   platform: $Enums.ClientPlatform
   status: $Enums.ClientStatus
+  whatsappOptIn: boolean
+  whatsappOptInAt: Date | null
+  whatsappOptInMethod: string | null
+  whatsappLastInbound: Date | null
   deletedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -235,6 +263,10 @@ export type ClientWhereInput = {
   industry?: Prisma.StringNullableFilter<"Client"> | string | null
   platform?: Prisma.EnumClientPlatformFilter<"Client"> | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFilter<"Client"> | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFilter<"Client"> | boolean
+  whatsappOptInAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  whatsappOptInMethod?: Prisma.StringNullableFilter<"Client"> | string | null
+  whatsappLastInbound?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
@@ -259,6 +291,10 @@ export type ClientOrderByWithRelationInput = {
   industry?: Prisma.SortOrderInput | Prisma.SortOrder
   platform?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  whatsappOptIn?: Prisma.SortOrder
+  whatsappOptInAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappOptInMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappLastInbound?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -286,6 +322,10 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   industry?: Prisma.StringNullableFilter<"Client"> | string | null
   platform?: Prisma.EnumClientPlatformFilter<"Client"> | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFilter<"Client"> | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFilter<"Client"> | boolean
+  whatsappOptInAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  whatsappOptInMethod?: Prisma.StringNullableFilter<"Client"> | string | null
+  whatsappLastInbound?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
@@ -310,6 +350,10 @@ export type ClientOrderByWithAggregationInput = {
   industry?: Prisma.SortOrderInput | Prisma.SortOrder
   platform?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  whatsappOptIn?: Prisma.SortOrder
+  whatsappOptInAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappOptInMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappLastInbound?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -331,6 +375,10 @@ export type ClientScalarWhereWithAggregatesInput = {
   industry?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   platform?: Prisma.EnumClientPlatformWithAggregatesFilter<"Client"> | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusWithAggregatesFilter<"Client"> | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolWithAggregatesFilter<"Client"> | boolean
+  whatsappOptInAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Client"> | Date | string | null
+  whatsappOptInMethod?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  whatsappLastInbound?: Prisma.DateTimeNullableWithAggregatesFilter<"Client"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Client"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
@@ -345,6 +393,10 @@ export type ClientCreateInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -369,6 +421,10 @@ export type ClientUncheckedCreateInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -391,6 +447,10 @@ export type ClientUpdateInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -415,6 +475,10 @@ export type ClientUncheckedUpdateInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,6 +502,10 @@ export type ClientCreateManyInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -452,6 +520,10 @@ export type ClientUpdateManyMutationInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -467,6 +539,10 @@ export type ClientUncheckedUpdateManyInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -497,6 +573,10 @@ export type ClientCountOrderByAggregateInput = {
   industry?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  whatsappOptIn?: Prisma.SortOrder
+  whatsappOptInAt?: Prisma.SortOrder
+  whatsappOptInMethod?: Prisma.SortOrder
+  whatsappLastInbound?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -512,6 +592,10 @@ export type ClientMaxOrderByAggregateInput = {
   industry?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  whatsappOptIn?: Prisma.SortOrder
+  whatsappOptInAt?: Prisma.SortOrder
+  whatsappOptInMethod?: Prisma.SortOrder
+  whatsappLastInbound?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -527,6 +611,10 @@ export type ClientMinOrderByAggregateInput = {
   industry?: Prisma.SortOrder
   platform?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  whatsappOptIn?: Prisma.SortOrder
+  whatsappOptInAt?: Prisma.SortOrder
+  whatsappOptInMethod?: Prisma.SortOrder
+  whatsappLastInbound?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -734,6 +822,10 @@ export type ClientCreateWithoutAgencyInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -756,6 +848,10 @@ export type ClientUncheckedCreateWithoutAgencyInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -808,6 +904,10 @@ export type ClientScalarWhereInput = {
   industry?: Prisma.StringNullableFilter<"Client"> | string | null
   platform?: Prisma.EnumClientPlatformFilter<"Client"> | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFilter<"Client"> | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFilter<"Client"> | boolean
+  whatsappOptInAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
+  whatsappOptInMethod?: Prisma.StringNullableFilter<"Client"> | string | null
+  whatsappLastInbound?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Client"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
@@ -822,6 +922,10 @@ export type ClientCreateWithoutUsersInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -845,6 +949,10 @@ export type ClientUncheckedCreateWithoutUsersInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -882,6 +990,10 @@ export type ClientUpdateWithoutUsersInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -905,6 +1017,10 @@ export type ClientUncheckedUpdateWithoutUsersInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -926,6 +1042,10 @@ export type ClientCreateWithoutStatusHistoryInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -949,6 +1069,10 @@ export type ClientUncheckedCreateWithoutStatusHistoryInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -986,6 +1110,10 @@ export type ClientUpdateWithoutStatusHistoryInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1009,6 +1137,10 @@ export type ClientUncheckedUpdateWithoutStatusHistoryInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1030,6 +1162,10 @@ export type ClientCreateWithoutCommunicationsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1053,6 +1189,10 @@ export type ClientUncheckedCreateWithoutCommunicationsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1090,6 +1230,10 @@ export type ClientUpdateWithoutCommunicationsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1113,6 +1257,10 @@ export type ClientUncheckedUpdateWithoutCommunicationsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1134,6 +1282,10 @@ export type ClientCreateWithoutProjectsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1157,6 +1309,10 @@ export type ClientUncheckedCreateWithoutProjectsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1194,6 +1350,10 @@ export type ClientUpdateWithoutProjectsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1217,6 +1377,10 @@ export type ClientUncheckedUpdateWithoutProjectsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1238,6 +1402,10 @@ export type ClientCreateWithoutInvoicesInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1261,6 +1429,10 @@ export type ClientUncheckedCreateWithoutInvoicesInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1298,6 +1470,10 @@ export type ClientUpdateWithoutInvoicesInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1321,6 +1497,10 @@ export type ClientUncheckedUpdateWithoutInvoicesInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1342,6 +1522,10 @@ export type ClientCreateWithoutTicketsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1365,6 +1549,10 @@ export type ClientUncheckedCreateWithoutTicketsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1402,6 +1590,10 @@ export type ClientUpdateWithoutTicketsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1425,6 +1617,10 @@ export type ClientUncheckedUpdateWithoutTicketsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1446,6 +1642,10 @@ export type ClientCreateWithoutQuotesInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1469,6 +1669,10 @@ export type ClientUncheckedCreateWithoutQuotesInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1506,6 +1710,10 @@ export type ClientUpdateWithoutQuotesInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1529,6 +1737,10 @@ export type ClientUncheckedUpdateWithoutQuotesInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1550,6 +1762,10 @@ export type ClientCreateWithoutTagsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1573,6 +1789,10 @@ export type ClientUncheckedCreateWithoutTagsInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1615,6 +1835,10 @@ export type ClientCreateManyAgencyInput = {
   industry?: string | null
   platform: $Enums.ClientPlatform
   status?: $Enums.ClientStatus
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: Date | string | null
+  whatsappOptInMethod?: string | null
+  whatsappLastInbound?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1629,6 +1853,10 @@ export type ClientUpdateWithoutAgencyInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1651,6 +1879,10 @@ export type ClientUncheckedUpdateWithoutAgencyInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1673,6 +1905,10 @@ export type ClientUncheckedUpdateManyWithoutAgencyInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1687,6 +1923,10 @@ export type ClientUpdateWithoutTagsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1710,6 +1950,10 @@ export type ClientUncheckedUpdateWithoutTagsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1732,6 +1976,10 @@ export type ClientUncheckedUpdateManyWithoutTagsInput = {
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   platform?: Prisma.EnumClientPlatformFieldUpdateOperationsInput | $Enums.ClientPlatform
   status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
+  whatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappOptInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappOptInMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappLastInbound?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1841,6 +2089,10 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   industry?: boolean
   platform?: boolean
   status?: boolean
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: boolean
+  whatsappOptInMethod?: boolean
+  whatsappLastInbound?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1866,6 +2118,10 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   industry?: boolean
   platform?: boolean
   status?: boolean
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: boolean
+  whatsappOptInMethod?: boolean
+  whatsappLastInbound?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1882,6 +2138,10 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   industry?: boolean
   platform?: boolean
   status?: boolean
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: boolean
+  whatsappOptInMethod?: boolean
+  whatsappLastInbound?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1898,12 +2158,16 @@ export type ClientSelectScalar = {
   industry?: boolean
   platform?: boolean
   status?: boolean
+  whatsappOptIn?: boolean
+  whatsappOptInAt?: boolean
+  whatsappOptInMethod?: boolean
+  whatsappLastInbound?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agencyId" | "businessName" | "contactName" | "contactEmail" | "contactPhone" | "industry" | "platform" | "status" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "agencyId" | "businessName" | "contactName" | "contactEmail" | "contactPhone" | "industry" | "platform" | "status" | "whatsappOptIn" | "whatsappOptInAt" | "whatsappOptInMethod" | "whatsappLastInbound" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   users?: boolean | Prisma.Client$usersArgs<ExtArgs>
@@ -1946,6 +2210,10 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     industry: string | null
     platform: $Enums.ClientPlatform
     status: $Enums.ClientStatus
+    whatsappOptIn: boolean
+    whatsappOptInAt: Date | null
+    whatsappOptInMethod: string | null
+    whatsappLastInbound: Date | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -2390,6 +2658,10 @@ export interface ClientFieldRefs {
   readonly industry: Prisma.FieldRef<"Client", 'String'>
   readonly platform: Prisma.FieldRef<"Client", 'ClientPlatform'>
   readonly status: Prisma.FieldRef<"Client", 'ClientStatus'>
+  readonly whatsappOptIn: Prisma.FieldRef<"Client", 'Boolean'>
+  readonly whatsappOptInAt: Prisma.FieldRef<"Client", 'DateTime'>
+  readonly whatsappOptInMethod: Prisma.FieldRef<"Client", 'String'>
+  readonly whatsappLastInbound: Prisma.FieldRef<"Client", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Client", 'DateTime'>
